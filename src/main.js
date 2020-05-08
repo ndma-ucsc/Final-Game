@@ -13,7 +13,7 @@ const tileSize = 30;
 
 let config = {
   type: Phaser.AUTO,
-  title: "A Kitsune's Dream",
+  title: " ",
   scale: {
       mode: Phaser.Scale.FIT,
       autoCenter: Phaser.Scale.CENTER_BOTH,
