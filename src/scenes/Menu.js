@@ -4,10 +4,11 @@ class Menu extends Phaser.Scene {
     }
 
     create() {
+        console.log("Inside Menu Scene");
         
+        this.scene.start("playScene");
     }
 
     update(){
-        
     }
 }
