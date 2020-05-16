@@ -2,15 +2,15 @@ class Play extends Phaser.Scene {
     constructor() {
         super("playScene");
     }
-    preload()
-    {
-
+    preload(){
     }
 
     create() {
         console.log("Inside Play Scene");
         player = this.add.rectangle(200, 200, 100, 100, 0xfacade);
         this.physics.add.existing(player);
+
+        this.jumpSFX = this.sound.add('jump', {volume: 0.5});
 
         this.slowMotion = false;
         this.slowSpeed = 5;
@@ -49,6 +49,7 @@ class Play extends Phaser.Scene {
         //Jumping
         if (cursors.up.isDown && player.body.onFloor())
         {
+            this.jumpSFX.play();
             player.body.setVelocityY(-650);
         }
 
