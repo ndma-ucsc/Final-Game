@@ -17,6 +17,9 @@ class Play extends Phaser.Scene {
         this.paused = false;
         this.physics.world.gravity.y = 1500;
 
+        this.jump = this.sound.add('jump', {volume: 0.1});
+        this.pauseOn = this.sound.add('pauseOn', {volume: 1});
+        this.pauseOff = this.sound.add('pauseOff', {volume: 1});
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
@@ -54,7 +57,7 @@ class Play extends Phaser.Scene {
         }
         else if (!this.player.body.onFloor()){
             if (cursors.left.isDown) {
-                this.player.body.setAccelerationX(this.airSpeed);
+                this.player.body.setAccelerationX(-this.airSpeed);
             }
             else if (cursors.right.isDown) {
                 this.player.body.setAccelerationX(this.airSpeed);
@@ -66,6 +69,7 @@ class Play extends Phaser.Scene {
         
         //Jumping
         if (cursors.up.isDown && this.player.body.onFloor()) {
+            this.jump.play();
             this.player.body.setVelocityY(this.jumpVelocity);
         }
     }
@@ -91,12 +95,16 @@ class Play extends Phaser.Scene {
             if (this.paused == false) {
                 console.log("Game Paused");
                 this.paused = true;
+                this.pauseOn.play();
                 this.player.body.enable = false;
+                this.scene.launch("pauseScene");
             }
             else if (this.paused == true) {
                 console.log("Game Unpaused");
                 this.paused = false;
+                this.pauseOff.play();
                 this.player.body.enable = true;
+                this.scene.stop("pauseScene");
             }
         }
     }
