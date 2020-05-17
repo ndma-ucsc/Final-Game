@@ -69,7 +69,7 @@ class Play extends Phaser.Scene {
         }
         
         //Jumping
-        if (cursors.up.isDown && this.player.body.onFloor()) {
+        if (cursors.up.isDown && this.player.body.onFloor() && this.paused == false) {
             this.jump.play();
             this.player.body.setVelocityY(this.jumpVelocity);
         }
@@ -93,7 +93,7 @@ class Play extends Phaser.Scene {
         //Slow Mo Time
         if (Phaser.Input.Keyboard.JustDown(keyF)) {
             if (this.slowMotion == false) {
-                console.log("Slow Mo On");this.physi
+                console.log("Slow Mo On");
                 this.slowMotion = true;
                 this.physics.world.timeScale = this.slowSpeed;
             }
