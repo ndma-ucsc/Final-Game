@@ -75,13 +75,13 @@ class Play extends Phaser.Scene {
         }
 
         //If touching wall
-        if (this.player.body.blocked.left && Phaser.Input.Keyboard.JustDown(keySPACE))
+        if (this.player.body.blocked.left && Phaser.Input.Keyboard.JustDown(cursors.up))
         {
             console.log("Left Wall Jump");
             this.player.body.setVelocityX(this.movementSpeed);
             this.player.body.setVelocityY(this.jumpVelocity);
         }
-        if (this.player.body.blocked.right && Phaser.Input.Keyboard.JustDown(keySPACE))
+        if (this.player.body.blocked.right && Phaser.Input.Keyboard.JustDown(cursors.up))
         {
             console.log("Right Wall Jump");
             this.player.body.setVelocityX(-this.movementSpeed);
