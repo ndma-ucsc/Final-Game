@@ -17,18 +17,19 @@ let config = {
   scale: {
       mode: Phaser.Scale.FIT,
       autoCenter: Phaser.Scale.CENTER_BOTH,
-      width: 896,
+      width: 953,
       height: 1024,
   },
-  physics:{
+  physics: {
     default: 'arcade',
     arcade:{
       fps: 240,
       gravity: {y: 1000},
       debug: false
-    }
   },
-  scene: [Load, Menu, Option, Play, GameOver]
+  pixelArt: true
+  },
+  scene: [Load, Menu, Option, Play, GameOver, Pause]
 };
 
 let game = new Phaser.Game(config);

@@ -5,7 +5,7 @@ class Play extends Phaser.Scene {
 
     create() {
         console.log("Inside Play Scene");
-        this.player = this.add.rectangle(200, 200, 64, 64, 0xfacade);
+        this.player = this.add.image(200, 200, 'player');
         this.physics.add.existing(this.player);
 
         this.slowMotion = false;
@@ -17,14 +17,18 @@ class Play extends Phaser.Scene {
         this.paused = false;
         this.physics.world.gravity.y = 1500;
 
+        this.jump = this.sound.add('jump', {volume: 0.1});
+        this.pauseOn = this.sound.add('pauseOn', {volume: 1});
+        this.pauseOff = this.sound.add('pauseOff', {volume: 1});
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
+        keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
-        //Player will bounce a bit when landing
-        // this.player.body.bounce.y = 0.2;
+        //Background
+        this.add.image(0, 0, 'background1').setOrigin(0, 0).setDepth(-10);
 
         //Player will not fall out of the screen
         this.player.body.collideWorldBounds = true;
@@ -54,7 +58,7 @@ class Play extends Phaser.Scene {
         }
         else if (!this.player.body.onFloor()){
             if (cursors.left.isDown) {
-                this.player.body.setAccelerationX(this.airSpeed);
+                this.player.body.setAccelerationX(-this.airSpeed);
             }
             else if (cursors.right.isDown) {
                 this.player.body.setAccelerationX(this.airSpeed);
@@ -66,13 +70,28 @@ class Play extends Phaser.Scene {
 
         //Jumping
         if (cursors.up.isDown && this.player.body.onFloor()) {
+            this.jump.play();
+            this.player.body.setVelocityY(this.jumpVelocity);
+        }
+
+        //If touching wall
+        if (this.player.body.blocked.left && Phaser.Input.Keyboard.JustDown(cursors.up))
+        {
+            console.log("Left Wall Jump");
+            this.player.body.setVelocityX(this.movementSpeed);
+            this.player.body.setVelocityY(this.jumpVelocity);
+        }
+        if (this.player.body.blocked.right && Phaser.Input.Keyboard.JustDown(cursors.up))
+        {
+            console.log("Right Wall Jump");
+            this.player.body.setVelocityX(-this.movementSpeed);
             this.player.body.setVelocityY(this.jumpVelocity);
         }
     }
 
     slowMoUpdate(){
         //Slow Mo Time
-        if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
+        if (Phaser.Input.Keyboard.JustDown(keyF)) {
             if (this.slowMotion == false) {
                 console.log("Slow Mo On");this.physi
                 this.slowMotion = true;
@@ -91,12 +110,16 @@ class Play extends Phaser.Scene {
             if (this.paused == false) {
                 console.log("Game Paused");
                 this.paused = true;
+                this.pauseOn.play();
                 this.player.body.enable = false;
+                this.scene.launch("pauseScene");
             }
             else if (this.paused == true) {
                 console.log("Game Unpaused");
                 this.paused = false;
+                this.pauseOff.play();
                 this.player.body.enable = true;
+                this.scene.stop("pauseScene");
             }
         }
     }

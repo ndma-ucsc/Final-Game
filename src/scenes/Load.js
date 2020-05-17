@@ -5,12 +5,6 @@ class Load extends Phaser.Scene {
 
     preload(){
 
-        /* test loading bar buffer*/
-        // this.load.image('background', 'images/tut/background.png');
-        // for(var i =0;i<30;i++) {
-		// 	this.load.image('background_'+i, 'images/tut/background.png');
-		// };
-
         // loading bar frame
         var progressBar = this.add.graphics();
         var progressBox = this.add.graphics();
@@ -65,6 +59,17 @@ class Load extends Phaser.Scene {
             loadingText.destroy();
             percentText.destroy();
         });
+
+        this.load.path = "./assets/sfx/";
+        this.load.audio('jump', 'Jump.wav');
+        this.load.audio('pauseOn', 'Pause2.wav');
+        this.load.audio('pauseOff', 'Pause1.wav');
+
+        this.load.path = "./assets/backgrounds/";
+        this.load.image('background1', 'tilemap.png');
+
+        this.load.path = "./assets/player/";
+        this.load.image('player', 'player.png');
     }
 
     create() {
