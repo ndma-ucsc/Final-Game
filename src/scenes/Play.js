@@ -28,7 +28,7 @@ class Play extends Phaser.Scene {
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
         //Background
-        this.add.tileSprite(0, 0, game.config.width, game.config.height, "background1").setOrigin(0, 0).setDepth(-10);
+        this.add.image(0, 0, 'background1').setOrigin(0, 0).setDepth(-10);
 
         //Player will not fall out of the screen
         this.player.body.collideWorldBounds = true;
