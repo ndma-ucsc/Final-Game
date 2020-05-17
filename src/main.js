@@ -17,12 +17,13 @@ let config = {
   scale: {
       mode: Phaser.Scale.FIT,
       autoCenter: Phaser.Scale.CENTER_BOTH,
-      width: 1100,
-      height: 680,
+      width: 896,
+      height: 1024,
   },
   physics:{
     default: 'arcade',
     arcade:{
+      fps: 240,
       gravity: {y: 1000},
       debug: false
     }
