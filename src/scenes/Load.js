@@ -67,6 +67,9 @@ class Load extends Phaser.Scene {
 
         this.load.path = "./assets/backgrounds/";
         this.load.image('background1', 'tilemap.png');
+
+        this.load.path = "./assets/player/";
+        this.load.image('player', 'player.png');
     }
 
     create() {

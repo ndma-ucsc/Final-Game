@@ -5,7 +5,7 @@ class Play extends Phaser.Scene {
 
     create() {
         console.log("Inside Play Scene");
-        this.player = this.add.rectangle(200, 200, 64, 64, 0xfacade);
+        this.player = this.add.image(200, 200, 'player');
         this.physics.add.existing(this.player);
 
         this.slowMotion = false;
