@@ -29,6 +29,7 @@ class Play extends Phaser.Scene {
 
         //Background
         this.add.image(0, 0, 'background1').setOrigin(0, 0).setDepth(-10);
+        this.add.image(0, 0, 'light').setOrigin(0, 0);
 
         //Player will not fall out of the screen
         this.player.body.collideWorldBounds = true;
@@ -40,6 +41,12 @@ class Play extends Phaser.Scene {
         this.moveUpdate();
         this.slowMoUpdate();
         this.pauseUpdate();
+        if(this.player.x > 830 || this.player.x < 123) {
+            this.player.setTint(0x045D57);
+        }
+        else {
+            this.player.setTint();
+        }
     }
 
     moveUpdate(){
