@@ -23,6 +23,7 @@ class Play extends Phaser.Scene {
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
+        keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
@@ -72,11 +73,25 @@ class Play extends Phaser.Scene {
             this.jump.play();
             this.player.body.setVelocityY(this.jumpVelocity);
         }
+
+        //If touching wall
+        if (this.player.body.blocked.left && Phaser.Input.Keyboard.JustDown(keySPACE))
+        {
+            console.log("Left Wall Jump");
+            this.player.body.setVelocityX(this.movementSpeed);
+            this.player.body.setVelocityY(this.jumpVelocity);
+        }
+        if (this.player.body.blocked.right && Phaser.Input.Keyboard.JustDown(keySPACE))
+        {
+            console.log("Right Wall Jump");
+            this.player.body.setVelocityX(-this.movementSpeed);
+            this.player.body.setVelocityY(this.jumpVelocity);
+        }
     }
 
     slowMoUpdate(){
         //Slow Mo Time
-        if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
+        if (Phaser.Input.Keyboard.JustDown(keyF)) {
             if (this.slowMotion == false) {
                 console.log("Slow Mo On");this.physi
                 this.slowMotion = true;
