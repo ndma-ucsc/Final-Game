@@ -27,8 +27,8 @@ class Play extends Phaser.Scene {
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
-        //Player will bounce a bit when landing
-        // this.player.body.bounce.y = 0.2;
+        //Background
+        this.add.tileSprite(0, 0, game.config.width, game.config.height, "background1").setOrigin(0, 0).setDepth(-10);
 
         //Player will not fall out of the screen
         this.player.body.collideWorldBounds = true;

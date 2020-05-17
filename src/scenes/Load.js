@@ -64,6 +64,9 @@ class Load extends Phaser.Scene {
         this.load.audio('jump', 'Jump.wav');
         this.load.audio('pauseOn', 'Pause2.wav');
         this.load.audio('pauseOff', 'Pause1.wav');
+
+        this.load.path = "./assets/backgrounds/";
+        this.load.image("background1", "tilemap.png");
     }
 
     create() {
