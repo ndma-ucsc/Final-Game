@@ -63,7 +63,7 @@ class Play extends Phaser.Scene {
                 this.player.body.setAccelerationY(this.fastFall);
             }
         }
-        
+
         //Jumping
         if (cursors.up.isDown && this.player.body.onFloor()) {
             this.player.body.setVelocityY(this.jumpVelocity);
