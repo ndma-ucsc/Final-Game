@@ -15,7 +15,6 @@ class Play extends Phaser.Scene {
         this.airSpeed = 300;
         this.fastFall = 3000;
         this.paused = false;
-        this.physics.world.gravity.y = 1500;
 
         this.jump = this.sound.add('jump', {volume: 0.1});
         this.pauseOn = this.sound.add('pauseOn', {volume: 1});
