@@ -5,8 +5,8 @@ class Play extends Phaser.Scene {
 
     create() {
         console.log("Inside Play Scene");
-        player = this.add.rectangle(200, 200, 100, 100, 0xfacade);
-        this.physics.add.existing(player);
+        this.player = this.add.rectangle(200, 200, 100, 100, 0xfacade);
+        this.physics.add.existing(this.player);
 
         this.slowMotion = false;
         this.slowSpeed = 5;
@@ -19,64 +19,54 @@ class Play extends Phaser.Scene {
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
         //Player will bounce a bit when landing
-        player.body.bounce.y = 0.2;
+        this.player.body.bounce.y = 0.2;
 
         //Player will not fall out of the screen
-        player.body.collideWorldBounds = true;
+        this.player.body.collideWorldBounds = true;
         this.pause = false;
     }
 
 
     update() {
         //Movement
-        if (cursors.left.isDown)
-        {
-            player.body.setVelocityX(-this.movementSpeed);
+        if (cursors.left.isDown) {
+            this.player.body.setVelocityX(-this.movementSpeed);
         }
-        else if (cursors.right.isDown)
-        {
-            player.body.setVelocityX(this.movementSpeed);
+        else if (cursors.right.isDown) {
+            this.player.body.setVelocityX(this.movementSpeed);
         }
-        else
-        {
-            player.body.setVelocityX(0);
+        else {
+            this.player.body.setVelocityX(0);
         }
 
         //Jumping
-        if (cursors.up.isDown && player.body.onFloor())
-        {
-            player.body.setVelocityY(-650);
+        if (cursors.up.isDown && this.player.body.onFloor()) {
+            this.player.body.setVelocityY(-650);
         }
 
         //Slow Mo Time
-        if(Phaser.Input.Keyboard.JustDown(keySPACE))
-        {
-            if(this.slowMotion == false)
-            {
+        if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
+            if (this.slowMotion == false) {
                 console.log("Slow Mo On");
                 this.slowMotion = true;
-                this.physics.world.timeScale = this.slowMotion; 
+                this.physics.world.timeScale = this.slowMotion;
             }
-            else if(this.slowMotion == true)
-            {
+            else if (this.slowMotion == true) {
                 console.log("Slow Mo Off");
                 this.slowMotion = false;
-                this.physics.world.timeScale = 1; 
+                this.physics.world.timeScale = 1;
             }
         }
-        if(Phaser.Input.Keyboard.JustDown(keyESC))
-        {
-            if(this.paused == false)
-            {
+        if (Phaser.Input.Keyboard.JustDown(keyESC)) {
+            if (this.paused == false) {
                 console.log("Game Paused");
                 this.paused = true;
-                player.body.enable = false;
+                this.player.body.enable = false;
             }
-            else if(this.paused == true)
-            {
+            else if (this.paused == true) {
                 console.log("Game Unpaused");
                 this.paused = false;
-                player.body.enable = true;
+                this.player.body.enable = true;
             }
         }
     }
