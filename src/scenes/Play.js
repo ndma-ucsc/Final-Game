@@ -30,7 +30,6 @@ class Play extends Phaser.Scene{
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-
         //Background
         this.add.image(0, 0, 'background1').setOrigin(0, 0).setDepth(-10);
         this.add.image(0, 0, 'light').setOrigin(0, 0);
@@ -85,6 +84,17 @@ class Play extends Phaser.Scene{
                 this.player.body.setAccelerationY(0);
 
             }
+        }
+
+        // Wall Cling
+        if (cursors.left.isDown && !this.player.body.onFloor() && this.player.body.blocked.left){
+            this.player.body.setVelocityY(0);
+        }
+        if (cursors.right.isDown && !this.player.body.onFloor() && this.player.body.blocked.right){
+            this.player.body.setVelocityY(0);
+        }
+        else {
+            this.physics.world.gravity.y = 1500;
         }
 
         //Jumping
