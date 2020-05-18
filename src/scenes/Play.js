@@ -13,12 +13,16 @@ class Play extends Phaser.Scene {
         this.movementSpeed = 400;
         this.jumpVelocity = -700
         this.airSpeed = 300;
-        this.fastFall = 3000;
+        this.fastFall = 2000;
         this.paused = false;
 
+        //Sound FX Implemented
         this.jump = this.sound.add('jump', {volume: 0.1});
         this.pauseOn = this.sound.add('pauseOn', {volume: 1});
         this.pauseOff = this.sound.add('pauseOff', {volume: 1});
+        this.land = this.sound.add('land', {volume: 1});
+        this.slow = this.sound.add('slow', {volume: 1, repeat: true});
+        this.wall = this.sound.add('wall', {volume: 0.1});
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
@@ -35,7 +39,6 @@ class Play extends Phaser.Scene {
         this.pause = false;
     }
 
-
     update() {
         this.moveUpdate();
         this.slowMoUpdate();
@@ -50,7 +53,8 @@ class Play extends Phaser.Scene {
 
     moveUpdate(){
         //Movement
-        if (this.player.body.onFloor()){
+        if (this.player.body.onFloor())
+        {
             if (cursors.left.isDown) {
                 this.player.body.setVelocityX(-this.movementSpeed);
             }
@@ -61,8 +65,14 @@ class Play extends Phaser.Scene {
                 this.player.body.setVelocity(0,0);
                 this.player.body.setAcceleration(0,0);
             }
+            if(!this.isGrounded)
+            {
+                this.land.play();
+                this.isGrounded = true;
+            }
         }
         else if (!this.player.body.onFloor()){
+            this.isGrounded = false;
             if (cursors.left.isDown) {
                 this.player.body.setAccelerationX(-this.airSpeed);
             }
@@ -84,12 +94,14 @@ class Play extends Phaser.Scene {
         if (this.player.body.blocked.left && Phaser.Input.Keyboard.JustDown(cursors.up))
         {
             console.log("Left Wall Jump");
+            this.wall.play();
             this.player.body.setVelocityX(this.movementSpeed);
             this.player.body.setVelocityY(this.jumpVelocity);
         }
         if (this.player.body.blocked.right && Phaser.Input.Keyboard.JustDown(cursors.up))
         {
             console.log("Right Wall Jump");
+            this.wall.play();
             this.player.body.setVelocityX(-this.movementSpeed);
             this.player.body.setVelocityY(this.jumpVelocity);
         }
@@ -100,11 +112,13 @@ class Play extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(keyF)) {
             if (this.slowMotion == false) {
                 console.log("Slow Mo On");
+                this.slow.play();
                 this.slowMotion = true;
                 this.physics.world.timeScale = this.slowSpeed;
             }
             else if (this.slowMotion == true) {
                 console.log("Slow Mo Off");
+                this.slow.stop();
                 this.slowMotion = false;
                 this.physics.world.timeScale = 1;
             }
