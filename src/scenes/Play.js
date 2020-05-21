@@ -21,7 +21,7 @@ class Play extends Phaser.Scene{
         this.pauseOn = this.sound.add('pauseOn', { volume: 1 });
         this.pauseOff = this.sound.add('pauseOff', { volume: 1 });
         this.land = this.sound.add('land', { volume: 1 });
-        this.slow = this.sound.add('slow', { volume: 1, repeat: true });
+        this.slow = this.sound.add('slow', { volume: 1, loop: true });
         this.wall = this.sound.add('wall', { volume: 0.1 });
 
         //Keyboard Inputs
