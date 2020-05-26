@@ -5,14 +5,15 @@ class Play extends Phaser.Scene{
 
     create(){
         console.log("Inside Play Scene");
-        this.player = this.physics.add.sprite(200, 200, 'player');
+        this.player = this.physics.add.sprite(game.config.width/2, game.config.height, 'player');
 
         this.slowMotion = false;
         this.slowSpeed = 5;
         this.movementSpeed = 400;
         this.jumpVelocity = -700
-        this.airSpeed = 300;
+        this.airSpeed = 500;
         this.fastFall = 2000;
+        this.wallCling = false;
         this.paused = false;
 
         //Sound FX Implemented
@@ -29,6 +30,8 @@ class Play extends Phaser.Scene{
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         //Background
         this.add.image(0, 0, 'background1').setOrigin(0, 0).setDepth(-10);
         this.add.image(0, 0, 'light').setOrigin(0, 0);
@@ -67,7 +70,7 @@ class Play extends Phaser.Scene{
     }
 
     moveUpdate(){
-        //Movement
+        //General Movement
         if (this.player.body.onFloor()){
             if (cursors.left.isDown){
                 this.player.body.setVelocityX(-this.movementSpeed);
@@ -84,7 +87,8 @@ class Play extends Phaser.Scene{
                 this.isGrounded = true;
             }
         }
-        else if (!this.player.body.onFloor()){
+        //Directional Input
+        else if (!this.player.body.onFloor() && !this.wallCling){
             this.isGrounded = false;
             if (cursors.left.isDown){
                 this.player.body.setAccelerationX(-this.airSpeed);
@@ -97,19 +101,31 @@ class Play extends Phaser.Scene{
             }
             else{
                 this.player.body.setAccelerationY(0);
-
             }
         }
 
         // Wall Cling
-        if (cursors.left.isDown && !this.player.body.onFloor() && this.player.body.blocked.left){
-            this.player.body.setVelocityY(0);
+        if (cursors.left.isDown && !cursors.right.isDown && !this.player.body.onFloor() && this.player.body.blocked.left && this.player.body.velocity.y > 0){
+            this.player.body.setAccelerationX(-10);
+            this.slowMotion = true;
+            this.physics.world.timeScale = this.slowSpeed;
+            this.wallCling = true;
         }
-        if (cursors.right.isDown && !this.player.body.onFloor() && this.player.body.blocked.right){
-            this.player.body.setVelocityY(0);
+        else if (cursors.right.isDown && !cursors.left.isDown && !this.player.body.onFloor() && this.player.body.blocked.right && this.player.body.velocity.y > 0){
+            this.player.body.setAccelerationX(10);
+            this.slowMotion = true;
+            this.physics.world.timeScale = this.slowSpeed;
+            this.wallCling = true;
         }
-        else {
-            this.physics.world.gravity.y = 1500;
+        else if((!cursors.left.isDown && !cursors.right.isDown)){
+            this.wallCling = false;
+            this.slowMotion = false;
+            this.physics.world.timeScale = 1;
+        }
+        else{
+            this.wallCling = false;
+            this.slowMotion = false;
+            this.physics.world.timeScale = 1;
         }
 
         //Jumping
@@ -125,12 +141,17 @@ class Play extends Phaser.Scene{
                     this.wall.play();
                     this.player.body.setVelocityX(this.movementSpeed);
                     this.player.body.setVelocityY(this.jumpVelocity);
+                    this.slowMotion = false;
+                    this.physics.world.timeScale = 1;
+                    
                 }
                 if (this.player.body.blocked.right){
                     console.log("Right Wall Jump");
                     this.wall.play();
                     this.player.body.setVelocityX(-this.movementSpeed);
                     this.player.body.setVelocityY(this.jumpVelocity);
+                    this.slowMotion = false;
+                    this.physics.world.timeScale = 1;
                 }
             }
         }
