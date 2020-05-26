@@ -5,8 +5,7 @@ class Play extends Phaser.Scene{
 
     create(){
         console.log("Inside Play Scene");
-        this.player = this.add.image(200, 200, 'player');
-        this.physics.add.existing(this.player);
+        this.player = this.physics.add.sprite(200, 200, 'player');
 
         this.slowMotion = false;
         this.slowSpeed = 5;
@@ -37,6 +36,22 @@ class Play extends Phaser.Scene{
         //Player will not fall out of the screen
         this.player.body.collideWorldBounds = true;
         this.pause = false;
+
+        //add a tile map
+        const map = this.add.tilemap("platform_map");
+
+        //add a tileset
+        const tileset = map.addTilesetImage("level_tileset", "tile1");
+
+        //create static layer
+        const groundLayer = map.createStaticLayer("Platforms", tileset, 0, 0);
+
+        //set map collision
+        groundLayer.setCollision([1]);
+
+        //create collider
+        this.physics.add.collider(this.player, groundLayer)
+        
     }
 
     update(){

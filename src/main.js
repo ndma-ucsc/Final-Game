@@ -17,7 +17,7 @@ let config = {
   scale: {
       mode: Phaser.Scale.FIT,
       autoCenter: Phaser.Scale.CENTER_BOTH,
-      width: 953,
+      width: 960,
       height: 1024,
   },
   physics: {
