@@ -6,6 +6,7 @@ class Play extends Phaser.Scene{
     create(){
         console.log("Inside Play Scene");
         this.player = this.physics.add.sprite(game.config.width/2, game.config.height, 'player');
+        this.enemy1 = new Enemy(this, game.config.width/2, game.config.height - 800, null, -300);
 
         this.slowMotion = false;
         this.slowSpeed = 5;
@@ -61,6 +62,7 @@ class Play extends Phaser.Scene{
         this.moveUpdate();
         this.slowMoUpdate();
         this.pauseUpdate();
+        this.enemyUpdate();
         if (this.player.x > 830 || this.player.x < 123){
             this.player.setTint(0x045D57);
         }
@@ -107,25 +109,25 @@ class Play extends Phaser.Scene{
         // Wall Cling
         if (cursors.left.isDown && !cursors.right.isDown && !this.player.body.onFloor() && this.player.body.blocked.left && this.player.body.velocity.y > 0){
             this.player.body.setAccelerationX(-10);
-            this.slowMotion = true;
-            this.physics.world.timeScale = this.slowSpeed;
+            //this.slowMotion = true;
+            //this.physics.world.timeScale = this.slowSpeed;
             this.wallCling = true;
         }
         else if (cursors.right.isDown && !cursors.left.isDown && !this.player.body.onFloor() && this.player.body.blocked.right && this.player.body.velocity.y > 0){
             this.player.body.setAccelerationX(10);
-            this.slowMotion = true;
-            this.physics.world.timeScale = this.slowSpeed;
+            //this.slowMotion = true;
+            //this.physics.world.timeScale = this.slowSpeed;
             this.wallCling = true;
         }
         else if((!cursors.left.isDown && !cursors.right.isDown)){
             this.wallCling = false;
-            this.slowMotion = false;
-            this.physics.world.timeScale = 1;
+            //this.slowMotion = false;
+            //this.physics.world.timeScale = 1;
         }
         else{
             this.wallCling = false;
-            this.slowMotion = false;
-            this.physics.world.timeScale = 1;
+            //this.slowMotion = false;
+            //this.physics.world.timeScale = 1;
         }
 
         //Jumping
@@ -141,8 +143,8 @@ class Play extends Phaser.Scene{
                     this.wall.play();
                     this.player.body.setVelocityX(this.movementSpeed);
                     this.player.body.setVelocityY(this.jumpVelocity);
-                    this.slowMotion = false;
-                    this.physics.world.timeScale = 1;
+                    //this.slowMotion = false;
+                    //this.physics.world.timeScale = 1;
                     
                 }
                 if (this.player.body.blocked.right){
@@ -150,8 +152,8 @@ class Play extends Phaser.Scene{
                     this.wall.play();
                     this.player.body.setVelocityX(-this.movementSpeed);
                     this.player.body.setVelocityY(this.jumpVelocity);
-                    this.slowMotion = false;
-                    this.physics.world.timeScale = 1;
+                    //this.slowMotion = false;
+                    //this.physics.world.timeScale = 1;
                 }
             }
         }
@@ -192,5 +194,9 @@ class Play extends Phaser.Scene{
                 this.scene.stop("pauseScene");
             }
         }
+    }
+    enemyUpdate()
+    {
+        this.enemy1.update();
     }
 }
