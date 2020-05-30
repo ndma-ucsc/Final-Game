@@ -16,9 +16,11 @@ class Play extends Phaser.Scene{
         this.fastFall = 2000;
         this.wallCling = false;
         this.paused = false;
+        this.facing = 'left';
+        this.jump = false;
 
         //Sound FX Implemented
-        this.jump = this.sound.add('jump', { volume: 0.1 });
+        this.jumpSFX = this.sound.add('jump', { volume: 0.1 });
         this.pauseOn = this.sound.add('pauseOn', { volume: 1 });
         this.pauseOff = this.sound.add('pauseOff', { volume: 1 });
         this.land = this.sound.add('land', { volume: 1 });
@@ -76,13 +78,24 @@ class Play extends Phaser.Scene{
         if (this.player.body.onFloor()){
             if (cursors.left.isDown){
                 this.player.body.setVelocityX(-this.movementSpeed);
+                this.player.anims.play('runL',true);
+                this.facing = 'left';
             }
             else if (cursors.right.isDown){
                 this.player.body.setVelocityX(this.movementSpeed);
+                this.player.anims.play('runR',true);
+                this.facing = 'right';
             }
             else{
                 this.player.body.setVelocity(0, 0);
                 this.player.body.setAcceleration(0, 0);
+                if(this.facing == 'left' && this.jump == false) {
+                    this.player.anims.play('idleL',true);
+                }
+                else if(this.facing == 'right' && this.jump == false) {
+                    this.player.anims.play('idleR',true);
+                }
+                
             }
             if (!this.isGrounded){
                 this.land.play();
@@ -133,8 +146,15 @@ class Play extends Phaser.Scene{
         //Jumping
         if (Phaser.Input.Keyboard.JustDown(keyUP) && this.paused == false){
             if (this.player.body.onFloor()){ // Normal Jump
-                this.jump.play();
+                this.jump = true;
+                this.jumpSFX.play();
                 this.player.body.setVelocityY(this.jumpVelocity);
+                if(this.facing == 'left') {
+                    this.player.play('jumpL',true);
+                }
+                else if(this.facing == 'right') {
+                    this.player.play('jumpR',true);
+                }
             }
 
             else if (!this.player.body.onFloor()){ // Wall Jump
@@ -155,6 +175,26 @@ class Play extends Phaser.Scene{
                     //this.slowMotion = false;
                     //this.physics.world.timeScale = 1;
                 }
+            }
+        }
+
+        //Jump Landing
+        else if(this.jump && this.player.body.onFloor()) {
+            if(this.facing == 'left') {
+                this.player.play('jumpL_R',true);
+                this.player.on('animationcomplete', (animation,frame) => {
+                    if(animation.key === 'jumpL_R') {
+                        this.jump = false;
+                    }
+                }, this);
+            }
+            else if(this.facing == 'right') {
+                this.player.play('jumpR_R',true);
+                this.player.on('animationcomplete', (animation,frame) => {
+                    if(animation.key === 'jumpR_R') {
+                        this.jump = false;
+                    }
+                }, this);
             }
         }
     }
