@@ -99,6 +99,22 @@ class Play extends Phaser.Scene{
             }
             if (!this.isGrounded){
                 this.land.play();
+                if(this.facing == 'left') {
+                    this.player.play('jumpL_R',true);
+                    this.player.on('animationcomplete', (animation,frame) => {
+                        if(animation.key === 'jumpL_R') {
+                            this.jump = false;
+                        }
+                    }, this);
+                }
+                else if(this.facing == 'right') {
+                    this.player.play('jumpR_R',true);
+                    this.player.on('animationcomplete', (animation,frame) => {
+                        if(animation.key === 'jumpR_R') {
+                            this.jump = false;
+                        }
+                    }, this);
+                }
                 this.isGrounded = true;
             }
         }
@@ -175,26 +191,6 @@ class Play extends Phaser.Scene{
                     //this.slowMotion = false;
                     //this.physics.world.timeScale = 1;
                 }
-            }
-        }
-
-        //Jump Landing
-        else if(this.jump && this.player.body.onFloor()) {
-            if(this.facing == 'left') {
-                this.player.play('jumpL_R',true);
-                this.player.on('animationcomplete', (animation,frame) => {
-                    if(animation.key === 'jumpL_R') {
-                        this.jump = false;
-                    }
-                }, this);
-            }
-            else if(this.facing == 'right') {
-                this.player.play('jumpR_R',true);
-                this.player.on('animationcomplete', (animation,frame) => {
-                    if(animation.key === 'jumpR_R') {
-                        this.jump = false;
-                    }
-                }, this);
             }
         }
     }
