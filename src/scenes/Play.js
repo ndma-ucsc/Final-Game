@@ -11,7 +11,7 @@ class Play extends Phaser.Scene{
         this.slowMotion = false;
         this.slowSpeed = 5;
         this.movementSpeed = 400;
-        this.jumpVelocity = -700
+        this.jumpVelocity = -700;
         this.airSpeed = 700;
         this.fastFall = 2000;
         this.wallCling = false;
