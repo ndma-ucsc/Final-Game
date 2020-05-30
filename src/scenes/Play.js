@@ -177,6 +177,8 @@ class Play extends Phaser.Scene{
                 if (this.player.body.blocked.left){
                     console.log("Left Wall Jump");
                     this.wall.play();
+                    this.player.play('jumpR',true);
+                    this.facing = 'right';
                     this.player.body.setVelocityX(this.movementSpeed);
                     this.player.body.setVelocityY(this.jumpVelocity);
                     //this.slowMotion = false;
@@ -186,6 +188,8 @@ class Play extends Phaser.Scene{
                 if (this.player.body.blocked.right){
                     console.log("Right Wall Jump");
                     this.wall.play();
+                    this.player.play('jumpL',true);
+                    this.facing = 'left';
                     this.player.body.setVelocityX(-this.movementSpeed);
                     this.player.body.setVelocityY(this.jumpVelocity);
                     //this.slowMotion = false;
