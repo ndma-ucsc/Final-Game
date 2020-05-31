@@ -87,20 +87,24 @@ class Play extends Phaser.Scene{
                 this.player.body.setVelocityX(-this.movementSpeed);
                 this.player.anims.play('runL',true);
                 this.facing = 'left';
+                this.player.setSize(35,40,false).setOffset(30,20);
             }
             else if (cursors.right.isDown){
                 this.player.body.setVelocityX(this.movementSpeed);
                 this.player.anims.play('runR',true);
                 this.facing = 'right';
+                this.player.setSize(35,40,false).setOffset(35,20);
             }
             else{
                 this.player.body.setVelocity(0, 0);
                 this.player.body.setAcceleration(0, 0);
                 if(this.facing == 'left' && this.jump == false) {
                     this.player.anims.play('idleL',true);
+                    this.player.setSize(30,60).setOffset(25,0);
                 }
                 else if(this.facing == 'right' && this.jump == false) {
                     this.player.anims.play('idleR',true);
+                    this.player.setSize(30,60).setOffset(40,0);
                 }
                 
             }
@@ -170,9 +174,11 @@ class Play extends Phaser.Scene{
                 this.player.body.setVelocityY(this.jumpVelocity);
                 if(this.facing == 'left') {
                     this.player.play('jumpL',true);
+                    this.player.setSize(30,50,false).setOffset(25,10);
                 }
                 else if(this.facing == 'right') {
                     this.player.play('jumpR',true);
+                    this.player.setSize(30,50,false).setOffset(40,10);
                 }
             }
 
