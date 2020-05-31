@@ -7,7 +7,7 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
         this.body.allowGravity = false;
         this.body.bounce.set(1)
         this.body.collideWorldBounds = true;
-        this.body.setCircle(20, 1, 1);
+        this.body.setCircle(15, 10, 10);
         this.scene = scene;
 
         this.angle = Phaser.Math.Angle.BetweenPoints(this, this.scene.player);
