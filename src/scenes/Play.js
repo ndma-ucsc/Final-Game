@@ -199,6 +199,7 @@ class Play extends Phaser.Scene{
                     this.wall.play();
                     this.player.play('jumpR',true);
                     this.facing = 'right';
+                    this.player.setSize(30,50,false).setOffset(40,10);
                     this.player.body.setVelocityX(this.movementSpeed);
                     this.player.body.setVelocityY(this.jumpVelocity);
                 }
@@ -207,6 +208,7 @@ class Play extends Phaser.Scene{
                     this.wall.play();
                     this.player.play('jumpL',true);
                     this.facing = 'left';
+                    this.player.setSize(30,50,false).setOffset(25,10);
                     this.player.body.setVelocityX(-this.movementSpeed);
                     this.player.body.setVelocityY(this.jumpVelocity);
                 }
