@@ -36,7 +36,9 @@ class Play extends Phaser.Scene{
         this.landSFX = this.sound.add('land', { volume: 1 });
         this.slowSFX = this.sound.add('slow', { volume: 1, loop: true });
         this.wallSFX = this.sound.add('wall', { volume: 0.1 });
-        this.deathSFX = this.sound.add('wall', { volume: 0.1 });
+        this.deathSFX = this.sound.add('death', { volume: 0.8 });
+        this.ricochetSFX = this.sound.add('ricochet', { volume: 0.5 });
+        this.laserSFX = this.sound.add('laser', { volume: 0.5 });
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
@@ -82,19 +84,20 @@ class Play extends Phaser.Scene{
     }
     
     spawnBullet(){
-        if (!this.paused){
-            console.log("Firing Bullets");
-            this.enemies.children.iterate((child) => {
-                let x = this.time.addEvent({
-                    delay: Phaser.Math.Between(100, 400) * Phaser.Math.Between(10,30) * Phaser.Math.Between(1,3),
-                    callback: ()=> {
+        console.log("Firing Bullets");
+        this.enemies.children.iterate((child) => {
+            this.time.addEvent({
+                delay: Phaser.Math.Between(100, 400) * Phaser.Math.Between(10,30) * Phaser.Math.Between(1,3),
+                callback: ()=> {
+                    if (!this.paused){
                         let bullet = new Bullet(this, child.x, child.y, 'ball');
+                        this.laserSFX.play();
                         this.bullets.add(bullet);
-                    },
-                    loop: true
-                })
-            });
-        }
+                    }
+                },
+                loop: true
+            })
+        });
     }
     
     update(){
@@ -269,12 +272,26 @@ class Play extends Phaser.Scene{
                 console.log("Slow Mo On");
                 this.slowSFX.play();
                 this.slowMotion = true;
+
+                //Slow down certain sounds when in slow mo
+                this.laserSFX.rate = 1/this.slowSpeed;
+                this.landSFX.rate = 1/this.slowSpeed;
+                this.wallSFX.rate = 1/this.slowSpeed;
+                this.ricochetSFX.rate = 1/this.slowSpeed;
+
                 this.physics.world.timeScale = this.slowSpeed;
             }
             else if (this.slowMotion == true){
                 console.log("Slow Mo Off");
                 this.slowSFX.stop();
                 this.slowMotion = false;
+
+                //Set sounds back to normal
+                this.laserSFX.rate = 1;
+                this.landSFX.rate = 1;
+                this.wallSFX.rate = 1;
+                this.ricochetSFX.rate = 1;
+
                 this.physics.world.timeScale = 1;
             }
         }
@@ -286,15 +303,23 @@ class Play extends Phaser.Scene{
                 console.log("Game Paused");
                 this.paused = true;
                 this.pauseOnSFX.play();
+                if(this.slowMotion)
+                {
+                    this.slowSFX.stop();
+                }
                 this.player.body.enable = false;
                 this.scene.launch("pauseScene");
+                
             }
             else if (this.paused == true){
                 console.log("Game Unpaused");
                 this.paused = false;
                 this.pauseOffSFX.play();
+                if(this.slowMotion)
+                {
+                    this.slowSFX.play();
+                }
                 this.player.body.enable = true;
-                
                 this.scene.stop("pauseScene");
             }
         }
@@ -305,11 +330,10 @@ class Play extends Phaser.Scene{
         this.player.body.enable = false;
         this.input.keyboard.enabled = false;
         this.gameOver = true; // turn off collision checking
-        
         this.player.alpha = 0;
 
         // death sequence
-        // this.deathSFX.play()
+        this.deathSFX.play()
         // let death = this.add.sprite(this.player.x, this.player.y, 'death').setOrigin(1);
         // death.anims.play('death'); // explosion animation
 

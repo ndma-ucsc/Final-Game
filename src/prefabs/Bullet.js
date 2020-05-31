@@ -26,6 +26,7 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
         // if(this.body.blocked.left || this.body.blocked.up || this.body.blocked.down || this.body.blocked.right)
         if (!this.body.blocked.none)
         {
+            this.scene.ricochetSFX.play();
             this.ricochetCount++;
         }
         if(this.ricochetCount == 3)
