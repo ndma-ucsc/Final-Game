@@ -17,13 +17,15 @@ class Play extends Phaser.Scene{
         this.slowMotion = false;
         this.slowSpeed = 5;
         this.movementSpeed = 400;
-        this.jumpVelocity = -300;
+        this.jumpVelocity = -500;
         this.airSpeed = 300;
         this.fastFall = 2000;
         this.wallCling = false;
         this.paused = false;
         this.facing = 'left';
         this.jump = false;
+        this.jumps;
+        this.JUMP_MAX = 1;
 
         //Sound FX Implemented
         this.jumpSFX = this.sound.add('jump', { volume: 0.1 });
@@ -85,7 +87,6 @@ class Play extends Phaser.Scene{
         }
     }
     
-    
     update(){
         this.pauseUpdate();
         if (!this.paused){
@@ -110,6 +111,7 @@ class Play extends Phaser.Scene{
         //General Movement
         if (this.player.body.onFloor()){
             this.player.body.setMaxSpeed();
+            this.jumps = this.JUMP_MAX;
             if (cursors.left.isDown){
                 this.player.body.setVelocityX(-this.movementSpeed);
                 this.player.anims.play('runL',true);
@@ -195,25 +197,24 @@ class Play extends Phaser.Scene{
         }
 
         //Jumping
-        // if (Phaser.Input.Keyboard.JustDown(keyUP) && this.paused == false){
-        //     this.player.body.setMaxSpeed(this.jumpVelocity);
-        //     if (this.player.body.onFloor()){ // Normal Jump
-        //         this.jump = true;
-        //         this.jumpSFX.play();
-        //         this.player.body.setVelocityY(this.jumpVelocity);
-        //         if(this.facing == 'left') {
-        //             this.player.play('jumpL',true);
-        //             this.player.setSize(30,50,false).setOffset(25,10);
-        //         }
-        //         else if(this.facing == 'right') {
-        //             this.player.play('jumpR',true);
-        //             this.player.setSize(30,50,false).setOffset(40,10);
-        //         }
-        //     }
-        // }
-        if(Phaser.Input.Keyboard.DownDuration(cursors.up, 50)) {
-	        this.player.body.setVelocityY(this.jumpVelocity);
-	    }
+        if(Phaser.Input.Keyboard.DownDuration(cursors.up, 200) && this.jumps > 0) {
+            this.player.body.setVelocityY(this.jumpVelocity);
+            this.jump = true;
+            if(this.facing == 'left') {
+                this.player.play('jumpL',true);
+                this.player.setSize(30,50,false).setOffset(25,10);
+            }
+            else if(this.facing == 'right') {
+                this.player.play('jumpR',true);
+                this.player.setSize(30,50,false).setOffset(40,10);
+            }
+        }
+        if(Phaser.Input.Keyboard.UpDuration(cursors.up)) {
+	    	this.jumps--;          
+        }
+        if(Phaser.Input.Keyboard.JustDown(cursors.up) && this.player.body.onFloor()){
+            this.jumpSFX.play();
+        }
 
         // else if (!this.player.body.onFloor()){ // Wall Jump
         //     if (this.player.body.blocked.left){
