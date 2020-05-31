@@ -98,7 +98,7 @@ class Play extends Phaser.Scene{
                 this.player.body.setVelocityX(-this.movementSpeed);
                 this.player.anims.play('runL',true);
                 this.facing = 'left';
-                this.player.setSize(35,40,false).setOffset(30,20);
+                this.player.setSize(35,40,false).setOffset(30,20); //setSize(width,height,center or nah) setOffset(x,y) <- Move the hitbox (x,y)
             }
             else if (cursors.right.isDown){
                 this.player.body.setVelocityX(this.movementSpeed);
