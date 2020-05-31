@@ -94,7 +94,9 @@ class Load extends Phaser.Scene {
 
         this.load.path = "./assets/tile_map/";
         this.load.tilemapTiledJSON("platform_map", "tilemap01.json");
-        
+
+        this.load.path = "./assets/music/";
+        this.load.audio('cyberpunk', 'Cyberpunk(MaxBrhon).mp3');
     }
 
     create() {

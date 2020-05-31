@@ -40,6 +40,7 @@ class Play extends Phaser.Scene{
         this.deathSFX = this.sound.add('death', { volume: 0.8 });
         this.ricochetSFX = this.sound.add('ricochet', { volume: 0.5 });
         this.laserSFX = this.sound.add('laser', { volume: 0.5 });
+        this.backgroundMusic = this.sound.add('cyberpunk', { volume: 0.3, loop: true });
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
@@ -72,6 +73,9 @@ class Play extends Phaser.Scene{
         this.physics.add.collider(this.player, groundLayer)
         this.spawnEnemies(); 
         this.spawnBullet();
+
+        //play background music
+        this.backgroundMusic.play();
     }
         
     spawnEnemies(){
@@ -331,10 +335,11 @@ class Play extends Phaser.Scene{
             if (this.paused == false){
                 console.log("Game Paused");
                 this.paused = true;
+                this.backgroundMusic.pause();
                 this.pauseOnSFX.play();
                 if(this.slowMotion)
                 {
-                    this.slowSFX.stop();
+                    this.slowSFX.pause();
                 }
                 this.player.body.enable = false;
                 this.scene.launch("pauseScene");
@@ -343,10 +348,11 @@ class Play extends Phaser.Scene{
             else if (this.paused == true){
                 console.log("Game Unpaused");
                 this.paused = false;
+                this.backgroundMusic.resume();
                 this.pauseOffSFX.play();
                 if(this.slowMotion)
                 {
-                    this.slowSFX.play();
+                    this.slowSFX.resume();
                 }
                 this.player.body.enable = true;
                 this.scene.stop("pauseScene");
@@ -362,6 +368,7 @@ class Play extends Phaser.Scene{
         this.player.alpha = 0;
 
         // death sequence
+        this.backgroundMusic.stop();
         this.deathSFX.play()
         // let death = this.add.sprite(this.player.x, this.player.y, 'death').setOrigin(1);
         // death.anims.play('death'); // explosion animation
