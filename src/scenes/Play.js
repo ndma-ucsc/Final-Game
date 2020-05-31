@@ -26,6 +26,7 @@ class Play extends Phaser.Scene{
         this.paused = false;
         this.facing = 'left';
         this.jump = false;
+        this.falling = false;
         this.jumps;
         this.JUMP_MAX = 1;
 
@@ -187,14 +188,30 @@ class Play extends Phaser.Scene{
             }
             else{
                 this.player.body.setAccelerationX(0);
-                // falling animation here
+                this.falling = true;
+                if(this.facing == 'left' && this.jump == false) {
+                    this.player.play('fallingL',true);
+                    this.player.setSize(30,50,false).setOffset(25,10);
+                }
+                else if(this.facing == 'right' && this.jump == false) {
+                    this.player.play('fallingR',true);
+                    this.player.setSize(30,50,false).setOffset(40,10);
+                }
             }
             if (cursors.down.isDown){
                 this.player.body.setAccelerationY(this.fastFall);
             }
             else{
                 this.player.body.setAccelerationY(0);
-                // falling animation here
+                this.falling = true;
+                if(this.facing == 'left' && this.jump == false) {
+                    this.player.play('fallingL',true);
+                    this.player.setSize(30,50,false).setOffset(25,10);
+                }
+                else if(this.facing == 'right' && this.jump == false) {
+                    this.player.play('fallingR',true);
+                    this.player.setSize(30,50,false).setOffset(40,10);
+                }
             }
         }
 
@@ -226,9 +243,15 @@ class Play extends Phaser.Scene{
                     this.player.body.setVelocityX(-100)
                     this.player.body.setVelocityY(100);
                     this.wallCling = true;
+                    this.player.anims.play('wallclingL',true);
+                    this.facing = 'right';
                 }
                 else{
                     this.wallCling = false;
+                    if(this.facing == 'right' && this.jump == false) {
+                        this.player.anims.play('fallingR',true);
+                        this.player.setSize(30,50,false).setOffset(40,10);
+                    }
                 }
                 if (justDownVal){
                     console.log("Left Wall Jump");
@@ -245,9 +268,15 @@ class Play extends Phaser.Scene{
                     this.player.body.setVelocityX(100)
                     this.player.body.setVelocityY(100);
                     this.wallCling = true;
+                    this.player.anims.play('wallclingR',true);
+                    this.facing = 'left';
                 }
                 else{
                     this.wallCling = false;
+                    if(this.facing == 'left' && this.jump == false) {
+                        this.player.anims.play('fallingL',true);
+                        this.player.setSize(30,50,false).setOffset(25,10);
+                    }
                 }
                 if (justDownVal){
                     console.log("Right Wall Jump");
