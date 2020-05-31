@@ -31,11 +31,12 @@ class Play extends Phaser.Scene{
 
         //Sound FX Implemented
         this.jumpSFX = this.sound.add('jump', { volume: 0.1 });
-        this.pauseOn = this.sound.add('pauseOn', { volume: 1 });
-        this.pauseOff = this.sound.add('pauseOff', { volume: 1 });
-        this.land = this.sound.add('land', { volume: 1 });
-        this.slow = this.sound.add('slow', { volume: 1, loop: true });
-        this.wall = this.sound.add('wall', { volume: 0.1 });
+        this.pauseOnSFX = this.sound.add('pauseOn', { volume: 1 });
+        this.pauseOffSFX = this.sound.add('pauseOff', { volume: 1 });
+        this.landSFX = this.sound.add('land', { volume: 1 });
+        this.slowSFX = this.sound.add('slow', { volume: 1, loop: true });
+        this.wallSFX = this.sound.add('wall', { volume: 0.1 });
+        this.deathSFX = this.sound.add('wall', { volume: 0.1 });
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
@@ -73,8 +74,8 @@ class Play extends Phaser.Scene{
     spawnEnemies(){
         if (!this.paused){
             console.log("Spawned Enemies");
-            let enemy = new Enemy(this, game.config.width/2, game.config.height - 800, 'null', -300, 0);
-            let enemy2 = new Enemy(this, game.config.width/2 - 200, game.config.height - 600, 'null', -200, 0);
+            let enemy = new Enemy(this, game.config.width/2, game.config.height - 800, 'robot', -300, 0);
+            let enemy2 = new Enemy(this, game.config.width/2 - 200, game.config.height - 600, 'robot', -200, 0);
             this.enemies.add(enemy);
             this.enemies.add(enemy2);
         }
@@ -84,10 +85,10 @@ class Play extends Phaser.Scene{
         if (!this.paused){
             console.log("Firing Bullets");
             this.enemies.children.iterate((child) => {
-                this.time.addEvent({
+                let x = this.time.addEvent({
                     delay: Phaser.Math.Between(100, 400) * Phaser.Math.Between(10,30) * Phaser.Math.Between(1,3),
                     callback: ()=> {
-                        let bullet = new Bullet(this, child.x, child.y, null);
+                        let bullet = new Bullet(this, child.x, child.y, 'laser');
                         this.bullets.add(bullet);
                     },
                     loop: true
@@ -99,8 +100,8 @@ class Play extends Phaser.Scene{
     update(){
         this.pauseUpdate();
         if (!this.paused){
-            this.physics.world.collide(this.player, this.enemies, this.collisionUpdate(), null, this);
-            this.physics.world.collide(this.player, this.bullets, this.collisionUpdate(), null, this);
+            this.physics.world.collide(this.player, this.enemies, this.collisionUpdate, null, this);
+            this.physics.world.collide(this.player, this.bullets, this.collisionUpdate, null, this);
             this.moveUpdate();
             this.slowMoUpdate();
             if (this.player.x > 830 || this.player.x < 123){
@@ -150,7 +151,7 @@ class Play extends Phaser.Scene{
             }
             
             if (!this.isGrounded){
-                this.land.play();
+                this.landSFX.play();
                 if(this.facing == 'left') {
                     this.player.play('jumpL_R',true);
                     this.player.on('animationcomplete', (animation,frame) => {
@@ -228,7 +229,7 @@ class Play extends Phaser.Scene{
                 }
                 if (justDownVal){
                     console.log("Left Wall Jump");
-                    this.wall.play();
+                    this.wallSFX.play();
                     this.player.play('jumpR',true);
                     this.facing = 'right';
                     this.player.setSize(30,50,false).setOffset(40,10);
@@ -247,7 +248,7 @@ class Play extends Phaser.Scene{
                 }
                 if (justDownVal){
                     console.log("Right Wall Jump");
-                    this.wall.play();
+                    this.wallSFX.play();
                     this.player.play('jumpL',true);
                     this.facing = 'left';
                     this.player.setSize(30,50,false).setOffset(40,10);
@@ -266,13 +267,13 @@ class Play extends Phaser.Scene{
         if (Phaser.Input.Keyboard.JustDown(keyF)){
             if (this.slowMotion == false){
                 console.log("Slow Mo On");
-                this.slow.play();
+                this.slowSFX.play();
                 this.slowMotion = true;
                 this.physics.world.timeScale = this.slowSpeed;
             }
             else if (this.slowMotion == true){
                 console.log("Slow Mo Off");
-                this.slow.stop();
+                this.slowSFX.stop();
                 this.slowMotion = false;
                 this.physics.world.timeScale = 1;
             }
@@ -284,14 +285,14 @@ class Play extends Phaser.Scene{
             if (this.paused == false){
                 console.log("Game Paused");
                 this.paused = true;
-                this.pauseOn.play();
+                this.pauseOnSFX.play();
                 this.player.body.enable = false;
                 this.scene.launch("pauseScene");
             }
             else if (this.paused == true){
                 console.log("Game Unpaused");
                 this.paused = false;
-                this.pauseOff.play();
+                this.pauseOffSFX.play();
                 this.player.body.enable = true;
                 
                 this.scene.stop("pauseScene");
@@ -300,7 +301,19 @@ class Play extends Phaser.Scene{
     }
 
     collisionUpdate(){
-        // console.log('here');
+        // console.log("Game Over");
+        this.player.body.enable = false;
+        this.input.keyboard.enabled = false;
+        this.gameOver = true; // turn off collision checking
         
+        this.player.alpha = 0;
+
+        // death sequence
+        // this.deathSFX.play()
+        // let death = this.add.sprite(this.player.x, this.player.y, 'death').setOrigin(1);
+        // death.anims.play('death'); // explosion animation
+
+        this.cameras.main.fadeOut(2000, 255, 255, 255);
+        this.time.delayedCall(2000, () => {this.scene.start("gameOverScene");});
     }
 }

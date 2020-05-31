@@ -68,6 +68,7 @@ class Load extends Phaser.Scene {
         this.load.spritesheet('jumpLeft_recover', 'jump_left.png', {frameWidth: 100, frameHeight: 77, startFrame: 6, endFrame: 10});
         this.load.spritesheet('idleLeft', 'idle_left.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 3});
         this.load.spritesheet('idleRight', 'idle_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 3});
+        this.load.image('player', 'player.png');
 
         this.load.path = "./assets/sfx/";
         this.load.audio('jump', 'Jump.wav');
@@ -81,11 +82,10 @@ class Load extends Phaser.Scene {
         this.load.image('background1', 'tilemap.png');
         this.load.image('light', 'light.png');
 
-        this.load.path = "./assets/player/";
-        this.load.image('player', 'player.png');
-
         this.load.path = "./assets/sprites/";
         this.load.image("tile1", "tile1.png");
+        this.load.image("robot", "robot.png");
+        this.load.image("laser", "laser.png");
 
         this.load.path = "./assets/tile_map/";
         this.load.tilemapTiledJSON("platform_map", "tilemap01.json");
