@@ -9,7 +9,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.setVelocityX(velX);
         this.setVelocityY(velY);
         this.body.allowGravity = false;
-        this.scene = scene;  
+        this.scene = scene;
 
         this.velX = velX;
         this.velY = velY;
