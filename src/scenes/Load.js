@@ -11,7 +11,7 @@ class Load extends Phaser.Scene {
         this.load.spritesheet('jumpLeft', 'jump_left.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 5});
         this.load.spritesheet('jumpRight_recover', 'jump_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 6, endFrame: 10});
         this.load.spritesheet('jumpLeft_recover', 'jump_left.png', {frameWidth: 100, frameHeight: 77, startFrame: 6, endFrame: 10});
-        this.load.spritesheet('idleLeft', 'idle_left.png', {frameWidth: 40, frameHeight: 60, startFrame: 0, endFrame: 3});
+        this.load.spritesheet('idleLeft', 'idle_left.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 3});
         this.load.spritesheet('idleRight', 'idle_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 3});
 
         // loading bar frame
