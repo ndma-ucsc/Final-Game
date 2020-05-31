@@ -9,35 +9,32 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.setVelocityY(velY);
         this.body.allowGravity = false;
         this.scene = scene;  
+
+        this.velX = velX;
+        this.velY = velY;
     }
 
     update() {
         super.update();
-        if (!this.scene.paused) {
-
+        
+        //Horizontal Movement
+        if(this.x <= 0 && this.body.velocity.x < 0)
+        {
+            this.body.velocity.x *= -1;
         }
-        else {
-            
+        else if(this.x >= game.config.width && this.body.velocity.x > 0)
+        {
+            this.body.velocity.x *= -1;
         }
 
-        // //Horizontal Movement
-        // if(this.x <= 0 && this.body.velocity.x < 0)
-        // {
-        //     this.body.velocity.x *= -1;
-        // }
-        // else if(this.x >= game.config.width && this.body.velocity.x > 0)
-        // {
-        //     this.body.velocity.x *= -1;
-        // }
-
-        // //Vertical Movement
-        // if(this.y <= 0 && this.body.velocity.y < 0)
-        // {
-        //     this.body.velocity.y *= -1;
-        // }
-        // else if(this.y >= game.config.height && this.body.velocity.y > 0)
-        // {
-        //     this.body.velocity.y *= -1;
-        // }
+        //Vertical Movement
+        if(this.y <= 0 && this.body.velocity.y < 0)
+        {
+            this.body.velocity.y *= -1;
+        }
+        else if(this.y >= game.config.height && this.body.velocity.y > 0)
+        {
+            this.body.velocity.y *= -1;
+        }
     }
 }

@@ -58,9 +58,7 @@ class Play extends Phaser.Scene{
 
         //create collider
         this.physics.add.collider(this.player, groundLayer)
-        this.spawnEnemies();
-        console.log('hi there');
-        
+        this.spawnEnemies(); 
     }
         
     spawnEnemies(){
