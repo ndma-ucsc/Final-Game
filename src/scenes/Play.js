@@ -6,7 +6,9 @@ class Play extends Phaser.Scene{
     create(){
         console.log("Inside Play Scene");
         this.player = this.physics.add.sprite(game.config.width/2, game.config.height, 'player');
-        this.enemy1 = new Enemy(this, game.config.width/2, game.config.height - 800, null, -300, 0);
+        this.enemies = this.add.group({
+            runChildUpdate: true    //Make sure update runs on group children
+        });
 
         this.slowMotion = false;
         this.slowSpeed = 5;
@@ -56,16 +58,25 @@ class Play extends Phaser.Scene{
 
         //create collider
         this.physics.add.collider(this.player, groundLayer)
+        this.spawnEnemies();
+        console.log('hi there');
+        
     }
         
-
+    spawnEnemies(){
+        if (!this.paused){
+            console.log("Spawned Enemies");
+            let enemy = new Enemy(this, game.config.width/2, game.config.height - 800, 'null', -300, 0);
+            enemy.setDepth(999);
+            this.enemies.add(enemy);
+        }
+    }
 
     update(){
         this.pauseUpdate();
         if (!this.paused){
             this.moveUpdate();
             this.slowMoUpdate();
-            this.enemyUpdate();
             if (this.player.x > 830 || this.player.x < 123){
                 this.player.setTint(0x045D57);
             }
@@ -145,7 +156,7 @@ class Play extends Phaser.Scene{
                 this.player.body.setAccelerationY(0);
             }
         }
-        // Wall Cling
+        //Wall Cling
         if (cursors.left.isDown && !cursors.right.isDown && !this.player.body.onFloor() && this.player.body.blocked.left && this.player.body.velocity.y > 0){
             this.player.body.setVelocityY(100);
             this.wallCling = true;
@@ -184,9 +195,6 @@ class Play extends Phaser.Scene{
                     this.facing = 'right';
                     this.player.body.setVelocityX(this.movementSpeed);
                     this.player.body.setVelocityY(this.jumpVelocity);
-                    //this.slowMotion = false;
-                    //this.physics.world.timeScale = 1;
-                    
                 }
                 if (this.player.body.blocked.right){
                     console.log("Right Wall Jump");
@@ -195,8 +203,6 @@ class Play extends Phaser.Scene{
                     this.facing = 'left';
                     this.player.body.setVelocityX(-this.movementSpeed);
                     this.player.body.setVelocityY(this.jumpVelocity);
-                    //this.slowMotion = false;
-                    //this.physics.world.timeScale = 1;
                 }
             }
         }
@@ -237,9 +243,5 @@ class Play extends Phaser.Scene{
                 this.scene.stop("pauseScene");
             }
         }
-    }
-    enemyUpdate()
-    {
-        this.enemy1.update();
     }
 }
