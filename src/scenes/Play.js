@@ -12,7 +12,7 @@ class Play extends Phaser.Scene{
         this.slowSpeed = 5;
         this.movementSpeed = 400;
         this.jumpVelocity = -700;
-        this.airSpeed = 100;
+        this.airSpeed = 300;
         this.fastFall = 2000;
         this.wallCling = false;
         this.paused = false;
@@ -41,7 +41,6 @@ class Play extends Phaser.Scene{
 
         //Player will not fall out of the screen
         this.player.body.collideWorldBounds = true;
-        this.pause = false;
 
         //add a tile map
         const map = this.add.tilemap("platform_map");
@@ -57,19 +56,26 @@ class Play extends Phaser.Scene{
 
         //create collider
         this.physics.add.collider(this.player, groundLayer)
-        
     }
+        
+
 
     update(){
-        this.moveUpdate();
-        this.slowMoUpdate();
         this.pauseUpdate();
-        this.enemyUpdate();
-        if (this.player.x > 830 || this.player.x < 123){
-            this.player.setTint(0x045D57);
+        if (!this.paused){
+            this.moveUpdate();
+            this.slowMoUpdate();
+            this.enemyUpdate();
+            if (this.player.x > 830 || this.player.x < 123){
+                this.player.setTint(0x045D57);
+            }
+            else{
+                this.player.setTint();
+            }
+            this.anims.resumeAll();
         }
-        else{
-            this.player.setTint();
+        else if (this.paused){
+            this.anims.pauseAll();
         }
     }
 
