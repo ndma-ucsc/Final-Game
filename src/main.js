@@ -25,7 +25,7 @@ let config = {
     arcade:{
       fps: 240,
       gravity: {y: 1500},
-      debug: false
+      debug: true
   },
   pixelArt: true
   },
