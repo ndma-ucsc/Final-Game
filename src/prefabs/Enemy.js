@@ -17,6 +17,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     update() {
         super.update();
+
         if(!this.scene.paused){
             this.body.enable = true;
         }

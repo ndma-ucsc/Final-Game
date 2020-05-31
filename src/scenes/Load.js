@@ -4,16 +4,6 @@ class Load extends Phaser.Scene {
     }
 
     preload(){
-        this.load.path = "./assets/player/";
-        this.load.spritesheet('runRight', 'run_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 7});
-        this.load.spritesheet('runLeft', 'run_left.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 7});
-        this.load.spritesheet('jumpRight', 'jump_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 5});
-        this.load.spritesheet('jumpLeft', 'jump_left.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 5});
-        this.load.spritesheet('jumpRight_recover', 'jump_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 6, endFrame: 10});
-        this.load.spritesheet('jumpLeft_recover', 'jump_left.png', {frameWidth: 100, frameHeight: 77, startFrame: 6, endFrame: 10});
-        this.load.spritesheet('idleLeft', 'idle_left.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 3});
-        this.load.spritesheet('idleRight', 'idle_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 3});
-
         // loading bar frame
         var progressBar = this.add.graphics();
         var progressBox = this.add.graphics();
@@ -68,6 +58,16 @@ class Load extends Phaser.Scene {
             loadingText.destroy();
             percentText.destroy();
         });
+
+        this.load.path = "./assets/player/";
+        this.load.spritesheet('runRight', 'run_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 7});
+        this.load.spritesheet('runLeft', 'run_left.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 7});
+        this.load.spritesheet('jumpRight', 'jump_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 5});
+        this.load.spritesheet('jumpLeft', 'jump_left.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 5});
+        this.load.spritesheet('jumpRight_recover', 'jump_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 6, endFrame: 10});
+        this.load.spritesheet('jumpLeft_recover', 'jump_left.png', {frameWidth: 100, frameHeight: 77, startFrame: 6, endFrame: 10});
+        this.load.spritesheet('idleLeft', 'idle_left.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 3});
+        this.load.spritesheet('idleRight', 'idle_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 3});
 
         this.load.path = "./assets/sfx/";
         this.load.audio('jump', 'Jump.wav');

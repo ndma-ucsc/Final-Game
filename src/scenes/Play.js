@@ -16,11 +16,13 @@ class Play extends Phaser.Scene{
 
         this.slowMotion = false;
         this.slowSpeed = 5;
-        this.movementSpeed = 400;
+        this.movementSpeed = 300;
         this.jumpVelocity = -500;
         this.airSpeed = 300;
         this.fastFall = 2000;
         this.wallCling = false;
+        this.wallJumpSpeedX = 400;
+        this.wallJumpSpeedY = -650;
         this.paused = false;
         this.facing = 'left';
         this.jump = false;
@@ -65,15 +67,15 @@ class Play extends Phaser.Scene{
         //create collider
         this.physics.add.collider(this.player, groundLayer)
         this.spawnEnemies(); 
-        
-        
+
+        this.spawnBullet();
     }
         
     spawnEnemies(){
         if (!this.paused){
             console.log("Spawned Enemies");
             let enemy = new Enemy(this, game.config.width/2, game.config.height - 800, 'null', -300, 0);
-            let enemy2 = new Enemy(this, game.config.width/2, game.config.height - 600, 'null', -200, 0);
+            let enemy2 = new Enemy(this, game.config.width/2 - 200, game.config.height - 600, 'null', -200, 0);
             this.enemies.add(enemy);
             this.enemies.add(enemy2);
         }
@@ -82,8 +84,16 @@ class Play extends Phaser.Scene{
     spawnBullet(){
         if (!this.paused){
             console.log("Spawned Bullet");
-            let bullet = new Bullet(this, 100, 100, 'null');
-            this.bullets.add(bullet);
+            this.enemies.children.iterate((child) => {
+                this.time.addEvent({
+                    delay: Phaser.Math.Between(1000, 5000),
+                    callback: ()=> {
+                        let bullet = new Bullet(this, child.x, child.y, null);
+                        this.bullets.add(bullet);
+                    },
+                    loop: true
+                })
+            });
         }
     }
     
@@ -108,6 +118,7 @@ class Play extends Phaser.Scene{
     }
 
     moveUpdate(){
+        let justDownVal = Phaser.Input.Keyboard.JustDown(cursors.up);
         //General Movement
         if (this.player.body.onFloor()){
             this.player.body.setMaxSpeed();
@@ -118,6 +129,7 @@ class Play extends Phaser.Scene{
                 this.facing = 'left';
                 this.player.setSize(35,40,false).setOffset(30,20); //setSize(width,height,center or nah) setOffset(x,y) <- Move the hitbox (x,y)
             }
+            
             else if (cursors.right.isDown){
                 this.player.body.setVelocityX(this.movementSpeed);
                 this.player.anims.play('runR',true);
@@ -137,6 +149,7 @@ class Play extends Phaser.Scene{
                 }
                 
             }
+            
             if (!this.isGrounded){
                 this.land.play();
                 if(this.facing == 'left') {
@@ -158,9 +171,10 @@ class Play extends Phaser.Scene{
                 this.isGrounded = true;
             }
         }
-        
+
         //Directional Input
-        else if (!this.player.body.onFloor() && !this.wallCling){
+        if (!this.player.body.onFloor() && !this.wallCling){
+            
             this.isGrounded = false;
             if (cursors.left.isDown){
                 this.player.body.setAccelerationX(-this.airSpeed);
@@ -180,21 +194,6 @@ class Play extends Phaser.Scene{
                 // falling animation here
             }
         }
-        //Wall Cling
-        if (cursors.left.isDown && !cursors.right.isDown && !this.player.body.onFloor() && this.player.body.blocked.left && this.player.body.velocity.y > 0){
-            this.player.body.setVelocityY(100);
-            this.wallCling = true;
-        }
-        else if (cursors.right.isDown && !cursors.left.isDown && !this.player.body.onFloor() && this.player.body.blocked.right && this.player.body.velocity.y > 0){
-            this.player.body.setVelocityY(100);
-            this.wallCling = true;
-        }
-        else if((!cursors.left.isDown && !cursors.right.isDown)){
-            this.wallCling = false;
-        }
-        else{
-            this.wallCling = false;
-        }
 
         //Jumping
         if(Phaser.Input.Keyboard.DownDuration(cursors.up, 200) && this.jumps > 0) {
@@ -209,33 +208,58 @@ class Play extends Phaser.Scene{
                 this.player.setSize(30,50,false).setOffset(40,10);
             }
         }
-        if(Phaser.Input.Keyboard.UpDuration(cursors.up)) {
-	    	this.jumps--;          
+        else if(Phaser.Input.Keyboard.UpDuration(cursors.up)) {
+	    	this.jumps--;
         }
-        if(Phaser.Input.Keyboard.JustDown(cursors.up) && this.player.body.onFloor()){
+        if(justDownVal && this.player.body.onFloor()){
             this.jumpSFX.play();
         }
 
-        // else if (!this.player.body.onFloor()){ // Wall Jump
-        //     if (this.player.body.blocked.left){
-        //         console.log("Left Wall Jump");
-        //         this.wall.play();
-        //         this.player.play('jumpR',true);
-        //         this.facing = 'right';
-        //         this.player.setSize(30,50,false).setOffset(40,10);
-        //         this.player.body.setVelocityX(this.movementSpeed);
-        //         this.player.body.setVelocityY(this.jumpVelocity);
-        //     }
-        //     if (this.player.body.blocked.right){
-        //         console.log("Right Wall Jump");
-        //         this.wall.play();
-        //         this.player.play('jumpL',true);
-        //         this.facing = 'left';
-        //         this.player.setSize(30,50,false).setOffset(25,10);
-        //         this.player.body.setVelocityX(-this.movementSpeed);
-        //         this.player.body.setVelocityY(this.jumpVelocity);
-        //     }
-        // }
+
+        //Wall Cling
+        if (!this.player.body.onFloor()){
+            if (this.player.body.blocked.left){
+                if (cursors.left.isDown && !cursors.right.isDown && this.player.body.velocity.y > 0){
+                    this.player.body.setVelocityX(-100)
+                    this.player.body.setVelocityY(100);
+                    this.wallCling = true;
+                }
+                else{
+                    this.wallCling = false;
+                }
+                if (justDownVal){
+                    console.log("Left Wall Jump");
+                    this.wall.play();
+                    this.player.play('jumpR',true);
+                    this.facing = 'right';
+                    this.player.setSize(30,50,false).setOffset(40,10);
+                    this.player.body.setVelocityX(this.wallJumpSpeedX);
+                    this.player.body.setVelocityY(this.wallJumpSpeedY);
+                }
+            }
+            else if (this.player.body.blocked.right){
+                if (cursors.right.isDown && !cursors.left.isDown && this.player.body.velocity.y > 0){
+                    this.player.body.setVelocityX(100)
+                    this.player.body.setVelocityY(100);
+                    this.wallCling = true;
+                }
+                else{
+                    this.wallCling = false;
+                }
+                if (justDownVal){
+                    console.log("Right Wall Jump");
+                    this.wall.play();
+                    this.player.play('jumpL',true);
+                    this.facing = 'left';
+                    this.player.setSize(30,50,false).setOffset(40,10);
+                    this.player.body.setVelocityX(-this.wallJumpSpeedX);
+                    this.player.body.setVelocityY(this.wallJumpSpeedY);
+                }
+            }
+        }
+        else{
+            this.wallCling = false;
+        }
     }
 
     slowMoUpdate(){
@@ -277,6 +301,7 @@ class Play extends Phaser.Scene{
     }
 
     collisionUpdate(){
-
+        // console.log('here');
+        
     }
 }
