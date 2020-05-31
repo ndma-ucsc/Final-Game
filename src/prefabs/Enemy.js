@@ -1,15 +1,17 @@
 class Enemy extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y, texture, speed) {
+    constructor(scene, x, y, texture, velX, velY) {
 
         super(scene, x, y, texture);
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
-        this.setVelocityX(speed);
+        this.setVelocityX(velX);
+        this.setVelocityY(velY);
         this.body.allowGravity = false;
     }  
     
     update() {
+        //Horizontal Movement
         if(this.x <= 0 && this.body.velocity.x < 0)
         {
             this.body.velocity.x *= -1;
@@ -18,20 +20,15 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         {
             this.body.velocity.x *= -1;
         }
-        
-        /*
-        if(this.moveLeft) {
-            this.x -= this.speed;
-            if(this.x <= -this.width + 32) {
-                this.moveLeft = false;
-            }
+
+        //Vertical Movement
+        if(this.y <= 0 && this.body.velocity.y < 0)
+        {
+            this.body.velocity.y *= -1;
         }
-        else {
-            this.x += this.speed;
-            if(this.x >= this.width) {
-                this.moveLeft = true;
-            }
+        else if(this.y >= game.config.height && this.body.velocity.y > 0)
+        {
+            this.body.velocity.y *= -1;
         }
-        */
     }
 }

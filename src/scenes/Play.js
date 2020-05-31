@@ -6,7 +6,7 @@ class Play extends Phaser.Scene{
     create(){
         console.log("Inside Play Scene");
         this.player = this.physics.add.sprite(game.config.width/2, game.config.height, 'player');
-        this.enemy1 = new Enemy(this, game.config.width/2, game.config.height - 800, null, -300);
+        this.enemy1 = new Enemy(this, game.config.width/2, game.config.height - 800, null, -300, 0);
 
         this.slowMotion = false;
         this.slowSpeed = 5;
