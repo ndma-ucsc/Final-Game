@@ -9,11 +9,15 @@ class Play extends Phaser.Scene{
         this.enemies = this.add.group({
             runChildUpdate: true    //Make sure update runs on group children
         });
+        this.bullets = this.add.group({
+            runChildUpdate: true,
+            frameQuantity: 10
+        });
 
         this.slowMotion = false;
         this.slowSpeed = 5;
         this.movementSpeed = 400;
-        this.jumpVelocity = -700;
+        this.jumpVelocity = -300;
         this.airSpeed = 300;
         this.fastFall = 2000;
         this.wallCling = false;
@@ -59,20 +63,34 @@ class Play extends Phaser.Scene{
         //create collider
         this.physics.add.collider(this.player, groundLayer)
         this.spawnEnemies(); 
+        
+        
     }
         
     spawnEnemies(){
         if (!this.paused){
             console.log("Spawned Enemies");
             let enemy = new Enemy(this, game.config.width/2, game.config.height - 800, 'null', -300, 0);
-            enemy.setDepth(999);
+            let enemy2 = new Enemy(this, game.config.width/2, game.config.height - 600, 'null', -200, 0);
             this.enemies.add(enemy);
+            this.enemies.add(enemy2);
         }
     }
-
+    
+    spawnBullet(){
+        if (!this.paused){
+            console.log("Spawned Bullet");
+            let bullet = new Bullet(this, 100, 100, 'null');
+            this.bullets.add(bullet);
+        }
+    }
+    
+    
     update(){
         this.pauseUpdate();
         if (!this.paused){
+            this.physics.world.collide(this.player, this.enemies, this.collisionUpdate(), null, this);
+            this.physics.world.collide(this.player, this.bullets, this.collisionUpdate(), null, this);
             this.moveUpdate();
             this.slowMoUpdate();
             if (this.player.x > 830 || this.player.x < 123){
@@ -150,12 +168,14 @@ class Play extends Phaser.Scene{
             }
             else{
                 this.player.body.setAccelerationX(0);
+                // falling animation here
             }
             if (cursors.down.isDown){
                 this.player.body.setAccelerationY(this.fastFall);
             }
             else{
                 this.player.body.setAccelerationY(0);
+                // falling animation here
             }
         }
         //Wall Cling
@@ -175,41 +195,46 @@ class Play extends Phaser.Scene{
         }
 
         //Jumping
-        if (Phaser.Input.Keyboard.JustDown(keyUP) && this.paused == false){
-            this.player.body.setMaxSpeed(this.jumpVelocity);
-            if (this.player.body.onFloor()){ // Normal Jump
-                this.jump = true;
-                this.jumpSFX.play();
-                this.player.body.setVelocityY(this.jumpVelocity);
-                if(this.facing == 'left') {
-                    this.player.play('jumpL',true);
-                    this.player.setSize(30,50,false).setOffset(25,10);
-                }
-                else if(this.facing == 'right') {
-                    this.player.play('jumpR',true);
-                    this.player.setSize(30,50,false).setOffset(40,10);
-                }
-            }
+        // if (Phaser.Input.Keyboard.JustDown(keyUP) && this.paused == false){
+        //     this.player.body.setMaxSpeed(this.jumpVelocity);
+        //     if (this.player.body.onFloor()){ // Normal Jump
+        //         this.jump = true;
+        //         this.jumpSFX.play();
+        //         this.player.body.setVelocityY(this.jumpVelocity);
+        //         if(this.facing == 'left') {
+        //             this.player.play('jumpL',true);
+        //             this.player.setSize(30,50,false).setOffset(25,10);
+        //         }
+        //         else if(this.facing == 'right') {
+        //             this.player.play('jumpR',true);
+        //             this.player.setSize(30,50,false).setOffset(40,10);
+        //         }
+        //     }
+        // }
+        if(Phaser.Input.Keyboard.DownDuration(cursors.up, 50)) {
+	        this.player.body.setVelocityY(this.jumpVelocity);
+	    }
 
-            else if (!this.player.body.onFloor()){ // Wall Jump
-                if (this.player.body.blocked.left){
-                    console.log("Left Wall Jump");
-                    this.wall.play();
-                    this.player.play('jumpR',true);
-                    this.facing = 'right';
-                    this.player.body.setVelocityX(this.movementSpeed);
-                    this.player.body.setVelocityY(this.jumpVelocity);
-                }
-                if (this.player.body.blocked.right){
-                    console.log("Right Wall Jump");
-                    this.wall.play();
-                    this.player.play('jumpL',true);
-                    this.facing = 'left';
-                    this.player.body.setVelocityX(-this.movementSpeed);
-                    this.player.body.setVelocityY(this.jumpVelocity);
-                }
-            }
-        }
+        // else if (!this.player.body.onFloor()){ // Wall Jump
+        //     if (this.player.body.blocked.left){
+        //         console.log("Left Wall Jump");
+        //         this.wall.play();
+        //         this.player.play('jumpR',true);
+        //         this.facing = 'right';
+        //         this.player.setSize(30,50,false).setOffset(40,10);
+        //         this.player.body.setVelocityX(this.movementSpeed);
+        //         this.player.body.setVelocityY(this.jumpVelocity);
+        //     }
+        //     if (this.player.body.blocked.right){
+        //         console.log("Right Wall Jump");
+        //         this.wall.play();
+        //         this.player.play('jumpL',true);
+        //         this.facing = 'left';
+        //         this.player.setSize(30,50,false).setOffset(25,10);
+        //         this.player.body.setVelocityX(-this.movementSpeed);
+        //         this.player.body.setVelocityY(this.jumpVelocity);
+        //     }
+        // }
     }
 
     slowMoUpdate(){
@@ -244,8 +269,13 @@ class Play extends Phaser.Scene{
                 this.paused = false;
                 this.pauseOff.play();
                 this.player.body.enable = true;
+                
                 this.scene.stop("pauseScene");
             }
         }
+    }
+
+    collisionUpdate(){
+
     }
 }

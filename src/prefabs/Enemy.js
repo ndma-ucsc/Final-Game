@@ -5,6 +5,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
+        this.setImmovable();
         this.setVelocityX(velX);
         this.setVelocityY(velY);
         this.body.allowGravity = false;
@@ -16,7 +17,14 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     update() {
         super.update();
-        
+        if(!this.scene.paused){
+            this.body.enable = true;
+        }
+        else
+        {
+            this.body.enable = false;
+        }
+            
         //Horizontal Movement
         if(this.x <= 0 && this.body.velocity.x < 0)
         {
