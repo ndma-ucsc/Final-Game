@@ -16,14 +16,21 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
         this.ricochetCount = 0;
     }
     update() {
-            // if(this.body.blocked.left || this.body.blocked.up || this.body.blocked.down || this.body.blocked.right)
-            if (!this.body.blocked.none)
-            {
-                this.ricochetCount++;
-            }
-            if(this.ricochetCount == 3)
-            {
-                this.destroy();
-            }
+        if(!this.scene.paused){
+            this.body.enable = true;
+        }
+        else
+        {
+            this.body.enable = false;
+        }
+        // if(this.body.blocked.left || this.body.blocked.up || this.body.blocked.down || this.body.blocked.right)
+        if (!this.body.blocked.none)
+        {
+            this.ricochetCount++;
+        }
+        if(this.ricochetCount == 3)
+        {
+            this.destroy();
+        }
     }
 }
