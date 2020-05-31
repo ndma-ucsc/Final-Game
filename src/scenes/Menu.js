@@ -70,6 +70,38 @@ class Menu extends Phaser.Scene {
             repeat: 0
         });
 
+        // Ninja wallcling left
+        this.anims.create({
+            key: 'wallclingL',
+            frames: this.anims.generateFrameNumbers('wallclingLeft', {start: 0, end: 0, first: 0}),
+            frameRate: 1,
+            repeat: 0
+        });
+
+        // Ninja wallcling right
+        this.anims.create({
+            key: 'wallclingR',
+            frames: this.anims.generateFrameNumbers('wallclingRight', {start: 0, end: 0, first: 0}),
+            frameRate: 1,
+            repeat: 0
+        });
+
+        // Ninja falling left
+        this.anims.create({
+            key: 'fallingL',
+            frames: this.anims.generateFrameNumbers('jumpLeft', {start: 5, end: 5, first: 5}),
+            frameRate: 1,
+            repeat: 0
+        });
+
+        // Ninja falling left
+        this.anims.create({
+            key: 'fallingR',
+            frames: this.anims.generateFrameNumbers('jumpRight', {start: 5, end: 5, first: 5}),
+            frameRate: 1,
+            repeat: 0
+        });
+
         this.scene.start("playScene");
     }
 

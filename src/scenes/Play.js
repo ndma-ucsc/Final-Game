@@ -20,6 +20,7 @@ class Play extends Phaser.Scene{
         this.paused = false;
         this.facing = 'left';
         this.jump = false;
+        this.falling = false;
 
         //Sound FX Implemented
         this.jumpSFX = this.sound.add('jump', { volume: 0.1 });
@@ -91,16 +92,21 @@ class Play extends Phaser.Scene{
     moveUpdate(){
         //General Movement
         if (this.player.body.onFloor()){
+            this.falling = false;
             this.player.body.setMaxSpeed();
             if (cursors.left.isDown){
                 this.player.body.setVelocityX(-this.movementSpeed);
-                this.player.anims.play('runL',true);
+                if(!this.falling) {
+                    this.player.anims.play('runL',true);
+                }
                 this.facing = 'left';
                 this.player.setSize(35,40,false).setOffset(30,20); //setSize(width,height,center or nah) setOffset(x,y) <- Move the hitbox (x,y)
             }
             else if (cursors.right.isDown){
                 this.player.body.setVelocityX(this.movementSpeed);
-                this.player.anims.play('runR',true);
+                if(!this.falling) {
+                    this.player.anims.play('runR',true);
+                }
                 this.facing = 'right';
                 this.player.setSize(35,40,false).setOffset(35,20);
             }
@@ -156,19 +162,41 @@ class Play extends Phaser.Scene{
             }
             else{
                 this.player.body.setAccelerationY(0);
+                this.falling = true;
+                if(this.facing == 'left') {
+                    this.player.play('fallingL',true);
+                    this.player.setSize(30,50,false).setOffset(25,10);
+                }
+                else if(this.facing == 'right') {
+                    this.player.play('fallingR',true);
+                    this.player.setSize(30,50,false).setOffset(40,10);
+                }
             }
         }
         //Wall Cling
         if (cursors.left.isDown && !cursors.right.isDown && !this.player.body.onFloor() && this.player.body.blocked.left && this.player.body.velocity.y > 0){
             this.player.body.setVelocityY(100);
             this.wallCling = true;
+            this.player.anims.play('wallclingL',true);
+            this.facing = 'right';
         }
         else if (cursors.right.isDown && !cursors.left.isDown && !this.player.body.onFloor() && this.player.body.blocked.right && this.player.body.velocity.y > 0){
             this.player.body.setVelocityY(100);
             this.wallCling = true;
+            this.player.anims.play('wallclingR',true);
+            this.facing = 'left';
         }
-        else if((!cursors.left.isDown && !cursors.right.isDown)){
+        else if((!cursors.left.isDown && !cursors.right.isDown && !this.player.body.onFloor())){
             this.wallCling = false;
+            if(this.facing == 'left') {
+                this.player.anims.play('fallingL',true);
+                this.player.setSize(30,50,false).setOffset(25,10);
+            }
+            else if(this.facing == 'right') {
+                this.player.anims.play('fallingR',true);
+                this.player.setSize(30,50,false).setOffset(40,10);
+            }
+            
         }
         else{
             this.wallCling = false;
