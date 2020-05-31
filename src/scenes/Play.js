@@ -88,7 +88,7 @@ class Play extends Phaser.Scene{
                 let x = this.time.addEvent({
                     delay: Phaser.Math.Between(100, 400) * Phaser.Math.Between(10,30) * Phaser.Math.Between(1,3),
                     callback: ()=> {
-                        let bullet = new Bullet(this, child.x, child.y, 'laser');
+                        let bullet = new Bullet(this, child.x, child.y, 'ball');
                         this.bullets.add(bullet);
                     },
                     loop: true
@@ -313,7 +313,7 @@ class Play extends Phaser.Scene{
         // let death = this.add.sprite(this.player.x, this.player.y, 'death').setOrigin(1);
         // death.anims.play('death'); // explosion animation
 
-        this.cameras.main.fadeOut(2000, 255, 255, 255);
+        this.cameras.main.fadeOut(2000);
         this.time.delayedCall(2000, () => {this.scene.start("gameOverScene");});
     }
 }
