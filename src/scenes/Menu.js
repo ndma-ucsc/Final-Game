@@ -4,9 +4,70 @@ class Menu extends Phaser.Scene {
     }
 
     create() {
-        this.cameras.main.fadeIn(1500);
-        console.log("Inside Menu Scene");
+        console.log("Menu Scene");
+        if (!bgMusic.isPlaying){
+            bgMusic = this.sound.add('cyberpunk', {volume: bg_volume, loop: true});
+            bgMusic.play();
+        }
+        this.input.keyboard.enabled = false;
+        this.cameras.main.fadeIn(1000);
+        this.time.delayedCall(1000, () => {this.input.keyboard.enabled = true;});
+        this.selected = 1;
+        this.start = this.add.text(game.config.width/2, game.config.height/2, "START", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
+        this.option = this.add.text(game.config.width/2, game.config.height/2 + 60, "OPTION", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
+        this.generateFrameAnimation();
 
+
+    }
+
+    update(){
+        cursors = this.input.keyboard.createCursorKeys();
+        keyENTER = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+        if(this.input.keyboard.checkDown(cursors.up, 250)) {
+            if(this.selected > 1) {
+                this.selected--;
+            }
+            else {
+                this.selected = 2;
+            }
+        }
+        else if(this.input.keyboard.checkDown(cursors.down, 250)) {
+            if(this.selected < 2) {
+                this.selected++;
+            }
+            else {
+                this.selected = 1;
+            }
+        }
+        if(this.selected == 1) {
+            this.start.setTint(0x135300).setScale(1.3);
+            this.option.setTint().setScale();
+        }
+        else if(this.selected == 2) {
+            this.start.setTint().setScale();
+            this.option.setTint(0x135300).setScale(1.3);
+        }
+
+        if(Phaser.Input.Keyboard.JustDown(keyENTER)) {
+            this.input.keyboard.enabled = false;
+            if(this.selected == 1) {
+                this.cameras.main.fadeOut(1500);
+                this.time.delayedCall(1500,() => {this.scene.start("playScene");});
+            }
+            else if(this.selected == 2) {
+                this.cameras.main.fadeOut(500);
+                this.time.delayedCall(500,() => {
+                    this.cameras.main.fadeIn(1);
+                    this.input.keyboard.enabled = true;
+                    this.scene.pause();
+                    this.scene.launch("optionScene");
+                    keyENTER.reset();
+                });
+            }
+        }
+    }
+
+    generateFrameAnimation(){
         // Ninja idle Right
         this.anims.create({
             key: 'idleR',
@@ -102,10 +163,5 @@ class Menu extends Phaser.Scene {
             frameRate: 1,
             repeat: 0
         });
-
-        this.scene.start("playScene");
-    }
-
-    update(){
     }
 }

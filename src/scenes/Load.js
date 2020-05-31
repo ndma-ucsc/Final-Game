@@ -59,6 +59,9 @@ class Load extends Phaser.Scene {
             percentText.destroy();
         });
 
+        this.load.path = "./assets/music/";
+        this.load.audio('cyberpunk', 'Cyberpunk(MaxBrhon).mp3');
+
         this.load.path = "./assets/player/";
         this.load.spritesheet('runRight', 'run_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 7});
         this.load.spritesheet('runLeft', 'run_left.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 7});
@@ -94,9 +97,6 @@ class Load extends Phaser.Scene {
 
         this.load.path = "./assets/tile_map/";
         this.load.tilemapTiledJSON("platform_map", "tilemap01.json");
-
-        this.load.path = "./assets/music/";
-        this.load.audio('cyberpunk', 'Cyberpunk(MaxBrhon).mp3');
     }
 
     create() {

@@ -25,7 +25,7 @@ let config = {
     arcade:{
       fps: 240,
       gravity: {y: 1500},
-      debug: true
+      debug: false
   },
   pixelArt: true
   },
@@ -38,6 +38,7 @@ let game = new Phaser.Game(config);
 let keyF, keyP, keyLEFT, keyRIGHT, keyUP, keyDOWN, keyENTER, keySPACE, keyESC;
 let bgMusic;
 let volPt = 5;
-let bg_volume = 0.1;
-let sfx_volume = 0.1;
+let sfxPt = 2
+let bg_volume = volPt/10;
+let sfx_volume = sfxPt/10;
 let collisionDebug = false;

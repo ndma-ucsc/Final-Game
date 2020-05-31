@@ -4,7 +4,9 @@ class Play extends Phaser.Scene{
     }
 
     create(){
-        console.log("Inside Play Scene");
+        console.log("Play Scene");
+        this.cameras.main.fadeIn(1000);
+        this.input.keyboard.enabled = true;
         this.player = this.physics.add.sprite(game.config.width/2, game.config.height, 'player');
         this.enemies = this.add.group({
             runChildUpdate: true    //Make sure update runs on group children
@@ -13,6 +15,7 @@ class Play extends Phaser.Scene{
             runChildUpdate: true,
             frameQuantity: 10
         });
+        // this.powerUp = this.add.sprite(this.player.x, this.player.y, "null").setOrigin(0.5);
 
         this.slowMotion = false;
         this.slowSpeed = 5;
@@ -23,23 +26,24 @@ class Play extends Phaser.Scene{
         this.wallCling = false;
         this.wallJumpSpeedX = 400;
         this.wallJumpSpeedY = -650;
-        this.paused = false;
         this.facing = 'left';
         this.jump = false;
         this.falling = false;
         this.jumps;
         this.JUMP_MAX = 1;
+        this.paused = false;
+        this.gameOver = false;
 
         //Sound FX Implemented
-        this.jumpSFX = this.sound.add('jump', { volume: sfx_volume});
-        this.pauseOnSFX = this.sound.add('pauseOn', { volume: sfx_volume});
-        this.pauseOffSFX = this.sound.add('pauseOff', { volume: sfx_volume});
-        this.landSFX = this.sound.add('land', { volume: sfx_volume});
-        this.slowSFX = this.sound.add('slow', { volume: sfx_volume});
-        this.wallSFX = this.sound.add('wall', { volume: sfx_volume});
-        this.deathSFX = this.sound.add('death', { volume: sfx_volume});
-        this.ricochetSFX = this.sound.add('ricochet', { volume: sfx_volume/2});
-        this.laserSFX = this.sound.add('laser', { volume: sfx_volume/2});
+        this.jumpSFX = this.sound.add('jump', {volume: sfx_volume});
+        this.pauseOnSFX = this.sound.add('pauseOn', {volume: sfx_volume});
+        this.pauseOffSFX = this.sound.add('pauseOff', {volume: sfx_volume});
+        this.landSFX = this.sound.add('land', {volume: sfx_volume});
+        this.slowSFX = this.sound.add('slow', {volume: sfx_volume});
+        this.wallSFX = this.sound.add('wall', {volume: sfx_volume});
+        this.deathSFX = this.sound.add('death', {volume: sfx_volume});
+        this.ricochetSFX = this.sound.add('ricochet', {volume: sfx_volume/2});
+        this.laserSFX = this.sound.add('laser', {volume: sfx_volume/2});
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
@@ -75,7 +79,7 @@ class Play extends Phaser.Scene{
     }
         
     spawnEnemies(){
-        if (!this.paused){
+        if (!this.paused && !this.gameOver){
             console.log("Spawned Enemies");
             let enemy = new Enemy(this, game.config.width/2, game.config.height - 800, 'robot', -300, 0);
             let enemy2 = new Enemy(this, game.config.width/2 - 200, game.config.height - 600, 'robot', -200, 0);
@@ -88,9 +92,9 @@ class Play extends Phaser.Scene{
         console.log("Firing Bullets");
         this.enemies.children.iterate((child) => {
             this.time.addEvent({
-                delay: Phaser.Math.Between(100, 400) * Phaser.Math.Between(10,30) * Phaser.Math.Between(1,3),
+                delay: Phaser.Math.Between(100, 300) * Phaser.Math.Between(10,30) * Phaser.Math.Between(1,3),
                 callback: ()=> {
-                    if (!this.paused){
+                    if (!this.paused && !this.gameOver){
                         let bullet = new Bullet(this, child.x, child.y, 'ball');
                         this.laserSFX.play();
                         this.bullets.add(bullet);
@@ -102,8 +106,10 @@ class Play extends Phaser.Scene{
     }
     
     update(){
+        // this.powerUp.x = this.player.x;
+        // this.powerUp.y = this.player.y;
         this.pauseUpdate();
-        if (!this.paused){
+        if (!this.paused && !this.gameOver){
             this.physics.world.collide(this.player, this.enemies, this.collisionUpdate, null, this);
             this.physics.world.collide(this.player, this.bullets, this.collisionUpdate, null, this);
             this.moveUpdate();
@@ -114,10 +120,6 @@ class Play extends Phaser.Scene{
             else{
                 this.player.setTint();
             }
-            this.anims.resumeAll();
-        }
-        else if (this.paused){
-            this.anims.pauseAll();
         }
     }
 
@@ -328,36 +330,67 @@ class Play extends Phaser.Scene{
 
     pauseUpdate(){
         if (Phaser.Input.Keyboard.JustDown(keyESC)){
-            if (this.paused == false){
+            if (!this.gameOver && this.paused == false){
                 console.log("Game Paused");
                 this.paused = true;
-                this.backgroundMusic.pause();
                 this.pauseOnSFX.play();
                 if(this.slowMotion)
                 {
                     this.slowSFX.pause();
                 }
                 this.player.body.enable = false;
-                this.scene.launch("pauseScene");
-                
+                this.tweens.add({
+                    targets: this.cameras.main,
+                    alpha: 0.5,
+                    duration: 500,
+                    ease: 'Linear'
+                })
+                this.tweens.add({
+                    targets: bgMusic,
+                    volume: 0,
+                    duration: 500,
+                    ease: 'Linear'
+                })
+                bgMusic.pause();
+                this.anims.pauseAll();
+                this.scene.launch("optionScene");
             }
-            else if (this.paused == true){
+            else if (!this.gameOver && this.paused == true){
                 console.log("Game Unpaused");
                 this.paused = false;
-                this.backgroundMusic.resume();
                 this.pauseOffSFX.play();
                 if(this.slowMotion)
                 {
                     this.slowSFX.resume();
                 }
+                this.tweens.add({
+                    targets: this.cameras.main,
+                    alpha: 1,
+                    duration: 500,
+                    ease: 'Linear'
+                })
+                this.tweens.add({
+                    targets: bgMusic,
+                    volume: bg_volume,
+                    duration: 500,
+                    ease: 'Linear'
+                })
+                bgMusic.resume();
                 this.player.body.enable = true;
-                this.scene.stop("pauseScene");
+                this.anims.resumeAll();
+                this.scene.stop("optionScene");
+                cursors = this.input.keyboard.createCursorKeys();
+                keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+                keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+                keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+                keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+                keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+                keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
             }
         }
     }
 
     collisionUpdate(){
-        // console.log("Game Over");
         this.player.body.enable = false;
         this.input.keyboard.enabled = false;
         this.gameOver = true; // turn off collision checking

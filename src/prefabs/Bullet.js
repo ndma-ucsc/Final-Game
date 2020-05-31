@@ -16,7 +16,7 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
         this.ricochetCount = 0;
     }
     update() {
-        if(!this.scene.paused){
+        if(!this.scene.paused && !this.scene.gameOver){
             this.body.enable = true;
         }
         else
