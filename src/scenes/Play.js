@@ -67,7 +67,6 @@ class Play extends Phaser.Scene{
         //create collider
         this.physics.add.collider(this.player, groundLayer)
         this.spawnEnemies(); 
-
         this.spawnBullet();
     }
         
@@ -83,10 +82,10 @@ class Play extends Phaser.Scene{
     
     spawnBullet(){
         if (!this.paused){
-            console.log("Spawned Bullet");
+            console.log("Firing Bullets");
             this.enemies.children.iterate((child) => {
                 this.time.addEvent({
-                    delay: Phaser.Math.Between(1000, 5000),
+                    delay: Phaser.Math.Between(100, 400) * Phaser.Math.Between(10,30) * Phaser.Math.Between(1,3),
                     callback: ()=> {
                         let bullet = new Bullet(this, child.x, child.y, null);
                         this.bullets.add(bullet);
