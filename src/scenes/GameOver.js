@@ -6,7 +6,7 @@ class GameOver extends Phaser.Scene {
     create() {
         console.log('GAME OVER');
         
-        this.add.text(game.config.width/2, game.config.height/2, "YOU DIED YOU DUMBASS", {fontSize: "50px", color: "#FACADE"}).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2, "YOU DIED", {fontSize: "50px", color: "#FACADE"}).setOrigin(0.5);
     }
 
     update(){

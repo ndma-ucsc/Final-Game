@@ -4,6 +4,7 @@ class Menu extends Phaser.Scene {
     }
 
     create() {
+        this.cameras.main.fadeIn(1500);
         console.log("Inside Menu Scene");
 
         // Ninja idle Right

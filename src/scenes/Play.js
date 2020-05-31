@@ -31,16 +31,15 @@ class Play extends Phaser.Scene{
         this.JUMP_MAX = 1;
 
         //Sound FX Implemented
-        this.jumpSFX = this.sound.add('jump', { volume: 0.1 });
-        this.pauseOnSFX = this.sound.add('pauseOn', { volume: 1 });
-        this.pauseOffSFX = this.sound.add('pauseOff', { volume: 1 });
-        this.landSFX = this.sound.add('land', { volume: 1 });
-        this.slowSFX = this.sound.add('slow', { volume: 1, loop: true });
-        this.wallSFX = this.sound.add('wall', { volume: 0.1 });
-        this.deathSFX = this.sound.add('death', { volume: 0.8 });
-        this.ricochetSFX = this.sound.add('ricochet', { volume: 0.5 });
-        this.laserSFX = this.sound.add('laser', { volume: 0.5 });
-        this.backgroundMusic = this.sound.add('cyberpunk', { volume: 0.3, loop: true });
+        this.jumpSFX = this.sound.add('jump', { volume: sfx_volume});
+        this.pauseOnSFX = this.sound.add('pauseOn', { volume: sfx_volume});
+        this.pauseOffSFX = this.sound.add('pauseOff', { volume: sfx_volume});
+        this.landSFX = this.sound.add('land', { volume: sfx_volume});
+        this.slowSFX = this.sound.add('slow', { volume: sfx_volume});
+        this.wallSFX = this.sound.add('wall', { volume: sfx_volume});
+        this.deathSFX = this.sound.add('death', { volume: sfx_volume});
+        this.ricochetSFX = this.sound.add('ricochet', { volume: sfx_volume/2});
+        this.laserSFX = this.sound.add('laser', { volume: sfx_volume/2});
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
@@ -73,9 +72,6 @@ class Play extends Phaser.Scene{
         this.physics.add.collider(this.player, groundLayer)
         this.spawnEnemies(); 
         this.spawnBullet();
-
-        //play background music
-        this.backgroundMusic.play();
     }
         
     spawnEnemies(){
@@ -126,7 +122,7 @@ class Play extends Phaser.Scene{
     }
 
     moveUpdate(){
-        let justDownVal = Phaser.Input.Keyboard.JustDown(cursors.up);
+        let justDownVal = Phaser.Input.Keyboard.JustDown(keySPACE);
         //General Movement
         if (this.player.body.onFloor()){
             this.player.body.setMaxSpeed();
@@ -220,7 +216,7 @@ class Play extends Phaser.Scene{
         }
 
         //Jumping
-        if(Phaser.Input.Keyboard.DownDuration(cursors.up, 200) && this.jumps > 0) {
+        if(Phaser.Input.Keyboard.DownDuration(keySPACE, 200) && this.jumps > 0) {
             this.player.body.setVelocityY(this.jumpVelocity);
             this.jump = true;
             if(this.facing == 'left') {
@@ -232,7 +228,7 @@ class Play extends Phaser.Scene{
                 this.player.setSize(30,50,false).setOffset(40,10);
             }
         }
-        else if(Phaser.Input.Keyboard.UpDuration(cursors.up)) {
+        else if(Phaser.Input.Keyboard.UpDuration(keySPACE)) {
 	    	this.jumps--;
         }
         if(justDownVal && this.player.body.onFloor()){
@@ -368,7 +364,13 @@ class Play extends Phaser.Scene{
         this.player.alpha = 0;
 
         // death sequence
-        this.backgroundMusic.stop();
+        this.tweens.add({        // fade out
+            targets: bgMusic,
+            volume: 0,
+            ease: 'Linear',
+            duration: 400,
+        }); 
+        bgMusic.stop();
         this.deathSFX.play()
         // let death = this.add.sprite(this.player.x, this.player.y, 'death').setOrigin(1);
         // death.anims.play('death'); // explosion animation

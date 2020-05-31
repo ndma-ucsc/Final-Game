@@ -100,6 +100,9 @@ class Load extends Phaser.Scene {
     }
 
     create() {
+        //play background music
+        bgMusic = this.sound.add('cyberpunk', { volume: bg_volume, loop: true });
+        bgMusic.play();
         this.scene.start("menuScene");
     }
 }

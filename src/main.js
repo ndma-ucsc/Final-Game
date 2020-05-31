@@ -38,5 +38,6 @@ let game = new Phaser.Game(config);
 let keyF, keyP, keyLEFT, keyRIGHT, keyUP, keyDOWN, keyENTER, keySPACE, keyESC;
 let bgMusic;
 let volPt = 5;
-let bg_volume = 0.5;
+let bg_volume = 0.1;
+let sfx_volume = 0.1;
 let collisionDebug = false;
