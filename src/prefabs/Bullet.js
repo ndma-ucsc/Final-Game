@@ -10,8 +10,12 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
         this.body.setCircle(15, 10, 10);
         this.scene = scene;
 
-        this.angle = Phaser.Math.Angle.BetweenPoints(this, this.scene.player);
-        scene.physics.velocityFromRotation(this.angle, 300, this.body.velocity);
+        this.verticalError = 100;
+        this.horizontalError = 100;
+        this.angle = Phaser.Math.Angle.Between(this.x, this.y, 
+            this.scene.player.x + Phaser.Math.Between(-this.horizontalError, this.horizontalError), 
+            this.scene.player.y + Phaser.Math.Between(-this.verticalError, this.verticalError));
+        scene.physics.velocityFromRotation(this.angle, 800, this.body.velocity);
 
         this.ricochetCount = 0;
     }
