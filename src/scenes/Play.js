@@ -345,13 +345,13 @@ class Play extends Phaser.Scene{
                     duration: 500,
                     ease: 'Linear'
                 })
-                this.tweens.add({
-                    targets: bgMusic,
-                    volume: 0,
-                    duration: 500,
-                    ease: 'Linear'
-                })
-                bgMusic.pause();
+                // this.tweens.add({
+                //     targets: bgMusic,
+                //     volume: 0,
+                //     duration: 500,
+                //     ease: 'Linear'
+                // })
+                // bgMusic.pause();
                 this.anims.pauseAll();
                 this.scene.launch("optionScene");
             }
@@ -369,13 +369,13 @@ class Play extends Phaser.Scene{
                     duration: 500,
                     ease: 'Linear'
                 })
-                this.tweens.add({
-                    targets: bgMusic,
-                    volume: bg_volume,
-                    duration: 500,
-                    ease: 'Linear'
-                })
-                bgMusic.resume();
+                // this.tweens.add({
+                //     targets: bgMusic,
+                //     volume: bg_volume,
+                //     duration: 500,
+                //     ease: 'Linear'
+                // })
+                // bgMusic.resume();
                 this.player.body.enable = true;
                 this.anims.resumeAll();
                 this.scene.stop("optionScene");

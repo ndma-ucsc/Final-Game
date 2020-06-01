@@ -4,6 +4,8 @@ class Option extends Phaser.Scene {
     }
 
     create() {
+        console.log("Option Scene");
+        this.scene.bringToTop("optionScene");
         this.cameras.main.fadeIn(1500);
         this.volume_array = [0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1];
         this.sfx_array = [0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1];
@@ -122,7 +124,8 @@ class Option extends Phaser.Scene {
                     duration: 500
                 });
                 this.time.delayedCall(500,() => {
-                    this.scene.resume("menuScene");
+                    this.scene.stop("playScene");
+                    this.scene.start("menuScene");
                     this.scene.stop();
                 });
             }
