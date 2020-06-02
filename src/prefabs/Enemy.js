@@ -45,5 +45,18 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         {
             this.body.velocity.y *= -1;
         }
+
+        let changeXDirection = Phaser.Math.Between(0, 10000);
+        let changeYDirection = Phaser.Math.Between(0, 10000);
+        if(changeXDirection < 50)
+        {
+            console.log("Changed X");
+            this.body.velocity.x *= -1;
+        }
+        if(changeYDirection < 50)
+        {
+            console.log("Changed Y");
+            this.body.velocity.y *= -1; 
+        }
     }
 }

@@ -14,11 +14,12 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
         this.angle = Phaser.Math.Angle.Between(this.x, this.y, 
             this.scene.player.x + Phaser.Math.Between(-this.horizontalError, this.horizontalError), 
             this.scene.player.y + Phaser.Math.Between(-this.verticalError, this.verticalError));
-        scene.physics.velocityFromRotation(this.angle, 800, this.body.velocity);
+        scene.physics.velocityFromRotation(this.angle, 500, this.body.velocity);
 
         this.ricochetCount = 0;
     }
     update() {
+        //Stop movement if scene is paused
         if(!this.scene.paused && !this.scene.gameOver){
             this.body.enable = true;
         }
@@ -26,7 +27,7 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
         {
             this.body.enable = false;
         }
-        // if(this.body.blocked.left || this.body.blocked.up || this.body.blocked.down || this.body.blocked.right)
+
         if (!this.body.blocked.none)
         {
             this.scene.ricochetSFX.play();

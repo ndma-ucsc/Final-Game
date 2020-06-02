@@ -75,17 +75,24 @@ class Play extends Phaser.Scene{
         //create collider
         this.physics.add.collider(this.player, groundLayer)
         this.physics.add.collider(this.bullets, groundLayer);
-        this.spawnEnemies(); 
+        this.spawnRandomEnemies(3); 
         this.spawnBullet();
     }
         
-    spawnEnemies(){
+    spawnRandomEnemies(enemyCount){
         if (!this.paused && !this.gameOver){
             console.log("Spawned Enemies");
-            let enemy = new Enemy(this, game.config.width/2, game.config.height - 800, 'robot', -300, 0);
-            let enemy2 = new Enemy(this, game.config.width/2 - 200, game.config.height - 600, 'robot', -200, 0);
-            this.enemies.add(enemy);
-            this.enemies.add(enemy2);
+            for(let i = 0; i < enemyCount; i++)
+            {
+                let randomHeight = Phaser.Math.Between(0, game.config.height - 600);
+                let randomWidth = Phaser.Math.Between(0, game.config.width);
+                let randomXSpeed = Phaser.Math.Between(25, 100);
+                let randomYSpeed = Phaser.Math.Between(25, 100);
+                console.log(randomXSpeed);
+                console.log(randomYSpeed);
+                let enemy = new Enemy(this, randomWidth, randomHeight, 'robot', randomXSpeed, randomYSpeed);
+                this.enemies.add(enemy);
+            }
         }
     }
     
@@ -136,7 +143,6 @@ class Play extends Phaser.Scene{
                 this.facing = 'left';
                 this.player.setSize(35,40,false).setOffset(30,20); //setSize(width,height,center or nah) setOffset(x,y) <- Move the hitbox (x,y)
             }
-            
             else if (cursors.right.isDown){
                 this.player.body.setVelocityX(this.movementSpeed);
                 this.player.anims.play('runR',true);
