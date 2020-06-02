@@ -227,7 +227,13 @@ class Play extends Phaser.Scene{
         }
 
         //Jumping
-        if(Phaser.Input.Keyboard.DownDuration(keySPACE, 200) && this.jumps > 0) {
+        if (this.slowMotion){
+            this.jumpDuration = 1000;
+        }
+        else{
+            this.jumpDuration = 200;
+        }
+        if(Phaser.Input.Keyboard.DownDuration(keySPACE, this.jumpDuration) && this.jumps > 0) {
             this.player.body.setVelocityY(this.jumpVelocity);
             this.jump = true;
             if(this.facing == 'left') {
