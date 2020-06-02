@@ -75,8 +75,28 @@ class Play extends Phaser.Scene{
         //create collider
         this.physics.add.collider(this.player, groundLayer)
         this.physics.add.collider(this.bullets, groundLayer);
-        this.spawnRandomEnemies(4); 
+
+        this.spawnRandomEnemies(3); 
         this.spawnBullet();
+        this.dashing();   
+    }
+
+    update(){
+        // this.powerUp.x = this.player.x;
+        // this.powerUp.y = this.player.y;
+        this.pauseUpdate();
+        if (!this.paused && !this.gameOver){
+            this.physics.world.collide(this.player, this.enemies, this.collisionUpdate, null, this);
+            this.physics.world.collide(this.player, this.bullets, this.collisionUpdate, null, this);
+            this.moveUpdate();
+            this.slowMoUpdate();
+            if (this.player.x > 830 || this.player.x < 123){
+                this.player.setTint(0x045D57);
+            }
+            else{
+                this.player.setTint();
+            }
+        }
     }
         
     spawnRandomEnemies(enemyCount){
@@ -112,28 +132,10 @@ class Play extends Phaser.Scene{
             })
         });
     }
-    
-    update(){
-        // this.powerUp.x = this.player.x;
-        // this.powerUp.y = this.player.y;
-        this.pauseUpdate();
-        if (!this.paused && !this.gameOver){
-            this.physics.world.collide(this.player, this.enemies, this.collisionUpdate, null, this);
-            this.physics.world.collide(this.player, this.bullets, this.collisionUpdate, null, this);
-            this.moveUpdate();
-            this.slowMoUpdate();
-            if (this.player.x > 830 || this.player.x < 123){
-                this.player.setTint(0x045D57);
-            }
-            else{
-                this.player.setTint();
-            }
-        }
-    }
 
     moveUpdate(){
         let justDownVal = Phaser.Input.Keyboard.JustDown(keySPACE);
-        //General Movement
+        //On ground
         if (this.player.body.onFloor()){
             this.player.body.setMaxSpeed();
             this.jumps = this.JUMP_MAX;
@@ -160,9 +162,9 @@ class Play extends Phaser.Scene{
                     this.player.anims.play('idleR',true);
                     this.player.setSize(30,60).setOffset(40,0);
                 }
-                
             }
             
+            //While in the air
             if (!this.isGrounded){
                 this.landSFX.play();
                 if(this.facing == 'left') {
@@ -309,7 +311,7 @@ class Play extends Phaser.Scene{
             if (this.slowMotion == false){
                 console.log("Slow Mo On");
                 this.slowSFX.play();
-                this.slowMotion = true;
+                //game.config.physics.gravity.y /= 5;
 
                 //Slow down certain sounds when in slow mo
                 this.laserSFX.rate = 1/this.slowSpeed;
@@ -318,11 +320,14 @@ class Play extends Phaser.Scene{
                 this.ricochetSFX.rate = 1/this.slowSpeed;
 
                 this.physics.world.timeScale = this.slowSpeed;
+                this.time.timeScale = 1/this.slowSpeed;
+
+                this.slowMotion = true;
             }
             else if (this.slowMotion == true){
                 console.log("Slow Mo Off");
                 this.slowSFX.stop();
-                this.slowMotion = false;
+                //game.config.physics.gravity.y *= 5;
 
                 //Set sounds back to normal
                 this.laserSFX.rate = 1;
@@ -331,6 +336,9 @@ class Play extends Phaser.Scene{
                 this.ricochetSFX.rate = 1;
 
                 this.physics.world.timeScale = 1;
+                this.time.timeScale = 1;
+
+                this.slowMotion = false;
             }
         }
     }
@@ -417,5 +425,59 @@ class Play extends Phaser.Scene{
 
         this.cameras.main.fadeOut(2000);
         this.time.delayedCall(2000, () => {this.scene.start("gameOverScene");});
+    }
+
+    dashing(){
+        let dashLeft = this.input.keyboard.createCombo([cursors.left, cursors.left], {
+            resetOnWrongKey: true,
+            maxKeyDelay: 200,
+            resetOnMatch: true,
+            deleteOnMatch: false
+        });
+
+        let dashRight = this.input.keyboard.createCombo([cursors.right, cursors.right], {
+            resetOnWrongKey: true,
+            maxKeyDelay: 200,
+            resetOnMatch: true,
+            deleteOnMatch: false
+        });
+
+        this.input.keyboard.on('keycombomatch', (combo, event) => {
+            if (combo === dashLeft) { 
+                if (!this.isGrounded) {
+                    this.player.anims.play('runL',true);
+                    this.player.body.allowGravity = false;
+                    this.player.body.setVelocityY(0);
+                    this.player.body.setVelocityX(-this.movementSpeed);
+                    this.player.body.setAccelerationX(-this.airSpeed * 50);
+                    console.log("DASHED LEFT");
+                    this.time.addEvent({
+                        delay: 300,
+                        callback: ()=> {
+                            this.player.body.allowGravity = true;
+                        }
+                    })
+                }
+            }
+            
+            if (combo === dashRight) {
+                if (!this.isGrounded) {
+                    this.player.anims.play('runR',true);
+                    this.player.body.allowGravity = false;
+                    this.player.body.setVelocityY(0);
+                    this.player.body.setVelocityX(this.movementSpeed);
+                    this.player.body.setAccelerationX(this.airSpeed * 50);
+                    console.log("DASHED RIGHT");
+                    this.time.addEvent({
+                        delay: 300,
+                        callback: ()=> {
+                            this.player.body.allowGravity = true;
+                        }
+                    })
+                }
+                
+            }   
+        });
+
     }
 }
