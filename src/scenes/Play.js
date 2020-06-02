@@ -74,6 +74,7 @@ class Play extends Phaser.Scene{
 
         //create collider
         this.physics.add.collider(this.player, groundLayer)
+        this.physics.add.collider(this.bullets, groundLayer);
         this.spawnEnemies(); 
         this.spawnBullet();
     }
