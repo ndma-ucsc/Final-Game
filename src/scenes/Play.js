@@ -100,6 +100,10 @@ class Play extends Phaser.Scene{
                 this.player.setTint();
             }
         }
+        if(!this.gameOver)
+        {
+            this.musicUpdate();
+        }
         this.checkWin();
     }
         
@@ -112,8 +116,6 @@ class Play extends Phaser.Scene{
                 let randomWidth = Phaser.Math.Between(0, game.config.width);
                 let randomXSpeed = Phaser.Math.Between(25, 100);
                 let randomYSpeed = Phaser.Math.Between(25, 100);
-                console.log(randomXSpeed);
-                console.log(randomYSpeed);
                 let enemy = new Enemy(this, randomWidth, randomHeight, 'robot', randomXSpeed, randomYSpeed);
                 this.enemies.add(enemy);
             }
@@ -427,7 +429,7 @@ class Play extends Phaser.Scene{
             volume: 0,
             ease: 'Linear',
             duration: 400,
-        }); 
+        });
         bgMusic.stop();
         this.deathSFX.play()
         // let death = this.add.sprite(this.player.x, this.player.y, 'death').setOrigin(1);
@@ -489,9 +491,20 @@ class Play extends Phaser.Scene{
             }   
         });
     }
-
+    musicUpdate()
+    {
+        if(!bgMusic.isPlaying)
+        {
+            nextSong = Phaser.Math.RND.pick(songList);
+            while(bgMusic.key == nextSong)
+            {
+                nextSong = Phaser.Math.RND.pick(songList);
+            }
+            bgMusic = this.sound.add(nextSong);
+            bgMusic.play();
+            console.log("Now Playing: " + nextSong);
+        }
+    }
     checkWin(){
-        
-         
     }
 }
