@@ -69,6 +69,10 @@ class Load extends Phaser.Scene {
         this.load.audio('Kevlar Boys', 'Resonancedj & Giulio Maddaloni- Kevlar Boys.mp3');
         this.load.audio('Beamin', 'Strong Suit- Beamin.mp3');
         this.load.audio('Gumption Junction', 'Morphamish- Gumption Junction.mp3');
+        this.load.audio('Ragnarok', 'Fengir- Ragnarok.mp3');
+        this.load.audio('Ducky', 'SPCZ- Ducky.mp3');
+        this.load.audio('Assault', 'SPCZ- Assault.mp3');
+        this.load.audio('Lorry', 'Taseh- Lorry.mp3');
 
         this.load.path = "./assets/player/";
         this.load.spritesheet('runRight', 'run_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 7});

@@ -14,7 +14,9 @@ class Menu extends Phaser.Scene {
         this.option = this.add.text(game.config.width/2, game.config.height/2 + 60, "OPTION", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
         this.generateFrameAnimation();
 
-        songList = ["Bad Flower", "Panda", "Action Breakbeat", "Followed", "Turbo Giant", "Croissant Funk", "Kevlar Boys", "Beamin", "Gumption Junction"];
+        songList = ["Bad Flower", "Panda", "Action Breakbeat", 
+        "Followed", "Turbo Giant", "Croissant Funk", "Kevlar Boys", "Beamin", "Morphamish", "Ragnarok",
+        "Ducky", "Assault", "Lorry"];
         nextSong = Phaser.Math.RND.pick(songList);
         console.log("Now Playing: " + nextSong);
         bgMusic = this.sound.add(nextSong);
