@@ -37,6 +37,8 @@ let game = new Phaser.Game(config);
 // reserve some keyboard variables
 let keyF, keyP, keyLEFT, keyRIGHT, keyUP, keyDOWN, keyENTER, keySPACE, keyESC;
 let bgMusic;
+let songList;
+let nextSong;
 let volPt = 5;
 let sfxPt = 2
 let bg_volume = volPt/10;
