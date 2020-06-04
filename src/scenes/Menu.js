@@ -163,5 +163,13 @@ class Menu extends Phaser.Scene {
             frameRate: 1,
             repeat: 0
         });
+
+        // Oil Can spinning
+        this.anims.create({
+            key: 'spin',
+            frames: this.anims.generateFrameNumbers('oilcan', {start: 0, end: 7, first: 0}),
+            frameRate: 5,
+            repeat: 0
+        });
     }
 }
