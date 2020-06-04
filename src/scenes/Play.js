@@ -2,6 +2,9 @@ class Play extends Phaser.Scene{
     constructor(){
         super("playScene");
     }
+    init (data){
+        this.level = data.level;
+    }
 
     create(){
         console.log("Play Scene");
@@ -61,24 +64,24 @@ class Play extends Phaser.Scene{
         this.player.body.collideWorldBounds = true;
 
         //add a tile map
-        const map = this.add.tilemap("platform_map");
+        const map = this.add.tilemap(`level_map_${this.level}`);
 
         //add a tileset
-        const tileset = map.addTilesetImage("level_tileset", "tile1");
+        const tileset = map.addTilesetImage(`level_tileset_${this.level}`, "tiles");
 
         //create static layer
-        const groundLayer = map.createStaticLayer("Platforms", tileset, 0, 0);
+        const platformLayer = map.createStaticLayer("Platforms", tileset, 0, 0);
 
         //set map collision
-        groundLayer.setCollision([1]);
+        platformLayer.setCollision([1]);
 
         //create collider
-        this.physics.add.collider(this.player, groundLayer)
-        this.physics.add.collider(this.bullets, groundLayer);
+        this.physics.add.collider(this.player, platformLayer)
+        this.physics.add.collider(this.bullets, platformLayer);
 
-        this.spawnRandomEnemies(0); 
+        this.spawnRandomEnemies(this.level); 
         this.spawnBullet();
-        this.dashing();   
+        this.dashing();
     }
 
     update(){
@@ -101,6 +104,7 @@ class Play extends Phaser.Scene{
         {
             this.musicUpdate();
         }
+        this.checkWin();
     }
         
     spawnRandomEnemies(enemyCount){
@@ -272,7 +276,7 @@ class Play extends Phaser.Scene{
                         this.player.setSize(30,50,false).setOffset(40,10);
                     }
                 }
-                if (justDownVal){
+                if (justDownVal){ // Wall Jump
                     console.log("Left Wall Jump");
                     this.wallSFX.play();
                     this.player.play('jumpR',true);
@@ -297,7 +301,7 @@ class Play extends Phaser.Scene{
                         this.player.setSize(30,50,false).setOffset(25,10);
                     }
                 }
-                if (justDownVal){
+                if (justDownVal){ // Wall Jump
                     console.log("Right Wall Jump");
                     this.wallSFX.play();
                     this.player.play('jumpL',true);
@@ -487,7 +491,6 @@ class Play extends Phaser.Scene{
             }   
         });
     }
-
     musicUpdate()
     {
         if(!bgMusic.isPlaying)
@@ -501,5 +504,7 @@ class Play extends Phaser.Scene{
             bgMusic.play();
             console.log("Now Playing: " + nextSong);
         }
+    }
+    checkWin(){
     }
 }
