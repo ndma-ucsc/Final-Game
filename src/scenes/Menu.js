@@ -6,7 +6,7 @@ class Menu extends Phaser.Scene {
     create() {
         console.log("Menu Scene");
         if (!bgMusic.isPlaying){
-            bgMusic = this.sound.add('cyberpunk', {volume: bg_volume, loop: true});
+            bgMusic = this.sound.add('Bad Flower', {volume: bg_volume, loop: true});
             bgMusic.play();
         }
         this.input.keyboard.enabled = false;

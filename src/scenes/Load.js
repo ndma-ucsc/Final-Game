@@ -60,7 +60,15 @@ class Load extends Phaser.Scene {
         });
 
         this.load.path = "./assets/music/";
-        this.load.audio('cyberpunk', 'Cyberpunk(MaxBrhon).mp3');
+        this.load.audio('Bad Flower', 'Bisou- Bad Flower.mp3');
+        this.load.audio('Panda', 'Bisou- Panda.mp3');
+        this.load.audio('Action Breakbeat', 'Bill Vortex- Action Breakbeat.mp3');
+        this.load.audio('Followed', 'Shaolin Dub- Followed.mp3');
+        this.load.audio('Turbo Giant', 'Wankers United- Turbo Giant.mp3');
+        this.load.audio('Croissant Funk', 'Wankers United- Croissant Funk.mp3');
+        this.load.audio('Kevlar Boys', 'Resonancedj & Giulio Maddaloni- Kevlar Boys.mp3');
+        this.load.audio('Beamin', 'Strong Suit- Beamin.mp3');
+        this.load.audio('Morphamish', 'Morphamish- Gumption Junction.mp3');
 
         this.load.path = "./assets/player/";
         this.load.spritesheet('runRight', 'run_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 7});
@@ -100,8 +108,7 @@ class Load extends Phaser.Scene {
     }
 
     create() {
-        //play background music
-        bgMusic = this.sound.add('cyberpunk', { volume: bg_volume, loop: true });
+        bgMusic = this.sound.add(Phaser.Math.RND.pick(["Bad Flower", "Panda", "Action Breakbeat", "Followed", "Turbo Giant", "Croissant Funk", "Kevlar Boys", "Beamin", "Morphamish"]));
         bgMusic.play();
         this.scene.start("menuScene");
     }
