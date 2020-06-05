@@ -9,9 +9,44 @@ class Play extends Phaser.Scene{
     create(){
         this.cameras.main.fadeIn(1000);
         this.input.keyboard.enabled = true;
+        var _player;
+        var _gameOver = false;
+        var _inputKeyboard = this.input.keyboard;
+        var _tweens = this.tweens;
+        var _deathSFX;
+        var _cam = this.cameras.main;
+        var _time = this.time;
+        var _emitter;
+
+        //emitter overlap check
+        this.particleHit = {
+            contains: function (x, y)
+            {
+                if (_player.body.hitTest(x, y)) {
+                    _player.body.enable = false;
+                    _inputKeyboard.enabled = false;
+                    _gameOver = true; // turn off collision checking
+                    _player.alpha = 0;
+
+                    // death sequence
+                    _tweens.add({        // fade out
+                        targets: bgMusic,
+                        volume: 0,
+                        ease: 'Linear',
+                        duration: 400,
+                    }); 
+                    bgMusic.stop();
+                    _deathSFX.play()
+
+                    _cam.fadeOut(2000);
+                    _time.delayedCall(2000, () => {game.scene.start("gameOverScene");});
+                }
+            }
+        };
+        
         this.zawarudo = this.add.image(0, 0,'gray');
         this.player = this.physics.add.sprite(game.config.width/2, game.config.height, 'player');
-        
+        _player = this.player;
         this.boss = new Boss(this, game.config.width/2, 20, 'boss').setScale(1, 1).setOrigin(0,0);
         this.enemies = this.add.group({
             runChildUpdate: true    //Make sure update runs on group children
@@ -108,6 +143,9 @@ class Play extends Phaser.Scene{
         this.startFiring = 0;
         this.radius = 1;
 
+        _gameOver = this.gameOver;
+        
+
         //Sound FX Implemented
         this.jumpSFX = this.sound.add('jump', {volume: sfx_volume});
         this.pauseOnSFX = this.sound.add('pauseOn', {volume: sfx_volume});
@@ -118,6 +156,8 @@ class Play extends Phaser.Scene{
         this.deathSFX = this.sound.add('death', {volume: sfx_volume});
         this.ricochetSFX = this.sound.add('ricochet', {volume: sfx_volume/2});
         this.laserSFX = this.sound.add('laser', {volume: sfx_volume/2});
+
+        _deathSFX = this.deathSFX;
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
@@ -145,6 +185,8 @@ class Play extends Phaser.Scene{
         //Player will not fall out of the screen
         this.player.body.collideWorldBounds = true;
 
+        
+
         //add a tile map
         const map = this.add.tilemap(`level_map_${this.level}`);
 
@@ -157,8 +199,32 @@ class Play extends Phaser.Scene{
         //set map collision
         platformLayer.setCollision([1]);
 
+        var rect = new Phaser.Geom.Rectangle(0, -50, 960, 1);
+        this.particles = this.add.particles('oilcan');
+        // this.particles.anims.play('spin',true);
+        this.emitter = this.particles.createEmitter({
+            lifespan: 4000,
+            //angle: { min: 225, max: 315 },
+            speed: { min: 50, max: 200 },
+            scale: 1.2,
+            gravityY: 300,
+            //delay: 3000,
+            timeScale: 1,
+            bounce: 0.9,
+            quantity: 1,
+            frequency: 500, //higher = less
+            bounds: { x: 0, y: 0, w: 960, h: 1024 },
+            collideTop: false,
+            collideBottom: false,
+            emitZone: { source: rect },
+            deathZone: { type: 'onEnter', source: this.particleHit }
+        });
+        _emitter = this.emitter;
+
+        
+
         //create collider
-        this.physics.add.collider(this.player, platformLayer)
+        this.physics.add.collider(this.player, platformLayer);
         this.physics.add.collider(this.bullets, platformLayer);
 
         this.spawnRandomEnemies(this.level); 
@@ -207,6 +273,7 @@ class Play extends Phaser.Scene{
         if (!this.paused && !this.gameOver){
             this.physics.world.collide(this.player, this.enemies, this.collisionUpdate, null, this);
             this.physics.world.collide(this.player, this.bullets, this.collisionUpdate, null, this);
+            
             this.moveUpdate();
             this.slowMoUpdate();
             this.freezeUpdate();
@@ -393,11 +460,12 @@ class Play extends Phaser.Scene{
                     this.facing = 'right';
                 }
                 else{
-                    this.wallCling = false;
-                    if(this.facing == 'right' && this.jump == false) {
+                    if(this.wallCling) {
                         this.player.anims.play('fallingR',true);
                         this.player.setSize(30,50,false).setOffset(40,10);
                     }
+                    this.wallCling = false;
+                    
                 }
                 if (justDownVal){ // Wall Jump
                     console.log("Left Wall Jump");
@@ -418,11 +486,11 @@ class Play extends Phaser.Scene{
                     this.facing = 'left';
                 }
                 else{
-                    this.wallCling = false;
-                    if(this.facing == 'left' && this.jump == false) {
+                    if(this.wallCling) {
                         this.player.anims.play('fallingL',true);
                         this.player.setSize(30,50,false).setOffset(25,10);
                     }
+                    this.wallCling = false;
                 }
                 if (justDownVal){ // Wall Jump
                     console.log("Right Wall Jump");
@@ -456,12 +524,16 @@ class Play extends Phaser.Scene{
 
                 this.physics.world.timeScale = this.slowSpeed;
                 this.time.timeScale = 1/this.slowSpeed;
+                this.emitter.timeScale = 0.3;
+                this.emitter.setLifespan(15000);
                 this.boss.slowmo();
                 this.slowMotion = true;
 
             }
             else if (this.slowMotion == true){
                 console.log("Slow Mo Off");
+                this.emitter.timeScale = 1;
+                this.emitter.setLifespan(4000);
                 this.slowSFX.stop();
                 //game.config.physics.gravity.y *= 5;
 
@@ -500,6 +572,7 @@ class Play extends Phaser.Scene{
             if (!this.gameOver && this.paused == false){
                 console.log("Game Paused");
                 this.paused = true;
+                this.emitter.timeScale = 0;
                 this.pauseOnSFX.play();
                 if(this.slowMotion)
                 {
@@ -525,6 +598,7 @@ class Play extends Phaser.Scene{
             else if (!this.gameOver && this.paused == true){
                 console.log("Game Unpaused");
                 this.paused = false;
+                this.emitter.timeScale = 1;
                 this.pauseOffSFX.play();
                 if(this.slowMotion)
                 {

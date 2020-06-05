@@ -105,6 +105,7 @@ class Load extends Phaser.Scene {
         this.load.image("tiles", "tile1.png");
         this.load.image("robot", "robot.png");
         this.load.image("ball", "ball.png");
+        this.load.spritesheet("oilcan", "Oilcan.png", {frameWidth: 46.5, frameHeight: 33, startFrame: 0, endFrame: 7});
         this.load.image('hitbox', 'balls.png');
         this.load.image('gray', 'Zawarudo.png');
 
