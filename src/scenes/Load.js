@@ -66,9 +66,12 @@ class Load extends Phaser.Scene {
         this.load.audio('Followed', 'Shaolin Dub- Followed.mp3');
         this.load.audio('Turbo Giant', 'Wankers United- Turbo Giant.mp3');
         this.load.audio('Croissant Funk', 'Wankers United- Croissant Funk.mp3');
-        this.load.audio('Kevlar Boys', 'Resonancedj & Giulio Maddaloni- Kevlar Boys.mp3');
         this.load.audio('Beamin', 'Strong Suit- Beamin.mp3');
-        this.load.audio('Morphamish', 'Morphamish- Gumption Junction.mp3');
+        this.load.audio('Gumption Junction', 'Morphamish- Gumption Junction.mp3');
+        this.load.audio('Ragnarok', 'Fengir- Ragnarok.mp3');
+        this.load.audio('Ducky', 'SPCZ- Ducky.mp3');
+        this.load.audio('Assault', 'SPCZ- Assault.mp3');
+        this.load.audio('Lorry', 'Taseh- Lorry.mp3');
 
         this.load.path = "./assets/player/";
         this.load.spritesheet('runRight', 'run_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 7});
@@ -103,14 +106,14 @@ class Load extends Phaser.Scene {
         this.load.image("robot", "robot.png");
         this.load.image("ball", "ball.png");
         this.load.spritesheet("oilcan", "Oilcan.png", {frameWidth: 46.5, frameHeight: 33, startFrame: 0, endFrame: 7});
+        this.load.image('hitbox', 'balls.png');
+        this.load.image('gray', 'Zawarudo.png');
 
         this.load.path = "./assets/tile_map/";
         this.load.tilemapTiledJSON("level_map_1", "tilemap01.json");
     }
 
     create() {
-        bgMusic = this.sound.add(Phaser.Math.RND.pick(["Bad Flower", "Panda", "Action Breakbeat", "Followed", "Turbo Giant", "Croissant Funk", "Kevlar Boys", "Beamin", "Morphamish"]));
-        bgMusic.play();
         this.scene.start("menuScene");
     }
 }

@@ -4,11 +4,6 @@ class Menu extends Phaser.Scene {
     }
 
     create() {
-        console.log("Menu Scene");
-        if (!bgMusic.isPlaying){
-            bgMusic = this.sound.add('Bad Flower', {volume: bg_volume, loop: true});
-            bgMusic.play();
-        }
         this.input.keyboard.enabled = false;
         this.cameras.main.fadeIn(1000);
         this.time.delayedCall(1000, () => {this.input.keyboard.enabled = true;});
@@ -16,8 +11,6 @@ class Menu extends Phaser.Scene {
         this.start = this.add.text(game.config.width/2, game.config.height/2, "START", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
         this.option = this.add.text(game.config.width/2, game.config.height/2 + 60, "OPTION", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
         this.generateFrameAnimation();
-
-
     }
 
     update(){

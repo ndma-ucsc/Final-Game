@@ -7,7 +7,6 @@ class Play extends Phaser.Scene{
     }
 
     create(){
-        console.log("Play Scene");
         this.cameras.main.fadeIn(1000);
         this.input.keyboard.enabled = true;
         var _player;
@@ -45,14 +44,82 @@ class Play extends Phaser.Scene{
             }
         };
         
+        this.zawarudo = this.add.image(0, 0,'gray');
         this.player = this.physics.add.sprite(game.config.width/2, game.config.height, 'player');
         _player = this.player;
+        this.boss = new Boss(this, game.config.width/2, 20, 'boss').setScale(1, 1).setOrigin(0,0);
         this.enemies = this.add.group({
             runChildUpdate: true    //Make sure update runs on group children
         });
         this.bullets = this.add.group({
             runChildUpdate: true,
             frameQuantity: 10
+        });
+        //energy balls
+        this.bombs = this.physics.add.group({
+            active: true,
+            visible: false,
+            key:'ball',
+            frameQuantity: 8,
+            collideWorldBounds: false,
+            immovable: true,
+            allowGravity: false,
+            classType: Boss
+        });
+        //hitbox
+        this.bombsHitbox = this.physics.add.group({
+            active: true,
+            visible: false,
+            key:'hitbox',
+            frameQuantity: 8,
+            collideWorldBounds: false,
+            immovable: true,
+            allowGravity: false,
+            classType: Boss
+        });
+        //energy balls
+        this.bombs2 = this.physics.add.group({
+            active: true,
+            visible: false,
+            key:'ball',
+            frameQuantity: 24,
+            collideWorldBounds: false,
+            immovable: true,
+            allowGravity: false,
+            classType: Boss
+        });
+        //hitbox
+        this.bombsHitbox2 = this.physics.add.group({
+            active: true,
+            visible: false,
+            key:'hitbox',
+            frameQuantity: 24,
+            collideWorldBounds: false,
+            immovable: true,
+            allowGravity: false,
+            classType: Boss
+        });
+        //energy balls
+        this.bombs3 = this.physics.add.group({
+            active: true,
+            visible: false,
+            key:'ball',
+            frameQuantity: 30,
+            collideWorldBounds: false,
+            immovable: true,
+            allowGravity: false,
+            classType: Boss
+        });
+        //hitbox
+        this.bombsHitbox3 = this.physics.add.group({
+            active: true,
+            visible: false,
+            key:'hitbox',
+            frameQuantity: 30,
+            collideWorldBounds: false,
+            immovable: true,
+            allowGravity: false,
+            classType: Boss
         });
         // this.powerUp = this.add.sprite(this.player.x, this.player.y, "null").setOrigin(0.5);
 
@@ -70,8 +137,11 @@ class Play extends Phaser.Scene{
         this.falling = false;
         this.jumps;
         this.JUMP_MAX = 1;
+        this.dashCooldown = false;
         this.paused = false;
         this.gameOver = false;
+        this.startFiring = 0;
+        this.radius = 1;
 
         _gameOver = this.gameOver;
         
@@ -92,14 +162,25 @@ class Play extends Phaser.Scene{
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+        keyX = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+
         //Background
         this.add.image(0, 0, 'background1').setOrigin(0, 0).setDepth(-10);
         this.add.image(0, 0, 'light').setOrigin(0, 0);
+
+        //Background Music
+        songList = ["Bad Flower", "Panda", "Action Breakbeat", 
+        "Followed", "Turbo Giant", "Croissant Funk", "Beamin", "Gumption Junction", "Ragnarok",
+        "Ducky", "Assault", "Lorry"];
+        nextSong = Phaser.Math.RND.pick(songList);
+        bgMusic = this.sound.add(nextSong);
+        bgMusic.play();
+        console.log("Now Playing: " + nextSong);
 
         //Player will not fall out of the screen
         this.player.body.collideWorldBounds = true;
@@ -149,11 +230,45 @@ class Play extends Phaser.Scene{
         this.spawnRandomEnemies(this.level); 
         this.spawnBullet();
         this.dashing();
+        this.createCircle();
+
+        this.physics.add.overlap(this.player, this.bombsHitbox, () => {
+            //this.sound.play('sfx_explosion');
+            this.collisionUpdate();
+        });
+        this.physics.add.overlap(this.player, this.bombsHitbox2, () => {
+            //this.sound.play('sfx_explosion');
+            this.collisionUpdate();
+        });
+        this.physics.add.overlap(this.player, this.bombsHitbox3, () => {
+            //this.sound.play('sfx_explosion');
+            this.collisionUpdate();
+        });
+
+        this.time.addEvent({ delay: 3000, callback: () => {
+            this.startFiring++;
+        }, callbackScope: this, loop: true });
     }
 
     update(){
         // this.powerUp.x = this.player.x;
         // this.powerUp.y = this.player.y;
+        if(this.slowMotion) {
+            this.player.anims.msPerFrame = 300;
+            if(this.radius <= 1000) {
+                this.radius = this.radius + 80;
+                this.zawarudo.setScale(this.radius);
+            }
+        }
+        else if(!this.slowMotion) {
+            this.player.anims.msPerFrame = 130;
+            if(this.radius > 1) {
+                this.radius = this.radius - 80;
+                this.zawarudo.setScale(this.radius);
+            }
+        }
+        this.zawarudo.x = this.player.x;
+        this.zawarudo.y = this.player.y;
         this.pauseUpdate();
         if (!this.paused && !this.gameOver){
             this.physics.world.collide(this.player, this.enemies, this.collisionUpdate, null, this);
@@ -161,12 +276,23 @@ class Play extends Phaser.Scene{
             
             this.moveUpdate();
             this.slowMoUpdate();
+            this.freezeUpdate();
+            if(this.startFiring >=2) {
+                this.bombs.getChildren().forEach(function() {
+                    this.bombs.setVisible(true);
+                }, this);
+                this.boss.update(this.bombs,this.bombs2,this.bombs3,this.startAngle,this.endAngle,this.bombsHitbox,this.bombsHitbox2,this.bombsHitbox3,this.single,this.playerHitbox,this.bossHitbox);
+            }
             if (this.player.x > 830 || this.player.x < 123){
                 this.player.setTint(0x045D57);
             }
             else{
                 this.player.setTint();
             }
+        }
+        if(!this.gameOver)
+        {
+            this.musicUpdate();
         }
         this.checkWin();
     }
@@ -180,8 +306,6 @@ class Play extends Phaser.Scene{
                 let randomWidth = Phaser.Math.Between(0, game.config.width);
                 let randomXSpeed = Phaser.Math.Between(25, 100);
                 let randomYSpeed = Phaser.Math.Between(25, 100);
-                console.log(randomXSpeed);
-                console.log(randomYSpeed);
                 let enemy = new Enemy(this, randomWidth, randomHeight, 'robot', randomXSpeed, randomYSpeed);
                 this.enemies.add(enemy);
             }
@@ -400,10 +524,11 @@ class Play extends Phaser.Scene{
 
                 this.physics.world.timeScale = this.slowSpeed;
                 this.time.timeScale = 1/this.slowSpeed;
-                
                 this.emitter.timeScale = 0.3;
                 this.emitter.setLifespan(15000);
+                this.boss.slowmo();
                 this.slowMotion = true;
+
             }
             else if (this.slowMotion == true){
                 console.log("Slow Mo Off");
@@ -417,13 +542,29 @@ class Play extends Phaser.Scene{
                 this.landSFX.rate = 1;
                 this.wallSFX.rate = 1;
                 this.ricochetSFX.rate = 1;
-
+                this.boss.speedUp();
                 this.physics.world.timeScale = 1;
                 this.time.timeScale = 1;
 
                 this.slowMotion = false;
             }
         }
+    }
+    freezeUpdate(){
+        let player = this.player;
+        //freeze
+        if (Phaser.Input.Keyboard.DownDuration(keyX, 5000)){
+            console.log("Freeze On");
+            this.slowSFX.play();
+            this.wallCling = false;
+            this.player.body.setVelocity(0, 0);
+            this.player.body.allowGravity = false;
+            this.player.body.setAcceleration(0, 0);
+            this.input.keyboard.on('keyup-X', function (event) {
+                player.body.allowGravity = true;
+            });
+        }
+
     }
 
     pauseUpdate(){
@@ -481,6 +622,7 @@ class Play extends Phaser.Scene{
                 this.scene.stop("optionScene");
                 cursors = this.input.keyboard.createCursorKeys();
                 keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+                keyX = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
                 keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
                 keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
                 keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -502,7 +644,7 @@ class Play extends Phaser.Scene{
             volume: 0,
             ease: 'Linear',
             duration: 400,
-        }); 
+        });
         bgMusic.stop();
         this.deathSFX.play()
         // let death = this.add.sprite(this.player.x, this.player.y, 'death').setOrigin(1);
@@ -528,13 +670,13 @@ class Play extends Phaser.Scene{
         });
 
         this.input.keyboard.on('keycombomatch', (combo, event) => {
-            if (combo === dashLeft) { 
-                if (!this.isGrounded) {
+            if (combo === dashLeft && this.dashCooldown == false) { 
+                if (!this.isGrounded && !this.paused) {
+                    this.dashCooldown = true;
                     this.player.anims.play('runL',true);
                     this.player.body.allowGravity = false;
                     this.player.body.setVelocityY(0);
-                    this.player.body.setVelocityX(-this.movementSpeed);
-                    this.player.body.setAccelerationX(-this.airSpeed * 50);
+                    this.player.body.setVelocityX(-this.movementSpeed * 2);
                     console.log("DASHED LEFT");
                     this.time.addEvent({
                         delay: 300,
@@ -542,16 +684,22 @@ class Play extends Phaser.Scene{
                             this.player.body.allowGravity = true;
                         }
                     })
+                    this.time.addEvent({
+                        delay: 1000,
+                        callback: ()=> {
+                            this.dashCooldown = false;
+                        }
+                    })
                 }
             }
             
-            if (combo === dashRight) {
-                if (!this.isGrounded) {
+            if (combo === dashRight && this.dashCooldown == false) {
+                if (!this.isGrounded && !this.paused) {
+                    this.dashCooldown = true;
                     this.player.anims.play('runR',true);
                     this.player.body.allowGravity = false;
                     this.player.body.setVelocityY(0);
-                    this.player.body.setVelocityX(this.movementSpeed);
-                    this.player.body.setAccelerationX(this.airSpeed * 50);
+                    this.player.body.setVelocityX(this.movementSpeed * 2);
                     console.log("DASHED RIGHT");
                     this.time.addEvent({
                         delay: 300,
@@ -559,14 +707,47 @@ class Play extends Phaser.Scene{
                             this.player.body.allowGravity = true;
                         }
                     })
-                }
-                
+                    this.time.addEvent({
+                        delay: 2000,
+                        callback: ()=> {
+                            this.dashCooldown = false;
+                        }
+                    })
+                }              
             }   
         });
     }
 
+    createCircle() {
+        this.startAngle = this.tweens.addCounter({
+            from: 0,
+            to: 6.28,
+            duration: 8000, //speed of rotation higher = slower
+            repeat: -1
+        })
+    
+        this.endAngle = this.tweens.addCounter({
+            from: 6.28,
+            to: 12.56,
+            duration: 8000, //speed of rotation higher = slowerd
+            repeat: -1
+        })
+    }
+
+    musicUpdate()
+    {
+        if(!bgMusic.isPlaying)
+        {
+            nextSong = Phaser.Math.RND.pick(songList);
+            while(bgMusic.key == nextSong)
+            {
+                nextSong = Phaser.Math.RND.pick(songList);
+            }
+            bgMusic = this.sound.add(nextSong);
+            bgMusic.play();
+            console.log("Now Playing: " + nextSong);
+        }
+    }
     checkWin(){
-        
-         
     }
 }
