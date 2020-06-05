@@ -91,21 +91,21 @@ class Play extends Phaser.Scene{
         // this.powerUp.x = this.player.x;
         // this.powerUp.y = this.player.y;
         if(this.slowMotion) {
-            this.player.anims.msPerFrame = 300;
+            
             if(this.radius <= 1000) {
                 this.radius = this.radius + 80;
                 this.zawarudo.setScale(this.radius);
             }
         }
         else if(!this.slowMotion) {
-            this.player.anims.msPerFrame = 130;
+            this.zawarudo.x = this.player.x;
+            this.zawarudo.y = this.player.y;
             if(this.radius > 1) {
                 this.radius = this.radius - 80;
                 this.zawarudo.setScale(this.radius);
             }
         }
-        this.zawarudo.x = this.player.x;
-        this.zawarudo.y = this.player.y;
+        
         this.pauseUpdate();
         if (!this.paused && !this.gameOver){
             this.physics.world.collide(this.player, this.enemies, this.collisionUpdate, null, this);
