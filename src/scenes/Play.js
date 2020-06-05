@@ -9,13 +9,82 @@ class Play extends Phaser.Scene{
     create(){
         this.cameras.main.fadeIn(1000);
         this.input.keyboard.enabled = true;
+        this.zawarudo = this.add.image(0, 0,'gray');
         this.player = this.physics.add.sprite(game.config.width/2, game.config.height, 'player');
+        
+        this.boss = new Boss(this, game.config.width/2, 20, 'boss').setScale(1, 1).setOrigin(0,0);
         this.enemies = this.add.group({
             runChildUpdate: true    //Make sure update runs on group children
         });
         this.bullets = this.add.group({
             runChildUpdate: true,
             frameQuantity: 10
+        });
+        //energy balls
+        this.bombs = this.physics.add.group({
+            active: true,
+            visible: false,
+            key:'ball',
+            frameQuantity: 8,
+            collideWorldBounds: false,
+            immovable: true,
+            allowGravity: false,
+            classType: Boss
+        });
+        //hitbox
+        this.bombsHitbox = this.physics.add.group({
+            active: true,
+            visible: false,
+            key:'hitbox',
+            frameQuantity: 8,
+            collideWorldBounds: false,
+            immovable: true,
+            allowGravity: false,
+            classType: Boss
+        });
+        //energy balls
+        this.bombs2 = this.physics.add.group({
+            active: true,
+            visible: false,
+            key:'ball',
+            frameQuantity: 24,
+            collideWorldBounds: false,
+            immovable: true,
+            allowGravity: false,
+            classType: Boss
+        });
+        //hitbox
+        this.bombsHitbox2 = this.physics.add.group({
+            active: true,
+            visible: false,
+            key:'hitbox',
+            frameQuantity: 24,
+            collideWorldBounds: false,
+            immovable: true,
+            allowGravity: false,
+            classType: Boss
+        });
+        //energy balls
+        this.bombs3 = this.physics.add.group({
+            active: true,
+            visible: false,
+            key:'ball',
+            frameQuantity: 30,
+            collideWorldBounds: false,
+            immovable: true,
+            allowGravity: false,
+            classType: Boss
+        });
+        //hitbox
+        this.bombsHitbox3 = this.physics.add.group({
+            active: true,
+            visible: false,
+            key:'hitbox',
+            frameQuantity: 30,
+            collideWorldBounds: false,
+            immovable: true,
+            allowGravity: false,
+            classType: Boss
         });
         // this.powerUp = this.add.sprite(this.player.x, this.player.y, "null").setOrigin(0.5);
 
@@ -36,6 +105,8 @@ class Play extends Phaser.Scene{
         this.dashCooldown = false;
         this.paused = false;
         this.gameOver = false;
+        this.startFiring = 0;
+        this.radius = 1;
 
         //Sound FX Implemented
         this.jumpSFX = this.sound.add('jump', {volume: sfx_volume});
@@ -51,6 +122,7 @@ class Play extends Phaser.Scene{
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+        keyX = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -92,17 +164,58 @@ class Play extends Phaser.Scene{
         this.spawnRandomEnemies(this.level); 
         this.spawnBullet();
         this.dashing();
+        this.createCircle();
+
+        this.physics.add.overlap(this.player, this.bombsHitbox, () => {
+            //this.sound.play('sfx_explosion');
+            this.collisionUpdate();
+        });
+        this.physics.add.overlap(this.player, this.bombsHitbox2, () => {
+            //this.sound.play('sfx_explosion');
+            this.collisionUpdate();
+        });
+        this.physics.add.overlap(this.player, this.bombsHitbox3, () => {
+            //this.sound.play('sfx_explosion');
+            this.collisionUpdate();
+        });
+
+        this.time.addEvent({ delay: 3000, callback: () => {
+            this.startFiring++;
+        }, callbackScope: this, loop: true });
     }
 
     update(){
         // this.powerUp.x = this.player.x;
         // this.powerUp.y = this.player.y;
+        if(this.slowMotion) {
+            this.player.anims.msPerFrame = 300;
+            if(this.radius <= 1000) {
+                this.radius = this.radius + 80;
+                this.zawarudo.setScale(this.radius);
+            }
+        }
+        else if(!this.slowMotion) {
+            this.player.anims.msPerFrame = 130;
+            if(this.radius > 1) {
+                this.radius = this.radius - 80;
+                this.zawarudo.setScale(this.radius);
+            }
+        }
+        this.zawarudo.x = this.player.x;
+        this.zawarudo.y = this.player.y;
         this.pauseUpdate();
         if (!this.paused && !this.gameOver){
             this.physics.world.collide(this.player, this.enemies, this.collisionUpdate, null, this);
             this.physics.world.collide(this.player, this.bullets, this.collisionUpdate, null, this);
             this.moveUpdate();
             this.slowMoUpdate();
+            this.freezeUpdate();
+            if(this.startFiring >=2) {
+                this.bombs.getChildren().forEach(function() {
+                    this.bombs.setVisible(true);
+                }, this);
+                this.boss.update(this.bombs,this.bombs2,this.bombs3,this.startAngle,this.endAngle,this.bombsHitbox,this.bombsHitbox2,this.bombsHitbox3,this.single,this.playerHitbox,this.bossHitbox);
+            }
             if (this.player.x > 830 || this.player.x < 123){
                 this.player.setTint(0x045D57);
             }
@@ -343,8 +456,9 @@ class Play extends Phaser.Scene{
 
                 this.physics.world.timeScale = this.slowSpeed;
                 this.time.timeScale = 1/this.slowSpeed;
-
+                this.boss.slowmo();
                 this.slowMotion = true;
+
             }
             else if (this.slowMotion == true){
                 console.log("Slow Mo Off");
@@ -356,13 +470,29 @@ class Play extends Phaser.Scene{
                 this.landSFX.rate = 1;
                 this.wallSFX.rate = 1;
                 this.ricochetSFX.rate = 1;
-
+                this.boss.speedUp();
                 this.physics.world.timeScale = 1;
                 this.time.timeScale = 1;
 
                 this.slowMotion = false;
             }
         }
+    }
+    freezeUpdate(){
+        let player = this.player;
+        //freeze
+        if (Phaser.Input.Keyboard.DownDuration(keyX, 5000)){
+            console.log("Freeze On");
+            this.slowSFX.play();
+            this.wallCling = false;
+            this.player.body.setVelocity(0, 0);
+            this.player.body.allowGravity = false;
+            this.player.body.setAcceleration(0, 0);
+            this.input.keyboard.on('keyup-X', function (event) {
+                player.body.allowGravity = true;
+            });
+        }
+
     }
 
     pauseUpdate(){
@@ -418,6 +548,7 @@ class Play extends Phaser.Scene{
                 this.scene.stop("optionScene");
                 cursors = this.input.keyboard.createCursorKeys();
                 keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+                keyX = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
                 keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
                 keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
                 keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -512,6 +643,23 @@ class Play extends Phaser.Scene{
             }   
         });
     }
+
+    createCircle() {
+        this.startAngle = this.tweens.addCounter({
+            from: 0,
+            to: 6.28,
+            duration: 8000, //speed of rotation higher = slower
+            repeat: -1
+        })
+    
+        this.endAngle = this.tweens.addCounter({
+            from: 6.28,
+            to: 12.56,
+            duration: 8000, //speed of rotation higher = slowerd
+            repeat: -1
+        })
+    }
+
     musicUpdate()
     {
         if(!bgMusic.isPlaying)
