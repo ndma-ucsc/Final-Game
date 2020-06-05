@@ -100,7 +100,6 @@ class Play extends Phaser.Scene{
         this.falling = false;
         this.jumps;
         this.JUMP_MAX = 1;
-        this.dashCooldown = false;
         this.paused = false;
         this.gameOver = false;
         this.startFiring = 0;
@@ -137,7 +136,7 @@ class Play extends Phaser.Scene{
 
         //Background Music
         songList = ["Bad Flower", "Panda", "Action Breakbeat", 
-        "Followed", "Turbo Giant", "Croissant Funk", "Beamin", "Gumption Junction", "Ragnarok",
+        "Followed", "Turbo Giant", "Croissant Funk", "Beamin", "Morphamish", "Ragnarok",
         "Ducky", "Assault", "Lorry"];
         nextSong = Phaser.Math.RND.pick(songList);
         bgMusic = this.sound.add(nextSong);
@@ -616,13 +615,13 @@ class Play extends Phaser.Scene{
         });
 
         this.input.keyboard.on('keycombomatch', (combo, event) => {
-            if (combo === dashLeft && this.dashCooldown == false) { 
+            if (combo === dashLeft) { 
                 if (!this.isGrounded && !this.paused) {
-                    this.dashCooldown = true;
                     this.player.anims.play('runL',true);
                     this.player.body.allowGravity = false;
                     this.player.body.setVelocityY(0);
-                    this.player.body.setVelocityX(-this.movementSpeed * 2);
+                    this.player.body.setVelocityX(-this.movementSpeed);
+                    this.player.body.setAccelerationX(-this.airSpeed * 50);
                     console.log("DASHED LEFT");
                     this.time.addEvent({
                         delay: 300,
@@ -630,22 +629,16 @@ class Play extends Phaser.Scene{
                             this.player.body.allowGravity = true;
                         }
                     })
-                    this.time.addEvent({
-                        delay: 1000,
-                        callback: ()=> {
-                            this.dashCooldown = false;
-                        }
-                    })
                 }
             }
             
-            if (combo === dashRight && this.dashCooldown == false) {
+            if (combo === dashRight) {
                 if (!this.isGrounded && !this.paused) {
-                    this.dashCooldown = true;
                     this.player.anims.play('runR',true);
                     this.player.body.allowGravity = false;
                     this.player.body.setVelocityY(0);
-                    this.player.body.setVelocityX(this.movementSpeed * 2);
+                    this.player.body.setVelocityX(this.movementSpeed);
+                    this.player.body.setAccelerationX(this.airSpeed * 50);
                     console.log("DASHED RIGHT");
                     this.time.addEvent({
                         delay: 300,
@@ -653,13 +646,8 @@ class Play extends Phaser.Scene{
                             this.player.body.allowGravity = true;
                         }
                     })
-                    this.time.addEvent({
-                        delay: 2000,
-                        callback: ()=> {
-                            this.dashCooldown = false;
-                        }
-                    })
-                }              
+                }
+                
             }   
         });
     }
