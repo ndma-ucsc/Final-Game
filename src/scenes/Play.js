@@ -7,7 +7,6 @@ class Play extends Phaser.Scene{
     }
 
     create(){
-        console.log("Play Scene");
         this.cameras.main.fadeIn(1000);
         this.input.keyboard.enabled = true;
         this.player = this.physics.add.sprite(game.config.width/2, game.config.height, 'player');
@@ -56,9 +55,19 @@ class Play extends Phaser.Scene{
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+
         //Background
         this.add.image(0, 0, 'background1').setOrigin(0, 0).setDepth(-10);
         this.add.image(0, 0, 'light').setOrigin(0, 0);
+
+        //Background Music
+        songList = ["Bad Flower", "Panda", "Action Breakbeat", 
+        "Followed", "Turbo Giant", "Croissant Funk", "Beamin", "Morphamish", "Ragnarok",
+        "Ducky", "Assault", "Lorry"];
+        nextSong = Phaser.Math.RND.pick(songList);
+        bgMusic = this.sound.add(nextSong);
+        bgMusic.play();
+        console.log("Now Playing: " + nextSong);
 
         //Player will not fall out of the screen
         this.player.body.collideWorldBounds = true;
@@ -456,7 +465,7 @@ class Play extends Phaser.Scene{
 
         this.input.keyboard.on('keycombomatch', (combo, event) => {
             if (combo === dashLeft) { 
-                if (!this.isGrounded) {
+                if (!this.isGrounded && !this.paused) {
                     this.player.anims.play('runL',true);
                     this.player.body.allowGravity = false;
                     this.player.body.setVelocityY(0);
@@ -473,7 +482,7 @@ class Play extends Phaser.Scene{
             }
             
             if (combo === dashRight) {
-                if (!this.isGrounded) {
+                if (!this.isGrounded && !this.paused) {
                     this.player.anims.play('runR',true);
                     this.player.body.allowGravity = false;
                     this.player.body.setVelocityY(0);

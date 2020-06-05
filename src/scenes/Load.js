@@ -66,7 +66,6 @@ class Load extends Phaser.Scene {
         this.load.audio('Followed', 'Shaolin Dub- Followed.mp3');
         this.load.audio('Turbo Giant', 'Wankers United- Turbo Giant.mp3');
         this.load.audio('Croissant Funk', 'Wankers United- Croissant Funk.mp3');
-        this.load.audio('Kevlar Boys', 'Resonancedj & Giulio Maddaloni- Kevlar Boys.mp3');
         this.load.audio('Beamin', 'Strong Suit- Beamin.mp3');
         this.load.audio('Gumption Junction', 'Morphamish- Gumption Junction.mp3');
         this.load.audio('Ragnarok', 'Fengir- Ragnarok.mp3');

@@ -4,8 +4,6 @@ class Menu extends Phaser.Scene {
     }
 
     create() {
-        console.log("Menu Scene");
-
         this.input.keyboard.enabled = false;
         this.cameras.main.fadeIn(1000);
         this.time.delayedCall(1000, () => {this.input.keyboard.enabled = true;});
@@ -13,14 +11,6 @@ class Menu extends Phaser.Scene {
         this.start = this.add.text(game.config.width/2, game.config.height/2, "START", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
         this.option = this.add.text(game.config.width/2, game.config.height/2 + 60, "OPTION", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
         this.generateFrameAnimation();
-
-        songList = ["Bad Flower", "Panda", "Action Breakbeat", 
-        "Followed", "Turbo Giant", "Croissant Funk", "Kevlar Boys", "Beamin", "Morphamish", "Ragnarok",
-        "Ducky", "Assault", "Lorry"];
-        nextSong = Phaser.Math.RND.pick(songList);
-        console.log("Now Playing: " + nextSong);
-        bgMusic = this.sound.add(nextSong);
-        bgMusic.play();
     }
 
     update(){
