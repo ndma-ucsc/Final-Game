@@ -9,44 +9,7 @@ class Play extends Phaser.Scene{
     create(){
         this.cameras.main.fadeIn(1000);
         this.input.keyboard.enabled = true;
-        var _player;
-        var _gameOver = false;
-        var _inputKeyboard = this.input.keyboard;
-        var _tweens = this.tweens;
-        var _deathSFX;
-        var _cam = this.cameras.main;
-        var _time = this.time;
-        var _emitter;
-
-        //emitter overlap check
-        this.particleHit = {
-            contains: function (x, y)
-            {
-                if (_player.body.hitTest(x, y)) {
-                    _player.body.enable = false;
-                    _inputKeyboard.enabled = false;
-                    _gameOver = true; // turn off collision checking
-                    _player.alpha = 0;
-
-                    // death sequence
-                    _tweens.add({        // fade out
-                        targets: bgMusic,
-                        volume: 0,
-                        ease: 'Linear',
-                        duration: 400,
-                    }); 
-                    bgMusic.stop();
-                    _deathSFX.play()
-
-                    _cam.fadeOut(2000);
-                    _time.delayedCall(2000, () => {game.scene.start("gameOverScene");});
-                }
-            }
-        };
-        
-        this.zawarudo = this.add.image(0, 0,'gray');
         this.player = this.physics.add.sprite(game.config.width/2, game.config.height, 'player');
-        _player = this.player;
         this.boss = new Boss(this, game.config.width/2, 20, 'boss').setScale(1, 1).setOrigin(0,0);
         this.enemies = this.add.group({
             runChildUpdate: true    //Make sure update runs on group children
@@ -141,7 +104,6 @@ class Play extends Phaser.Scene{
         this.paused = false;
         this.gameOver = false;
         this.startFiring = 0;
-        this.radius = 1;
 
         _gameOver = this.gameOver;
         
@@ -253,22 +215,6 @@ class Play extends Phaser.Scene{
     update(){
         // this.powerUp.x = this.player.x;
         // this.powerUp.y = this.player.y;
-        if(this.slowMotion) {
-            this.player.anims.msPerFrame = 300;
-            if(this.radius <= 1000) {
-                this.radius = this.radius + 80;
-                this.zawarudo.setScale(this.radius);
-            }
-        }
-        else if(!this.slowMotion) {
-            this.player.anims.msPerFrame = 130;
-            if(this.radius > 1) {
-                this.radius = this.radius - 80;
-                this.zawarudo.setScale(this.radius);
-            }
-        }
-        this.zawarudo.x = this.player.x;
-        this.zawarudo.y = this.player.y;
         this.pauseUpdate();
         if (!this.paused && !this.gameOver){
             this.physics.world.collide(this.player, this.enemies, this.collisionUpdate, null, this);
@@ -527,8 +473,8 @@ class Play extends Phaser.Scene{
                 this.emitter.timeScale = 0.3;
                 this.emitter.setLifespan(15000);
                 this.boss.slowmo();
-                this.slowMotion = true;
 
+                this.slowMotion = true;
             }
             else if (this.slowMotion == true){
                 console.log("Slow Mo Off");
