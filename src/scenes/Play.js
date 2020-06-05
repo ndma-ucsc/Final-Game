@@ -16,6 +16,7 @@ class Play extends Phaser.Scene{
         this.slowSpeed = 5;
         this.movementSpeed = 300;
         this.jumpVelocity = -500;
+        this.jumpDuration = 200;
         this.airSpeed = 300;
         this.fastFall = 2000;
         this.wallCling = false;
@@ -258,12 +259,6 @@ class Play extends Phaser.Scene{
         }
 
         //Jumping
-        if (this.slowMotion){
-            this.jumpDuration = 1000;
-        }
-        else{
-            this.jumpDuration = 200;
-        }
         if(Phaser.Input.Keyboard.DownDuration(keySPACE, this.jumpDuration) && this.jumps > 0) {
             this.player.body.setVelocityY(this.jumpVelocity);
             this.jump = true;
