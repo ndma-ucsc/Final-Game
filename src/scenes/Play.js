@@ -112,7 +112,7 @@ class Play extends Phaser.Scene{
             
             this.moveUpdate();
             this.slowMoUpdate();
-            this.freezeUpdate();
+            //this.freezeUpdate();
             if (this.player.x > 830 || this.player.x < 123){
                 this.player.setTint(0x045D57);
             }
@@ -150,6 +150,11 @@ class Play extends Phaser.Scene{
                 callback: ()=> {
                     if (!this.paused && !this.gameOver){
                         let bullet = new Bullet(this, child.x, child.y, 'ball');
+                        if (this.slowMotion)
+                        {
+                            bullet.body.velocity.x /= this.slowSpeed;
+                            bullet.body.velocity.y /= this.slowSpeed;
+                        }
                         this.laserSFX.play();
                         this.bullets.add(bullet);
                     }
@@ -380,6 +385,7 @@ class Play extends Phaser.Scene{
         }
     }
     
+    /*
     freezeUpdate(){
         let player = this.player;
         //freeze
@@ -394,8 +400,8 @@ class Play extends Phaser.Scene{
                 player.body.allowGravity = true;
             });
         }
-
     }
+    */
 
     pauseUpdate(){
         if (Phaser.Input.Keyboard.JustDown(keyESC)){
