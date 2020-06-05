@@ -37,9 +37,13 @@ let game = new Phaser.Game(config);
 // reserve some keyboard variables
 let keyF, keyX, keyP, keyLEFT, keyRIGHT, keyUP, keyDOWN, keyENTER, keySPACE, keyESC;
 let bgMusic;
+<<<<<<< HEAD
 let songList;
 let nextSong;
 let volPt = 2;
+=======
+let volPt = 5;
+>>>>>>> parent of d4bb919... Randomize song after each song completes.
 let sfxPt = 2
 let bg_volume = volPt/10;
 let sfx_volume = sfxPt/10;

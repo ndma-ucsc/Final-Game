@@ -67,11 +67,15 @@ class Load extends Phaser.Scene {
         this.load.audio('Turbo Giant', 'Wankers United- Turbo Giant.mp3');
         this.load.audio('Croissant Funk', 'Wankers United- Croissant Funk.mp3');
         this.load.audio('Beamin', 'Strong Suit- Beamin.mp3');
+<<<<<<< HEAD
         this.load.audio('Gumption Junction', 'Morphamish- Gumption Junction.mp3');
         this.load.audio('Ragnarok', 'Fengir- Ragnarok.mp3');
         this.load.audio('Ducky', 'SPCZ- Ducky.mp3');
         this.load.audio('Assault', 'SPCZ- Assault.mp3');
         this.load.audio('Lorry', 'Taseh- Lorry.mp3');
+=======
+        this.load.audio('Morphamish', 'Morphamish- Gumption Junction.mp3');
+>>>>>>> parent of d4bb919... Randomize song after each song completes.
 
         this.load.path = "./assets/player/";
         this.load.spritesheet('runRight', 'run_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 7});
@@ -118,6 +122,8 @@ class Load extends Phaser.Scene {
     }
 
     create() {
+        bgMusic = this.sound.add(Phaser.Math.RND.pick(["Bad Flower", "Panda", "Action Breakbeat", "Followed", "Turbo Giant", "Croissant Funk", "Kevlar Boys", "Beamin", "Morphamish"]));
+        bgMusic.play();
         this.scene.start("menuScene");
     }
 }

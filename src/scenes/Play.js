@@ -188,7 +188,11 @@ class Play extends Phaser.Scene{
         this.physics.add.collider(this.player, platformLayer);
         this.physics.add.collider(this.bullets, platformLayer);
 
+<<<<<<< HEAD
         this.spawnRandomEnemies(this.level); 
+=======
+        this.spawnRandomEnemies(3); 
+>>>>>>> parent of d4bb919... Randomize song after each song completes.
         this.spawnBullet();
         this.dashing();
         this.createCircle();
@@ -235,11 +239,14 @@ class Play extends Phaser.Scene{
                 this.player.setTint();
             }
         }
+<<<<<<< HEAD
         if(!this.gameOver)
         {
             this.musicUpdate();
         }
         this.checkWin();
+=======
+>>>>>>> parent of d4bb919... Randomize song after each song completes.
     }
         
     spawnRandomEnemies(enemyCount){
@@ -251,6 +258,8 @@ class Play extends Phaser.Scene{
                 let randomWidth = Phaser.Math.Between(0, game.config.width);
                 let randomXSpeed = Phaser.Math.Between(25, 100);
                 let randomYSpeed = Phaser.Math.Between(25, 100);
+                console.log(randomXSpeed);
+                console.log(randomYSpeed);
                 let enemy = new Enemy(this, randomWidth, randomHeight, 'robot', randomXSpeed, randomYSpeed);
                 this.enemies.add(enemy);
             }
@@ -589,7 +598,7 @@ class Play extends Phaser.Scene{
             volume: 0,
             ease: 'Linear',
             duration: 400,
-        });
+        }); 
         bgMusic.stop();
         this.deathSFX.play()
         // let death = this.add.sprite(this.player.x, this.player.y, 'death').setOrigin(1);
@@ -650,8 +659,8 @@ class Play extends Phaser.Scene{
                 
             }   
         });
-    }
 
+<<<<<<< HEAD
     createCircle() {
         this.startAngle = this.tweens.addCounter({
             from: 0,
@@ -681,6 +690,8 @@ class Play extends Phaser.Scene{
             bgMusic.play();
             console.log("Now Playing: " + nextSong);
         }
+=======
+>>>>>>> parent of d4bb919... Randomize song after each song completes.
     }
     checkWin(){
     }
