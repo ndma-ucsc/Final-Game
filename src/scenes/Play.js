@@ -10,7 +10,9 @@ class Play extends Phaser.Scene{
         console.log("Play Scene");
         this.cameras.main.fadeIn(1000);
         this.input.keyboard.enabled = true;
+        this.zawarudo = this.add.image(0, 0,'gray');
         this.player = this.physics.add.sprite(game.config.width/2, game.config.height, 'player');
+        
         this.boss = new Boss(this, game.config.width/2, 20, 'boss').setScale(1, 1).setOrigin(0,0);
         this.enemies = this.add.group({
             runChildUpdate: true    //Make sure update runs on group children
@@ -104,6 +106,7 @@ class Play extends Phaser.Scene{
         this.paused = false;
         this.gameOver = false;
         this.startFiring = 0;
+        this.radius = 1;
 
         //Sound FX Implemented
         this.jumpSFX = this.sound.add('jump', {volume: sfx_volume});
@@ -174,6 +177,22 @@ class Play extends Phaser.Scene{
     update(){
         // this.powerUp.x = this.player.x;
         // this.powerUp.y = this.player.y;
+        if(this.slowMotion) {
+            this.player.anims.msPerFrame = 300;
+            if(this.radius <= 1000) {
+                this.radius = this.radius + 80;
+                this.zawarudo.setScale(this.radius);
+            }
+        }
+        else if(!this.slowMotion) {
+            this.player.anims.msPerFrame = 130;
+            if(this.radius > 1) {
+                this.radius = this.radius - 80;
+                this.zawarudo.setScale(this.radius);
+            }
+        }
+        this.zawarudo.x = this.player.x;
+        this.zawarudo.y = this.player.y;
         this.pauseUpdate();
         if (!this.paused && !this.gameOver){
             this.physics.world.collide(this.player, this.enemies, this.collisionUpdate, null, this);
@@ -428,8 +447,8 @@ class Play extends Phaser.Scene{
                 this.physics.world.timeScale = this.slowSpeed;
                 this.time.timeScale = 1/this.slowSpeed;
                 this.boss.slowmo();
-
                 this.slowMotion = true;
+
             }
             else if (this.slowMotion == true){
                 console.log("Slow Mo Off");
