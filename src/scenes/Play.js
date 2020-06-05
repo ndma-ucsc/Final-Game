@@ -9,82 +9,8 @@ class Play extends Phaser.Scene{
     create(){
         this.cameras.main.fadeIn(1000);
         this.input.keyboard.enabled = true;
+        this.zawarudo = this.add.image(0, 0,'gray');
         this.player = this.physics.add.sprite(game.config.width/2, game.config.height, 'player');
-        this.boss = new Boss(this, game.config.width/2, 20, 'boss').setScale(1, 1).setOrigin(0,0);
-        this.enemies = this.add.group({
-            runChildUpdate: true    //Make sure update runs on group children
-        });
-        this.bullets = this.add.group({
-            runChildUpdate: true,
-            frameQuantity: 10
-        });
-        //energy balls
-        this.bombs = this.physics.add.group({
-            active: true,
-            visible: false,
-            key:'ball',
-            frameQuantity: 8,
-            collideWorldBounds: false,
-            immovable: true,
-            allowGravity: false,
-            classType: Boss
-        });
-        //hitbox
-        this.bombsHitbox = this.physics.add.group({
-            active: true,
-            visible: false,
-            key:'hitbox',
-            frameQuantity: 8,
-            collideWorldBounds: false,
-            immovable: true,
-            allowGravity: false,
-            classType: Boss
-        });
-        //energy balls
-        this.bombs2 = this.physics.add.group({
-            active: true,
-            visible: false,
-            key:'ball',
-            frameQuantity: 24,
-            collideWorldBounds: false,
-            immovable: true,
-            allowGravity: false,
-            classType: Boss
-        });
-        //hitbox
-        this.bombsHitbox2 = this.physics.add.group({
-            active: true,
-            visible: false,
-            key:'hitbox',
-            frameQuantity: 24,
-            collideWorldBounds: false,
-            immovable: true,
-            allowGravity: false,
-            classType: Boss
-        });
-        //energy balls
-        this.bombs3 = this.physics.add.group({
-            active: true,
-            visible: false,
-            key:'ball',
-            frameQuantity: 30,
-            collideWorldBounds: false,
-            immovable: true,
-            allowGravity: false,
-            classType: Boss
-        });
-        //hitbox
-        this.bombsHitbox3 = this.physics.add.group({
-            active: true,
-            visible: false,
-            key:'hitbox',
-            frameQuantity: 30,
-            collideWorldBounds: false,
-            immovable: true,
-            allowGravity: false,
-            classType: Boss
-        });
-        // this.powerUp = this.add.sprite(this.player.x, this.player.y, "null").setOrigin(0.5);
 
         this.slowMotion = false;
         this.slowSpeed = 5;
@@ -102,10 +28,8 @@ class Play extends Phaser.Scene{
         this.JUMP_MAX = 1;
         this.paused = false;
         this.gameOver = false;
-        this.startFiring = 0;
-
-        _gameOver = this.gameOver;
-        
+        this.radius = 1;
+        this.canDash = true;
 
         //Sound FX Implemented
         this.jumpSFX = this.sound.add('jump', {volume: sfx_volume});
@@ -117,8 +41,6 @@ class Play extends Phaser.Scene{
         this.deathSFX = this.sound.add('death', {volume: sfx_volume});
         this.ricochetSFX = this.sound.add('ricochet', {volume: sfx_volume/2});
         this.laserSFX = this.sound.add('laser', {volume: sfx_volume/2});
-
-        _deathSFX = this.deathSFX;
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
@@ -134,19 +56,8 @@ class Play extends Phaser.Scene{
         this.add.image(0, 0, 'background1').setOrigin(0, 0).setDepth(-10);
         this.add.image(0, 0, 'light').setOrigin(0, 0);
 
-        //Background Music
-        songList = ["Bad Flower", "Panda", "Action Breakbeat", 
-        "Followed", "Turbo Giant", "Croissant Funk", "Beamin", "Morphamish", "Ragnarok",
-        "Ducky", "Assault", "Lorry"];
-        nextSong = Phaser.Math.RND.pick(songList);
-        bgMusic = this.sound.add(nextSong);
-        bgMusic.play();
-        console.log("Now Playing: " + nextSong);
-
         //Player will not fall out of the screen
         this.player.body.collideWorldBounds = true;
-
-        
 
         //add a tile map
         const map = this.add.tilemap(`level_map_${this.level}`);
@@ -158,66 +69,42 @@ class Play extends Phaser.Scene{
         const platformLayer = map.createStaticLayer("Platforms", tileset, 0, 0);
 
         //set map collision
-        platformLayer.setCollision([1]);
+        platformLayer.setCollision([1,2,3,4,5,6,7,8,9]);
 
-        var rect = new Phaser.Geom.Rectangle(0, -50, 960, 1);
-        this.particles = this.add.particles('oilcan');
-        // this.particles.anims.play('spin',true);
-        this.emitter = this.particles.createEmitter({
-            lifespan: 4000,
-            //angle: { min: 225, max: 315 },
-            speed: { min: 50, max: 200 },
-            scale: 1.2,
-            gravityY: 300,
-            //delay: 3000,
-            timeScale: 1,
-            bounce: 0.9,
-            quantity: 1,
-            frequency: 500, //higher = less
-            bounds: { x: 0, y: 0, w: 960, h: 1024 },
-            collideTop: false,
-            collideBottom: false,
-            emitZone: { source: rect },
-            deathZone: { type: 'onEnter', source: this.particleHit }
+        this.enemies = this.add.group({
+            runChildUpdate: true
         });
-        _emitter = this.emitter;
-
-        
+        this.bullets = this.add.group({
+            runChildUpdate: true
+        });
 
         //create collider
         this.physics.add.collider(this.player, platformLayer);
         this.physics.add.collider(this.bullets, platformLayer);
-
-<<<<<<< HEAD
         this.spawnRandomEnemies(this.level); 
-=======
-        this.spawnRandomEnemies(3); 
->>>>>>> parent of d4bb919... Randomize song after each song completes.
         this.spawnBullet();
         this.dashing();
-        this.createCircle();
-
-        this.physics.add.overlap(this.player, this.bombsHitbox, () => {
-            //this.sound.play('sfx_explosion');
-            this.collisionUpdate();
-        });
-        this.physics.add.overlap(this.player, this.bombsHitbox2, () => {
-            //this.sound.play('sfx_explosion');
-            this.collisionUpdate();
-        });
-        this.physics.add.overlap(this.player, this.bombsHitbox3, () => {
-            //this.sound.play('sfx_explosion');
-            this.collisionUpdate();
-        });
-
-        this.time.addEvent({ delay: 3000, callback: () => {
-            this.startFiring++;
-        }, callbackScope: this, loop: true });
     }
 
     update(){
         // this.powerUp.x = this.player.x;
         // this.powerUp.y = this.player.y;
+        if(this.slowMotion) {
+            this.player.anims.msPerFrame = 300;
+            if(this.radius <= 1000) {
+                this.radius = this.radius + 80;
+                this.zawarudo.setScale(this.radius);
+            }
+        }
+        else if(!this.slowMotion) {
+            this.player.anims.msPerFrame = 130;
+            if(this.radius > 1) {
+                this.radius = this.radius - 80;
+                this.zawarudo.setScale(this.radius);
+            }
+        }
+        this.zawarudo.x = this.player.x;
+        this.zawarudo.y = this.player.y;
         this.pauseUpdate();
         if (!this.paused && !this.gameOver){
             this.physics.world.collide(this.player, this.enemies, this.collisionUpdate, null, this);
@@ -226,12 +113,6 @@ class Play extends Phaser.Scene{
             this.moveUpdate();
             this.slowMoUpdate();
             this.freezeUpdate();
-            if(this.startFiring >=2) {
-                this.bombs.getChildren().forEach(function() {
-                    this.bombs.setVisible(true);
-                }, this);
-                this.boss.update(this.bombs,this.bombs2,this.bombs3,this.startAngle,this.endAngle,this.bombsHitbox,this.bombsHitbox2,this.bombsHitbox3,this.single,this.playerHitbox,this.bossHitbox);
-            }
             if (this.player.x > 830 || this.player.x < 123){
                 this.player.setTint(0x045D57);
             }
@@ -239,14 +120,11 @@ class Play extends Phaser.Scene{
                 this.player.setTint();
             }
         }
-<<<<<<< HEAD
-        if(!this.gameOver)
-        {
-            this.musicUpdate();
-        }
+        // if(!this.gameOver)
+        // {
+        //     this.musicUpdate();
+        // }
         this.checkWin();
-=======
->>>>>>> parent of d4bb919... Randomize song after each song completes.
     }
         
     spawnRandomEnemies(enemyCount){
@@ -254,12 +132,10 @@ class Play extends Phaser.Scene{
             console.log("Spawned Enemies");
             for(let i = 0; i < enemyCount; i++)
             {
-                let randomHeight = Phaser.Math.Between(0, game.config.height - 600);
+                let randomHeight = Phaser.Math.Between(0, game.config.height - 800);
                 let randomWidth = Phaser.Math.Between(0, game.config.width);
                 let randomXSpeed = Phaser.Math.Between(25, 100);
                 let randomYSpeed = Phaser.Math.Between(25, 100);
-                console.log(randomXSpeed);
-                console.log(randomYSpeed);
                 let enemy = new Enemy(this, randomWidth, randomHeight, 'robot', randomXSpeed, randomYSpeed);
                 this.enemies.add(enemy);
             }
@@ -468,42 +344,42 @@ class Play extends Phaser.Scene{
             if (this.slowMotion == false){
                 console.log("Slow Mo On");
                 this.slowSFX.play();
-                //game.config.physics.gravity.y /= 5;
-
                 //Slow down certain sounds when in slow mo
                 this.laserSFX.rate = 1/this.slowSpeed;
-                this.landSFX.rate = 1/this.slowSpeed;
-                this.wallSFX.rate = 1/this.slowSpeed;
                 this.ricochetSFX.rate = 1/this.slowSpeed;
 
-                this.physics.world.timeScale = this.slowSpeed;
-                this.time.timeScale = 1/this.slowSpeed;
-                this.emitter.timeScale = 0.3;
-                this.emitter.setLifespan(15000);
-                this.boss.slowmo();
+                this.enemies.children.iterate((child) => {
+                    child.body.velocity.x /= this.slowSpeed;
+                    child.body.velocity.y /= this.slowSpeed;
+                });
 
+                this.bullets.children.iterate((child) => {
+                    child.body.velocity.x /= this.slowSpeed;
+                    child.body.velocity.y /= this.slowSpeed;
+                });
                 this.slowMotion = true;
             }
             else if (this.slowMotion == true){
                 console.log("Slow Mo Off");
-                this.emitter.timeScale = 1;
-                this.emitter.setLifespan(4000);
                 this.slowSFX.stop();
-                //game.config.physics.gravity.y *= 5;
-
                 //Set sounds back to normal
                 this.laserSFX.rate = 1;
-                this.landSFX.rate = 1;
-                this.wallSFX.rate = 1;
                 this.ricochetSFX.rate = 1;
-                this.boss.speedUp();
-                this.physics.world.timeScale = 1;
-                this.time.timeScale = 1;
 
+                this.enemies.children.iterate((child) => {
+                    child.body.velocity.x *= this.slowSpeed;
+                    child.body.velocity.y *= this.slowSpeed;
+                });
+
+                this.bullets.children.iterate((child) => {
+                    child.body.velocity.x *= this.slowSpeed;
+                    child.body.velocity.y *= this.slowSpeed;
+                });
                 this.slowMotion = false;
             }
         }
     }
+    
     freezeUpdate(){
         let player = this.player;
         //freeze
@@ -526,7 +402,6 @@ class Play extends Phaser.Scene{
             if (!this.gameOver && this.paused == false){
                 console.log("Game Paused");
                 this.paused = true;
-                this.emitter.timeScale = 0;
                 this.pauseOnSFX.play();
                 if(this.slowMotion)
                 {
@@ -539,20 +414,12 @@ class Play extends Phaser.Scene{
                     duration: 500,
                     ease: 'Linear'
                 })
-                // this.tweens.add({
-                //     targets: bgMusic,
-                //     volume: 0,
-                //     duration: 500,
-                //     ease: 'Linear'
-                // })
-                // bgMusic.pause();
                 this.anims.pauseAll();
                 this.scene.launch("optionScene");
             }
             else if (!this.gameOver && this.paused == true){
                 console.log("Game Unpaused");
                 this.paused = false;
-                this.emitter.timeScale = 1;
                 this.pauseOffSFX.play();
                 if(this.slowMotion)
                 {
@@ -564,13 +431,6 @@ class Play extends Phaser.Scene{
                     duration: 500,
                     ease: 'Linear'
                 })
-                // this.tweens.add({
-                //     targets: bgMusic,
-                //     volume: bg_volume,
-                //     duration: 500,
-                //     ease: 'Linear'
-                // })
-                // bgMusic.resume();
                 this.player.body.enable = true;
                 this.anims.resumeAll();
                 this.scene.stop("optionScene");
@@ -607,7 +467,7 @@ class Play extends Phaser.Scene{
         this.cameras.main.fadeOut(2000);
         this.time.delayedCall(2000, () => {this.scene.start("gameOverScene");});
     }
-
+    
     dashing(){
         let dashLeft = this.input.keyboard.createCombo([cursors.left, cursors.left], {
             resetOnWrongKey: true,
@@ -625,12 +485,12 @@ class Play extends Phaser.Scene{
 
         this.input.keyboard.on('keycombomatch', (combo, event) => {
             if (combo === dashLeft) { 
-                if (!this.isGrounded && !this.paused) {
+                if (!this.isGrounded && !this.paused && this.canDash) {
+                    this.canDash = false;
                     this.player.anims.play('runL',true);
                     this.player.body.allowGravity = false;
                     this.player.body.setVelocityY(0);
                     this.player.body.setVelocityX(-this.movementSpeed);
-                    this.player.body.setAccelerationX(-this.airSpeed * 50);
                     console.log("DASHED LEFT");
                     this.time.addEvent({
                         delay: 300,
@@ -638,61 +498,59 @@ class Play extends Phaser.Scene{
                             this.player.body.allowGravity = true;
                         }
                     })
+                    this.time.addEvent({
+                        delay: 2000,
+                        callback: ()=> {
+                            this.canDash = true;
+                        }
+                    })
                 }
             }
             
-            if (combo === dashRight) {
+            if (combo === dashRight && this.canDash) {
                 if (!this.isGrounded && !this.paused) {
+                    this.canDash = false;
                     this.player.anims.play('runR',true);
                     this.player.body.allowGravity = false;
                     this.player.body.setVelocityY(0);
                     this.player.body.setVelocityX(this.movementSpeed);
-                    this.player.body.setAccelerationX(this.airSpeed * 50);
                     console.log("DASHED RIGHT");
                     this.time.addEvent({
                         delay: 300,
                         callback: ()=> {
                             this.player.body.allowGravity = true;
                         }
-                    })
+                    });
+                    this.time.addEvent({
+                        delay: 2000,
+                        callback: ()=> {
+                            this.canDash = true;
+                        }
+                    });
                 }
                 
             }   
         });
-
-<<<<<<< HEAD
-    createCircle() {
-        this.startAngle = this.tweens.addCounter({
-            from: 0,
-            to: 6.28,
-            duration: 8000, //speed of rotation higher = slower
-            repeat: -1
-        })
-    
-        this.endAngle = this.tweens.addCounter({
-            from: 6.28,
-            to: 12.56,
-            duration: 8000, //speed of rotation higher = slowerd
-            repeat: -1
-        })
     }
 
     musicUpdate()
     {
         if(!bgMusic.isPlaying)
         {
-            nextSong = Phaser.Math.RND.pick(songList);
-            while(bgMusic.key == nextSong)
+            while(nextSong == bgMusic.key)
             {
                 nextSong = Phaser.Math.RND.pick(songList);
             }
-            bgMusic = this.sound.add(nextSong);
+            bgMusic = this.sound.add(nextSong, {volume: bg_volume});
             bgMusic.play();
             console.log("Now Playing: " + nextSong);
         }
-=======
->>>>>>> parent of d4bb919... Randomize song after each song completes.
     }
+
     checkWin(){
+        if (this.player.y <= 0){
+            this.cameras.main.fadeOut(1000);
+            this.time.delayedCall(1000, () => {this.scene.start("playScene", {level: this.level++});})
+        }
     }
 }

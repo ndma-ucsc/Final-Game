@@ -4,6 +4,17 @@ class Menu extends Phaser.Scene {
     }
 
     create() {
+        
+        if (!bgMusic.isPlaying){
+            //Background Music
+            songList = ["Bad Flower", "Panda"]/*, "Action Breakbeat", 
+            "Followed", "Turbo Giant", "Croissant Funk", "Beamin", "Morphamish", "Ragnarok",
+            "Ducky", "Assault", "Lorry"];*/
+            nextSong = Phaser.Math.RND.pick(songList);
+            bgMusic = this.sound.add(nextSong);
+            bgMusic.play();
+            console.log("Now Playing: " + nextSong);
+        }
         this.input.keyboard.enabled = false;
         this.cameras.main.fadeIn(1000);
         this.time.delayedCall(1000, () => {this.input.keyboard.enabled = true;});

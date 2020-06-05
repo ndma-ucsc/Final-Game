@@ -62,20 +62,16 @@ class Load extends Phaser.Scene {
         this.load.path = "./assets/music/";
         this.load.audio('Bad Flower', 'Bisou- Bad Flower.mp3');
         this.load.audio('Panda', 'Bisou- Panda.mp3');
-        this.load.audio('Action Breakbeat', 'Bill Vortex- Action Breakbeat.mp3');
-        this.load.audio('Followed', 'Shaolin Dub- Followed.mp3');
-        this.load.audio('Turbo Giant', 'Wankers United- Turbo Giant.mp3');
-        this.load.audio('Croissant Funk', 'Wankers United- Croissant Funk.mp3');
-        this.load.audio('Beamin', 'Strong Suit- Beamin.mp3');
-<<<<<<< HEAD
-        this.load.audio('Gumption Junction', 'Morphamish- Gumption Junction.mp3');
-        this.load.audio('Ragnarok', 'Fengir- Ragnarok.mp3');
-        this.load.audio('Ducky', 'SPCZ- Ducky.mp3');
-        this.load.audio('Assault', 'SPCZ- Assault.mp3');
-        this.load.audio('Lorry', 'Taseh- Lorry.mp3');
-=======
-        this.load.audio('Morphamish', 'Morphamish- Gumption Junction.mp3');
->>>>>>> parent of d4bb919... Randomize song after each song completes.
+        // this.load.audio('Action Breakbeat', 'Bill Vortex- Action Breakbeat.mp3');
+        // this.load.audio('Followed', 'Shaolin Dub- Followed.mp3');
+        // this.load.audio('Turbo Giant', 'Wankers United- Turbo Giant.mp3');
+        // this.load.audio('Croissant Funk', 'Wankers United- Croissant Funk.mp3');
+        // this.load.audio('Beamin', 'Strong Suit- Beamin.mp3');
+        // this.load.audio('Gumption Junction', 'Morphamish- Gumption Junction.mp3');
+        // this.load.audio('Ragnarok', 'Fengir- Ragnarok.mp3');
+        // this.load.audio('Ducky', 'SPCZ- Ducky.mp3');
+        // this.load.audio('Assault', 'SPCZ- Assault.mp3');
+        // this.load.audio('Lorry', 'Taseh- Lorry.mp3');
 
         this.load.path = "./assets/player/";
         this.load.spritesheet('runRight', 'run_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 7});
@@ -106,24 +102,24 @@ class Load extends Phaser.Scene {
         this.load.image('light', 'light.png');
 
         this.load.path = "./assets/sprites/";
-        this.load.image("tiles", "tile1.png");
+        this.load.image("tiles", "tiles.png");
         this.load.image("robot", "robot.png");
         this.load.image("ball", "ball.png");
-<<<<<<< HEAD
-        this.load.spritesheet("oilcan", "Oilcan.png", {frameWidth: 46.5, frameHeight: 33, startFrame: 0, endFrame: 7});
-        this.load.image('hitbox', 'balls.png');
+this.load.image('hitbox', 'balls.png');
         this.load.image('gray', 'Zawarudo.png');
-=======
-        this.load.image('hitbox', 'assets/balls.png');
->>>>>>> parent of 65ba929... Slow mo anims fix + ZAWARUDO
 
         this.load.path = "./assets/tile_map/";
         this.load.tilemapTiledJSON("level_map_1", "tilemap01.json");
     }
 
     create() {
-        bgMusic = this.sound.add(Phaser.Math.RND.pick(["Bad Flower", "Panda", "Action Breakbeat", "Followed", "Turbo Giant", "Croissant Funk", "Kevlar Boys", "Beamin", "Morphamish"]));
+        songList = ["Bad Flower", "Panda"]/*, "Action Breakbeat", 
+        "Followed", "Turbo Giant", "Croissant Funk", "Beamin", "Morphamish", "Ragnarok",
+        "Ducky", "Assault", "Lorry"];*/
+        nextSong = Phaser.Math.RND.pick(songList);
+        bgMusic = this.sound.add(nextSong);
         bgMusic.play();
+        console.log("Now Playing: " + nextSong);
         this.scene.start("menuScene");
     }
 }
