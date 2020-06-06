@@ -5,7 +5,6 @@ class Option extends Phaser.Scene {
 
     create() {
         this.scene.bringToTop("optionScene");
-        // this.cameras.main.fadeIn(1500);
         
         let optionTextConfig = {
             fontFamily: 'Bradley Hand',
@@ -29,7 +28,7 @@ class Option extends Phaser.Scene {
         this.fullscreen = this.add.text(game.config.width/6, 3*game.config.height/5, 'FULLSCREEN', {fontSize: "50px"}).setOrigin(0,0.5);
         this.fullscreenText = this.add.text(5*game.config.width/6, 3*game.config.height/5, `${this.scale.isFullscreen ? ' ✔' : '  ❌'}`, optionTextConfig).setOrigin(1,0.5);
 
-        this.return = this.add.text(game.config.width/6, 4*game.config.height/5, 'Return to Main Menu', {fontSize: "50px"}).setOrigin(0,0.5);
+        this.return = this.add.text(game.config.width/2, 4*game.config.height/5, 'Back', {fontSize: "50px"}).setOrigin(0.5);
 
         cursors = this.input.keyboard.createCursorKeys();
         keyENTER = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
@@ -82,21 +81,31 @@ class Option extends Phaser.Scene {
         }
         
         if(this.selected == 1){
-            if(this.input.keyboard.checkDown(cursors.left, 250) && volPt > 0){
+            if(this.input.keyboard.checkDown(cursors.left, 100) && volPt > 0){
                 bgMusic.volume = --volPt / maxVolume;
             }
-            else if(this.input.keyboard.checkDown(cursors.right, 250) && volPt < maxVolume){
+            else if(this.input.keyboard.checkDown(cursors.right, 100) && volPt < maxVolume){
                 bgMusic.volume = ++volPt / maxVolume;
             }
             
         }
 
         else if(this.selected == 2){
-            if(this.input.keyboard.checkDown(cursors.left, 10) && sfxPt > 0){
-                this.sound.play(Phaser.Utils.Array.GetRandom(['jump', 'pauseOn', 'pauseOff', 'land', 'wall', 'death', 'ricochet', 'laser']), {volume: --sfxPt / maxVolume});
+            if(this.input.keyboard.checkDown(cursors.left, 100) && sfxPt > 0){
+                --sfxPt;
+                if(sfxPt % 10 == 0)
+                {
+                    console.log(sfxPt);
+                    this.sound.play(Phaser.Utils.Array.GetRandom(['jump', 'pauseOn', 'pauseOff', 'land', 'wall', 'death', 'ricochet', 'laser']), {volume: sfxPt / maxVolume});
+                }
             }
-            else if(this.input.keyboard.checkDown(cursors.right, 10) && sfxPt < maxVolume){
-                this.sound.play(Phaser.Utils.Array.GetRandom(['jump', 'pauseOn', 'pauseOff', 'land', 'wall', 'death', 'ricochet', 'laser']), {volume: ++sfxPt / maxVolume});
+            else if(this.input.keyboard.checkDown(cursors.right, 100) && sfxPt < maxVolume){
+                ++sfxPt;
+                if(sfxPt % 10 == 0)
+                {
+                    console.log(sfxPt);
+                    this.sound.play(Phaser.Utils.Array.GetRandom(['jump', 'pauseOn', 'pauseOff', 'land', 'wall', 'death', 'ricochet', 'laser']), {volume: sfxPt / maxVolume});
+                }
             }
         }
 
