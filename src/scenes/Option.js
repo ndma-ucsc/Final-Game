@@ -4,7 +4,6 @@ class Option extends Phaser.Scene {
     }
 
     create() {
-        console.log("Option Scene");
         this.scene.bringToTop("optionScene");
         // this.cameras.main.fadeIn(1500);
         
