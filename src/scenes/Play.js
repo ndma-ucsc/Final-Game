@@ -83,7 +83,6 @@ class Play extends Phaser.Scene{
         this.physics.add.collider(this.player, platformLayer);
         this.physics.add.collider(this.bullets, platformLayer);
         this.spawnEyeEnemies(this.level); 
-        //this.spawnBullet();
         this.dashing();
     }
 
@@ -112,7 +111,6 @@ class Play extends Phaser.Scene{
             
             this.moveUpdate();
             this.slowMoUpdate();
-            //this.freezeUpdate();
             if (this.player.x > 830 || this.player.x < 123){
                 this.player.setTint(0x045D57);
             }
@@ -120,10 +118,10 @@ class Play extends Phaser.Scene{
                 this.player.setTint();
             }
         }
-        // if(!this.gameOver)
-        // {
-        //     this.musicUpdate();
-        // }
+        if(!this.gameOver)
+        {
+            this.musicUpdate();
+        }
         this.checkWin();
     }
         
@@ -374,24 +372,6 @@ class Play extends Phaser.Scene{
             }
         }
     }
-    
-    /*
-    freezeUpdate(){
-        let player = this.player;
-        //freeze
-        if (Phaser.Input.Keyboard.Downw(keyX, 5000)){
-            console.log("Freeze On");
-            this.slowSFX.play();
-            this.wallCling = false;
-            this.player.body.setVelocity(0, 0);
-            this.player.body.allowGravity = false;
-            this.player.body.setAcceleration(0, 0);
-            this.input.keyboard.on('keyup-X', function (event) {
-                player.body.allowGravity = true;
-            });
-        }
-    }
-    */
 
     pauseUpdate(){
         if (Phaser.Input.Keyboard.JustDown(keyESC)){

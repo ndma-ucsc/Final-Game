@@ -8,7 +8,6 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
         this.body.collideWorldBounds = true;
         this.body.setCircle(15, 10, 10);
         this.scene = scene;
-
         this.verticalError = 100;
         this.horizontalError = 100;
         this.angle = Phaser.Math.Angle.Between(this.x, this.y, 
@@ -19,7 +18,7 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
         this.ricochetCount = 0;
     }
     update() {
-        //Stop movement if scene is paused
+        super.update();
         if(!this.scene.paused && !this.scene.gameOver){
             this.body.enable = true;
         }
