@@ -4,14 +4,20 @@ class Play extends Phaser.Scene{
     }
     init (data){
         this.level = data.level;
+        this.playerXPos = data.startingPos;
     }
 
     create(){
+        console.log(this.playerXPos);
         this.cameras.main.fadeIn(1000);
         this.input.keyboard.enabled = true;
         this.zawarudo = this.add.image(0, 0,'gray');
-        this.player = this.physics.add.sprite(game.config.width/2, game.config.height, 'player');
+        
+        //Adding player to scene
+        this.player = this.physics.add.sprite(this.playerXPos, game.config.height, 'player');
+        this.player.body.collideWorldBounds = true;
 
+        //Flags and other necessary variables
         this.slowMotion = false;
         this.slowSpeed = 5;
         this.movementSpeed = 300;
@@ -56,9 +62,6 @@ class Play extends Phaser.Scene{
         //Background
         this.add.image(0, 0, 'background1').setOrigin(0, 0).setDepth(-10);
         this.add.image(0, 0, 'light').setOrigin(0, 0);
-
-        //Player will not fall out of the screen
-        this.player.body.collideWorldBounds = true;
 
         //add a tile map
         const map = this.add.tilemap(`level_map_${this.level}`);
@@ -526,8 +529,7 @@ class Play extends Phaser.Scene{
 
     checkWin(){
         if (this.player.y <= 0){
-            this.cameras.main.fadeOut(1000);
-            this.time.delayedCall(1000, () => {this.scene.start("playScene", {level: this.level++});})
+            this.scene.start("playScene", {level: this.level++, startingPos: this.player.x, remainingXVel: this.player.body.velocity.x});
         }
     }
 }

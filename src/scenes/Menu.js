@@ -54,7 +54,9 @@ class Menu extends Phaser.Scene {
             this.input.keyboard.enabled = false;
             if(this.selected == 1) {
                 this.cameras.main.fadeOut(1500);
-                this.time.delayedCall(1500,() => {this.scene.start("playScene", {level: 1});});
+                this.time.delayedCall(1500,() => {
+                    this.scene.start("playScene", {level: 1, startingPos: game.config.width / 2});
+                });
             }
             else if(this.selected == 2) {
                 this.cameras.main.fadeOut(500);
