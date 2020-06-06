@@ -1,3 +1,4 @@
+"use strict";
 class Play extends Phaser.Scene{
     constructor(){
         super("playScene");
@@ -254,7 +255,7 @@ class Play extends Phaser.Scene{
         }
 
         //Jumping
-        if(Phaser.Input.Keyboard.DownDuration(keySPACE, this.jumpDuration) && this.jumps > 0) {
+        if(Phaser.Input.Keyboard.DownDuration(keySPACE, this.jumpDuration) && this.jumps > 0 && this.player.body.velocity.y <= 0) {
             this.player.body.setVelocityY(this.jumpVelocity);
             this.jump = true;
             if(this.facing == 'left') {
@@ -266,7 +267,7 @@ class Play extends Phaser.Scene{
                 this.player.setSize(30,50,false).setOffset(40,10);
             }
         }
-        else if(Phaser.Input.Keyboard.UpDuration(keySPACE)) {
+        else if(Phaser.Input.Keyboard.UpDuration(keySPACE) && this.jump) {
 	    	this.jumps--;
         }
         if(justDownVal && this.player.body.onFloor()){
@@ -299,6 +300,7 @@ class Play extends Phaser.Scene{
                     this.player.setSize(30,50,false).setOffset(40,10);
                     this.player.body.setVelocityX(this.wallJumpSpeedX);
                     this.player.body.setVelocityY(this.wallJumpSpeedY);
+                    this.wallCling = false;
                 }
             }
             else if (this.player.body.blocked.right){
@@ -323,6 +325,7 @@ class Play extends Phaser.Scene{
                     this.player.setSize(30,50,false).setOffset(40,10);
                     this.player.body.setVelocityX(-this.wallJumpSpeedX);
                     this.player.body.setVelocityY(this.wallJumpSpeedY);
+                    this.wallCling = false;
                 }
             }
         }
@@ -524,7 +527,8 @@ class Play extends Phaser.Scene{
 
     checkWin(){
         if (this.player.y <= 0){
-            this.scene.start("playScene", {level: this.level++, startingPos: this.player.x, remainingXVel: this.player.body.velocity.x});
+            this.level++;
+            this.scene.start("playScene", {level: this.level, startingPos: this.player.x, remainingXVel: this.player.body.velocity.x});
         }
     }
 }
