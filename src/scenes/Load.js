@@ -12,7 +12,7 @@ class Load extends Phaser.Scene {
         
         // loading... text
         var loadingText = this.make.text({
-            x: game.config.width / 2 + 5,
+            x: game.config.width / 2 + 15,
             y: game.config.height / 2 - 30,
             text: 'Loading...',
             style: {
@@ -25,7 +25,7 @@ class Load extends Phaser.Scene {
         // loading percent text
         var percentText = this.make.text({
             x: game.config.width / 2,
-            y: game.config.height / 2 + 70,
+            y: game.config.height / 2 + 25,
             text: '0%',
             style: {
                 font: '18px monospace',
@@ -62,14 +62,11 @@ class Load extends Phaser.Scene {
         this.load.path = "./assets/music/";
         this.load.audio('Bad Flower', 'Bisou- Bad Flower.mp3');
         this.load.audio('Panda', 'Bisou- Panda.mp3');
-        this.load.audio('Action Breakbeat', 'Bill Vortex- Action Breakbeat.mp3');
         this.load.audio('Followed', 'Shaolin Dub- Followed.mp3');
         this.load.audio('Turbo Giant', 'Wankers United- Turbo Giant.mp3');
         this.load.audio('Croissant Funk', 'Wankers United- Croissant Funk.mp3');
-        this.load.audio('Beamin', 'Strong Suit- Beamin.mp3');
         this.load.audio('Gumption Junction', 'Morphamish- Gumption Junction.mp3');
         this.load.audio('Ragnarok', 'Fengir- Ragnarok.mp3');
-        this.load.audio('Ducky', 'SPCZ- Ducky.mp3');
         this.load.audio('Assault', 'SPCZ- Assault.mp3');
         this.load.audio('Lorry', 'Taseh- Lorry.mp3');
 
@@ -113,9 +110,9 @@ class Load extends Phaser.Scene {
     }
 
     create() {
-        songList = ["Bad Flower", "Panda", "Action Breakbeat", 
-        "Followed", "Turbo Giant", "Croissant Funk", "Beamin", "Gumption Junction", "Ragnarok",
-        "Ducky", "Assault", "Lorry"];
+        songList = ["Bad Flower", "Panda", "Followed", 
+        "Turbo Giant", "Croissant Funk", "Gumption Junction", 
+        "Ragnarok", "Assault", "Lorry"];
         bgMusic = this.sound;
         this.scene.start("menuScene");
     }
