@@ -32,7 +32,7 @@ let config = {
   },
   pixelArt: true
   },
-  scene: [Load, Menu, Option, Pause, Play, GameOver]
+  scene: [Load, Menu, Option, Pause, Play, GameOver, GameEnd]
 };
 
 let game = new Phaser.Game(config);
