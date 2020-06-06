@@ -529,7 +529,7 @@ class Play extends Phaser.Scene{
 
     checkWin(){
         if (this.player.y <= 0){
-            this.scene.start("playScene", {level: this.level++, startingPos: this.player.x, remainingXVel: this.player.body.velocity.x});
+            this.scene.start("playScene", {level: ++this.level, startingPos: this.player.x, remainingXVel: this.player.body.velocity.x});
         }
     }
 }
