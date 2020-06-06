@@ -8,6 +8,7 @@ class Play extends Phaser.Scene{
     }
 
     create(){
+        console.log("Current Level: " + this.level);
         this.cameras.main.fadeIn(1000);
         this.input.keyboard.enabled = true;
         this.zawarudo = this.add.image(0, 0,'gray');
