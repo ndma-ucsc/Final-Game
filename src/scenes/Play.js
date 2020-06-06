@@ -8,7 +8,6 @@ class Play extends Phaser.Scene{
     }
 
     create(){
-        console.log(this.playerXPos);
         this.cameras.main.fadeIn(1000);
         this.input.keyboard.enabled = true;
         this.zawarudo = this.add.image(0, 0,'gray');
@@ -130,7 +129,6 @@ class Play extends Phaser.Scene{
         
     spawnEyeEnemies(enemyCount){
         if (!this.paused && !this.gameOver){
-            console.log("Spawned Enemies");
             for(let i = 0; i < enemyCount; i++)
             {
                 let randomHeight = Phaser.Math.Between(0, game.config.height - 800);
@@ -294,7 +292,6 @@ class Play extends Phaser.Scene{
                     
                 }
                 if (justDownVal){ // Wall Jump
-                    console.log("Left Wall Jump");
                     this.wallSFX.play();
                     this.player.play('jumpR',true);
                     this.facing = 'right';
@@ -319,7 +316,6 @@ class Play extends Phaser.Scene{
                     this.wallCling = false;
                 }
                 if (justDownVal){ // Wall Jump
-                    console.log("Right Wall Jump");
                     this.wallSFX.play();
                     this.player.play('jumpL',true);
                     this.facing = 'left';
@@ -470,7 +466,6 @@ class Play extends Phaser.Scene{
                     this.player.body.allowGravity = false;
                     this.player.body.setVelocityY(0);
                     this.player.body.setVelocityX(-this.movementSpeed);
-                    console.log("DASHED LEFT");
                     this.time.addEvent({
                         delay: 300,
                         callback: ()=> {
@@ -493,7 +488,6 @@ class Play extends Phaser.Scene{
                     this.player.body.allowGravity = false;
                     this.player.body.setVelocityY(0);
                     this.player.body.setVelocityX(this.movementSpeed);
-                    console.log("DASHED RIGHT");
                     this.time.addEvent({
                         delay: 300,
                         callback: ()=> {
@@ -529,7 +523,7 @@ class Play extends Phaser.Scene{
 
     checkWin(){
         if (this.player.y <= 0){
-            this.scene.start("playScene", {level: ++this.level, startingPos: this.player.x, remainingXVel: this.player.body.velocity.x});
+            this.scene.start("playScene", {level: this.level++, startingPos: this.player.x, remainingXVel: this.player.body.velocity.x});
         }
     }
 }
