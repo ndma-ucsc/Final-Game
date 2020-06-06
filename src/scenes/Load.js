@@ -63,11 +63,14 @@ class Load extends Phaser.Scene {
         this.load.audio('Panda', 'Bisou- Panda.mp3');
         this.load.audio('Followed', 'Shaolin Dub- Followed.mp3');
         this.load.audio('Turbo Giant', 'Wankers United- Turbo Giant.mp3');
-        this.load.audio('Croissant Funk', 'Wankers United- Croissant Funk.mp3');
         this.load.audio('Gumption Junction', 'Morphamish- Gumption Junction.mp3');
         this.load.audio('Ragnarok', 'Fengir- Ragnarok.mp3');
         this.load.audio('Assault', 'SPCZ- Assault.mp3');
         this.load.audio('Lorry', 'Taseh- Lorry.mp3');
+        this.load.audio('Mxghty', 'Lazer Falcon- MXGHTY.mp3');
+        this.load.audio('Space Cop', 'Smoked Meat Fax Machine- Space Cop.mp3');
+        this.load.audio('New Horizons', 'Decktonic- New Horizons.mp3');
+        this.load.audio('Up There', 'Moon Veil- Up There.mp3');
 
         this.load.path = "./assets/player/";
         this.load.spritesheet('runRight', 'run_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 7});
@@ -109,9 +112,12 @@ class Load extends Phaser.Scene {
     }
 
     create() {
-        songList = ["Bad Flower", "Panda", "Followed", 
-        "Turbo Giant", "Croissant Funk", "Gumption Junction", 
-        "Ragnarok", "Assault", "Lorry"];
+        songList = [
+        "Bad Flower", "Panda", "Followed", 
+        "Turbo Giant", "Gumption Junction", "Ragnarok", 
+        "Assault", "Lorry", "Mxghty", 
+        "Space Cop", "New Horizons", "Up There"
+        ];
         bgMusic = this.sound;
         this.scene.start("menuScene");
     }
