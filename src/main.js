@@ -42,8 +42,7 @@ let keyF, keyX, keyP, keyLEFT, keyRIGHT, keyUP, keyDOWN, keyENTER, keySPACE, key
 let bgMusic;
 let songList;
 let nextSong;
-let volPt = 2;
-let sfxPt = 2
-let bg_volume = volPt/10;
-let sfx_volume = sfxPt/10;
+let volPt = 20;
+let sfxPt = 20;
 let collisionDebug = false;
+let maxVolume = 100;

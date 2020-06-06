@@ -7,8 +7,7 @@ class Option extends Phaser.Scene {
         console.log("Option Scene");
         this.scene.bringToTop("optionScene");
         // this.cameras.main.fadeIn(1500);
-        this.volume_array = [0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1];
-        this.sfx_array = [0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1];
+        
         let optionTextConfig = {
             fontFamily: 'Bradley Hand',
             fontSize: '55px',
@@ -20,13 +19,13 @@ class Option extends Phaser.Scene {
             },
         };
 
-        this.optionText = this.add.text(game.config.width/2, 60, 'option', {fontSize: "50px"}).setOrigin(0.5);
+        this.optionText = this.add.text(game.config.width/2, 60, 'Options', {fontSize: "50px"}).setOrigin(0.5);
 
         this.volume = this.add.text(game.config.width/6, 1*game.config.height/5, 'VOLUME', {fontSize: "50px"}).setOrigin(0,0.5);
-        this.volumeText = this.add.text(5*game.config.width/6, 1*game.config.height/5, `${Math.floor(bg_volume * 10)}` , optionTextConfig).setOrigin(1,0.5);
+        this.volumeText = this.add.text(5*game.config.width/6, 1*game.config.height/5, volPt * maxVolume , optionTextConfig).setOrigin(1,0.5);
 
         this.sfx = this.add.text(game.config.width/6, 2*game.config.height/5, 'SFX', {fontSize: "50px"}).setOrigin(0,0.5);
-        this.sfxText = this.add.text(5*game.config.width/6, 2*game.config.height/5, `${Math.floor(sfx_volume * 10)}` , optionTextConfig).setOrigin(1,0.5);
+        this.sfxText = this.add.text(5*game.config.width/6, 2*game.config.height/5, sfxPt * maxVolume , optionTextConfig).setOrigin(1,0.5);
 
         this.fullscreen = this.add.text(game.config.width/6, 3*game.config.height/5, 'FULLSCREEN', {fontSize: "50px"}).setOrigin(0,0.5);
         this.fullscreenText = this.add.text(5*game.config.width/6, 3*game.config.height/5, `${this.scale.isFullscreen ? ' ✔' : '  ❌'}`, optionTextConfig).setOrigin(1,0.5);
@@ -85,28 +84,20 @@ class Option extends Phaser.Scene {
         
         if(this.selected == 1){
             if(this.input.keyboard.checkDown(cursors.left, 250) && volPt > 0){
-                volPt --;
-                bg_volume = this.volume_array[volPt];
-                bgMusic.volume = bg_volume;
+                bgMusic.volume = --volPt / maxVolume;
             }
-            else if(this.input.keyboard.checkDown(cursors.right, 250) && volPt < 10){
-                volPt ++;
-                bg_volume = this.volume_array[volPt];
-                bgMusic.volume = bg_volume;
+            else if(this.input.keyboard.checkDown(cursors.right, 250) && volPt < maxVolume){
+                bgMusic.volume = ++volPt / maxVolume;
             }
             
         }
 
         else if(this.selected == 2){
-            if(this.input.keyboard.checkDown(cursors.left, 250) && sfxPt > 0){
-                sfxPt --;
-                sfx_volume = this.sfx_array[sfxPt];
-                this.sound.play(Phaser.Utils.Array.GetRandom(['jump', 'pauseOn', 'pauseOff', 'land', 'wall', 'death', 'ricochet', 'laser']), {volume: sfx_volume});
+            if(this.input.keyboard.checkDown(cursors.left, 10) && sfxPt > 0){
+                this.sound.play(Phaser.Utils.Array.GetRandom(['jump', 'pauseOn', 'pauseOff', 'land', 'wall', 'death', 'ricochet', 'laser']), {volume: --sfxPt / maxVolume});
             }
-            else if(this.input.keyboard.checkDown(cursors.right, 250) && sfxPt < 10){
-                sfxPt ++;
-                sfx_volume = this.sfx_array[sfxPt];
-                this.sound.play(Phaser.Utils.Array.GetRandom(['jump', 'pauseOn', 'pauseOff', 'land', 'wall', 'death', 'ricochet', 'laser']), {volume: sfx_volume});
+            else if(this.input.keyboard.checkDown(cursors.right, 10) && sfxPt < maxVolume){
+                this.sound.play(Phaser.Utils.Array.GetRandom(['jump', 'pauseOn', 'pauseOff', 'land', 'wall', 'death', 'ricochet', 'laser']), {volume: ++sfxPt / maxVolume});
             }
         }
 

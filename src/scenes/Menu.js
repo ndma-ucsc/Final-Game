@@ -4,23 +4,21 @@ class Menu extends Phaser.Scene {
     }
 
     create() {
-        
-        if (!bgMusic.isPlaying){
-            //Background Music
-            songList = ["Bad Flower", "Panda"]/*, "Action Breakbeat", 
-            "Followed", "Turbo Giant", "Croissant Funk", "Beamin", "Morphamish", "Ragnarok",
-            "Ducky", "Assault", "Lorry"];*/
+        if(!bgMusic.isPlaying)
+        {
             nextSong = Phaser.Math.RND.pick(songList);
             bgMusic = this.sound.add(nextSong);
+            bgMusic.volume = volPt / maxVolume;
             bgMusic.play();
             console.log("Now Playing: " + nextSong);
         }
+
         this.input.keyboard.enabled = false;
         this.cameras.main.fadeIn(1000);
         this.time.delayedCall(1000, () => {this.input.keyboard.enabled = true;});
         this.selected = 1;
         this.start = this.add.text(game.config.width/2, game.config.height/2, "START", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
-        this.option = this.add.text(game.config.width/2, game.config.height/2 + 60, "OPTION", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
+        this.option = this.add.text(game.config.width/2, game.config.height/2 + 60, "OPTIONS", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
         this.generateFrameAnimation();
     }
 

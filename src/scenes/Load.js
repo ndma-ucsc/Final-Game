@@ -113,13 +113,10 @@ this.load.image('hitbox', 'balls.png');
     }
 
     create() {
-        songList = ["Bad Flower", "Panda"]/*, "Action Breakbeat", 
+        songList = ["Bad Flower", "Panda"];/*, "Action Breakbeat", 
         "Followed", "Turbo Giant", "Croissant Funk", "Beamin", "Morphamish", "Ragnarok",
         "Ducky", "Assault", "Lorry"];*/
-        nextSong = Phaser.Math.RND.pick(songList);
-        bgMusic = this.sound.add(nextSong);
-        bgMusic.play();
-        console.log("Now Playing: " + nextSong);
+        bgMusic = this.sound;
         this.scene.start("menuScene");
     }
 }

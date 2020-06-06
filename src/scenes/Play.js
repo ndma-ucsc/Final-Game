@@ -33,15 +33,15 @@ class Play extends Phaser.Scene{
         this.canDash = true;
 
         //Sound FX Implemented
-        this.jumpSFX = this.sound.add('jump', {volume: sfx_volume});
-        this.pauseOnSFX = this.sound.add('pauseOn', {volume: sfx_volume});
-        this.pauseOffSFX = this.sound.add('pauseOff', {volume: sfx_volume});
-        this.landSFX = this.sound.add('land', {volume: sfx_volume});
-        this.slowSFX = this.sound.add('slow', {volume: sfx_volume});
-        this.wallSFX = this.sound.add('wall', {volume: sfx_volume});
-        this.deathSFX = this.sound.add('death', {volume: sfx_volume});
-        this.ricochetSFX = this.sound.add('ricochet', {volume: sfx_volume/2});
-        this.laserSFX = this.sound.add('laser', {volume: sfx_volume/2});
+        this.jumpSFX = this.sound.add('jump', {volume: sfxPt / maxVolume});
+        this.pauseOnSFX = this.sound.add('pauseOn', {volume: sfxPt / maxVolume});
+        this.pauseOffSFX = this.sound.add('pauseOff', {volume: sfxPt / maxVolume});
+        this.landSFX = this.sound.add('land', {volume: sfxPt / maxVolume});
+        this.slowSFX = this.sound.add('slow', {volume: sfxPt / maxVolume});
+        this.wallSFX = this.sound.add('wall', {volume: sfxPt / maxVolume});
+        this.deathSFX = this.sound.add('death', {volume: sfxPt / maxVolume});
+        this.ricochetSFX = this.sound.add('ricochet', {volume: sfxPt / maxVolume / 2});
+        this.laserSFX = this.sound.add('laser', {volume: sfxPt / maxVolume / 2});
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
@@ -82,8 +82,8 @@ class Play extends Phaser.Scene{
         //create collider
         this.physics.add.collider(this.player, platformLayer);
         this.physics.add.collider(this.bullets, platformLayer);
-        this.spawnRandomEnemies(this.level); 
-        this.spawnBullet();
+        this.spawnEyeEnemies(this.level); 
+        //this.spawnBullet();
         this.dashing();
     }
 
@@ -91,7 +91,6 @@ class Play extends Phaser.Scene{
         // this.powerUp.x = this.player.x;
         // this.powerUp.y = this.player.y;
         if(this.slowMotion) {
-            
             if(this.radius <= 1000) {
                 this.radius = this.radius + 80;
                 this.zawarudo.setScale(this.radius);
@@ -128,7 +127,7 @@ class Play extends Phaser.Scene{
         this.checkWin();
     }
         
-    spawnRandomEnemies(enemyCount){
+    spawnEyeEnemies(enemyCount){
         if (!this.paused && !this.gameOver){
             console.log("Spawned Enemies");
             for(let i = 0; i < enemyCount; i++)
@@ -141,10 +140,6 @@ class Play extends Phaser.Scene{
                 this.enemies.add(enemy);
             }
         }
-    }
-    
-    spawnBullet(){
-        console.log("Firing Bullets");
         this.enemies.children.iterate((child) => {
             this.time.addEvent({
                 delay: Phaser.Math.Between(100, 300) * Phaser.Math.Between(10,30) * Phaser.Math.Between(1,3),
@@ -384,7 +379,7 @@ class Play extends Phaser.Scene{
     freezeUpdate(){
         let player = this.player;
         //freeze
-        if (Phaser.Input.Keyboard.DownDuration(keyX, 5000)){
+        if (Phaser.Input.Keyboard.Downw(keyX, 5000)){
             console.log("Freeze On");
             this.slowSFX.play();
             this.wallCling = false;
@@ -542,7 +537,8 @@ class Play extends Phaser.Scene{
             {
                 nextSong = Phaser.Math.RND.pick(songList);
             }
-            bgMusic = this.sound.add(nextSong, {volume: bg_volume});
+            bgMusic = this.sound.add(nextSong, {volume: volume_array[volPt]});
+            
             bgMusic.play();
             console.log("Now Playing: " + nextSong);
         }
