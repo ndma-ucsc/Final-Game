@@ -537,10 +537,10 @@ class Play extends Phaser.Scene{
             {
                 nextSong = Phaser.Math.RND.pick(songList);
             }
-            bgMusic = this.sound.add(nextSong, {volume: volume_array[volPt]});
+            bgMusic = this.sound.add(nextSong, {volume: volPt / maxVolume});
             
             bgMusic.play();
-            console.log("Now Playing: " + nextSong);
+            console.log("Now Playing: " + bgMusic.key);
         }
     }
 

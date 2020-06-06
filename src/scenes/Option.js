@@ -5,7 +5,7 @@ class Option extends Phaser.Scene {
 
     create() {
         this.scene.bringToTop("optionScene");
-        
+
         let optionTextConfig = {
             fontFamily: 'Bradley Hand',
             fontSize: '55px',
@@ -17,22 +17,26 @@ class Option extends Phaser.Scene {
             },
         };
 
-        this.optionText = this.add.text(game.config.width/2, 60, 'Options', {fontSize: "50px"}).setOrigin(0.5);
+        this.optionText = this.add.text(game.config.width / 2, 60, 'Options', {fontSize: "50px"}).setOrigin(0.5);
 
-        this.volume = this.add.text(game.config.width/6, 1*game.config.height/5, 'VOLUME', {fontSize: "50px"}).setOrigin(0,0.5);
-        this.volumeText = this.add.text(5*game.config.width/6, 1*game.config.height/5, volPt * maxVolume , optionTextConfig).setOrigin(1,0.5);
+        this.volume = this.add.text(game.config.width / 6, 1 * game.config.height / 6, 'VOLUME', {fontSize: "50px"}).setOrigin(0,0.5);
+        this.volumeText = this.add.text(5*game.config.width/6, 1 * game.config.height / 6, volPt * maxVolume , optionTextConfig).setOrigin(1,0.5);
 
-        this.sfx = this.add.text(game.config.width/6, 2*game.config.height/5, 'SFX', {fontSize: "50px"}).setOrigin(0,0.5);
-        this.sfxText = this.add.text(5*game.config.width/6, 2*game.config.height/5, sfxPt * maxVolume , optionTextConfig).setOrigin(1,0.5);
+        this.sfx = this.add.text(game.config.width / 6, 2 * game.config.height / 6, 'SFX', {fontSize: "50px"}).setOrigin(0,0.5);
+        this.sfxText = this.add.text(5 * game.config.width / 6, 2 * game.config.height / 6, sfxPt * maxVolume , optionTextConfig).setOrigin(1,0.5);
 
-        this.fullscreen = this.add.text(game.config.width/6, 3*game.config.height/5, 'FULLSCREEN', {fontSize: "50px"}).setOrigin(0,0.5);
-        this.fullscreenText = this.add.text(5*game.config.width/6, 3*game.config.height/5, `${this.scale.isFullscreen ? ' ✔' : '  ❌'}`, optionTextConfig).setOrigin(1,0.5);
+        this.fullscreen = this.add.text(game.config.width / 6, 3 * game.config.height / 6, 'FULLSCREEN', {fontSize: "50px"}).setOrigin(0,0.5);
+        this.fullscreenText = this.add.text(5 * game.config.width / 6, 3 * game.config.height / 6, `${this.scale.isFullscreen ? ' ✔' : '  ❌'}`, optionTextConfig).setOrigin(1,0.5);
 
-        this.return = this.add.text(game.config.width/2, 4*game.config.height/5, 'Back', {fontSize: "50px"}).setOrigin(0.5);
+        this.musicBox = this.add.text(game.config.width / 6, 4 * game.config.height / 6, 'SONG', {fontSize: "50px"}).setOrigin(0,0.5);
+        this.musicBoxText = this.add.text(5 * game.config.width / 6, 4 * game.config.height / 6, bgMusic.key , optionTextConfig).setOrigin(1,0.5);
+
+        this.return = this.add.text(game.config.width / 2, 5 * game.config.height / 6, 'Back', {fontSize: "50px"}).setOrigin(0.5);
 
         cursors = this.input.keyboard.createCursorKeys();
         keyENTER = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
         this.selected = 1;
+        this.songIndex;
     }
 
     update(){
@@ -41,11 +45,11 @@ class Option extends Phaser.Scene {
                 this.selected--;
             }
             else {
-                this.selected = 4;
+                this.selected = 5;
             }
         }
         else if(this.input.keyboard.checkDown(cursors.down, 250)){
-            if(this.selected < 4) {
+            if(this.selected < 5) {
                 this.selected++;
             }
             else {
@@ -57,12 +61,14 @@ class Option extends Phaser.Scene {
             this.volume.setTint(0xABFFA6).setScale(1.3);
             this.sfx.setTint().setScale();
             this.fullscreen.setTint().setScale();
+            this.musicBox.setTint().setScale();
             this.return.setTint().setScale();
         }
         else if(this.selected == 2) {
             this.volume.setTint().setScale();
             this.sfx.setTint(0xABFFA6).setScale(1.3);
             this.fullscreen.setTint().setScale();
+            this.musicBox.setTint().setScale();
             this.return.setTint().setScale();
         }
 
@@ -70,6 +76,7 @@ class Option extends Phaser.Scene {
             this.volume.setTint().setScale();
             this.sfx.setTint().setScale();
             this.fullscreen.setTint(0xABFFA6).setScale(1.3);
+            this.musicBox.setTint().setScale();
             this.return.setTint().setScale();
         }
         
@@ -77,6 +84,15 @@ class Option extends Phaser.Scene {
             this.volume.setTint().setScale();
             this.sfx.setTint().setScale();
             this.fullscreen.setTint().setScale();
+            this.musicBox.setTint(0xABFFA6).setScale(1.3);
+            this.return.setTint().setScale();
+        }
+
+        else if(this.selected == 5) {
+            this.volume.setTint().setScale();
+            this.sfx.setTint().setScale();
+            this.fullscreen.setTint().setScale();
+            this.musicBox.setTint().setScale();
             this.return.setTint(0xABFFA6).setScale(1.3);
         }
         
@@ -86,8 +102,7 @@ class Option extends Phaser.Scene {
             }
             else if(this.input.keyboard.checkDown(cursors.right, 100) && volPt < maxVolume){
                 bgMusic.volume = ++volPt / maxVolume;
-            }
-            
+            } 
         }
 
         else if(this.selected == 2){
@@ -95,7 +110,6 @@ class Option extends Phaser.Scene {
                 --sfxPt;
                 if(sfxPt % 10 == 0)
                 {
-                    console.log(sfxPt);
                     this.sound.play(Phaser.Utils.Array.GetRandom(['jump', 'pauseOn', 'pauseOff', 'land', 'wall', 'death', 'ricochet', 'laser']), {volume: sfxPt / maxVolume});
                 }
             }
@@ -103,7 +117,6 @@ class Option extends Phaser.Scene {
                 ++sfxPt;
                 if(sfxPt % 10 == 0)
                 {
-                    console.log(sfxPt);
                     this.sound.play(Phaser.Utils.Array.GetRandom(['jump', 'pauseOn', 'pauseOff', 'land', 'wall', 'death', 'ricochet', 'laser']), {volume: sfxPt / maxVolume});
                 }
             }
@@ -114,7 +127,32 @@ class Option extends Phaser.Scene {
                 this.scale.isFullscreen ? this.scale.stopFullscreen() : this.scale.startFullscreen();
             }
         }
+
         else if(this.selected == 4){
+            
+            if(this.input.keyboard.checkDown(cursors.left, 100)){
+                this.songIndex = songList.indexOf(bgMusic.key) - 1;
+                if(this.songIndex < 0) {
+                    this.songIndex = songList.length - 1;
+                }
+                bgMusic.stop();
+                bgMusic = this.sound.add(songList[this.songIndex], {volume: volPt / maxVolume});
+                bgMusic.play();
+                console.log("Now Playing: " + bgMusic.key);
+            }
+            else if(this.input.keyboard.checkDown(cursors.right, 100) && volPt < maxVolume){
+                this.songIndex = songList.indexOf(bgMusic.key) + 1;
+                if(this.songIndex > songList.length - 1) {
+                    this.songIndex = 0;
+                }
+                bgMusic.stop();
+                bgMusic = this.sound.add(songList[this.songIndex], {volume: volPt / maxVolume});
+                bgMusic.play();
+                console.log("Now Playing: " + bgMusic.key);
+            }
+        }
+
+        else if(this.selected == 5){
             if(Phaser.Input.Keyboard.JustDown(keyENTER)){
                 this.add.tween({
                     targets: this.cameras.main,
@@ -129,8 +167,9 @@ class Option extends Phaser.Scene {
                 });
             }
         }
-        this.volumeText.text = `${volPt}`;
-        this.sfxText.text = `${sfxPt}`;
-        this.fullscreenText.text = `${this.scale.isFullscreen ? '✔' : '❌'}`;
+        this.volumeText.text = volPt;
+        this.sfxText.text = sfxPt;
+        this.fullscreenText.text = this.scale.isFullscreen ? '✔' : '❌';
+        this.musicBoxText.text = bgMusic.key;
     } // end of update
 }

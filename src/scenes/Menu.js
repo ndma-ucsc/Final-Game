@@ -10,7 +10,7 @@ class Menu extends Phaser.Scene {
             bgMusic = this.sound.add(nextSong);
             bgMusic.volume = volPt / maxVolume;
             bgMusic.play();
-            console.log("Now Playing: " + nextSong);
+            console.log("Now Playing: " + bgMusic.key);
         }
 
         this.input.keyboard.enabled = false;
