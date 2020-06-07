@@ -17,9 +17,29 @@ class Menu extends Phaser.Scene {
         this.cameras.main.fadeIn(1000);
         this.time.delayedCall(1000, () => {this.input.keyboard.enabled = true;});
         this.selected = 1;
+        this.cover = this.add.image(0, 0,'cover').setAlpha(0);
         this.start = this.add.text(game.config.width/2, game.config.height/2, "START", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
         this.option = this.add.text(game.config.width/2, game.config.height/2 + 60, "OPTIONS", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
         this.generateFrameAnimation();
+
+        // this.tweens.add({
+        //     targets: this.cover,
+        //     x: 100,
+        //     ease: 'Sine.easeInOut',
+        //     yoyo: false,
+        //     repeat: 0,
+        //     duration: 3000
+        // });
+
+        this.tweens.add({
+            targets: this.cover,
+            alpha: { value: 1, duration: 5000, ease: 'Power1' },
+            yoyo: true,
+            loop: -1,
+            onLoop : this.coverChange.bind(this)
+
+        });
+        
     }
 
     update(){
@@ -69,6 +89,12 @@ class Menu extends Phaser.Scene {
                 });
             }
         }
+    }
+
+    coverChange() {
+        this.cover.setScale(0.4);
+        this.cover.x = 400
+        this.cover.y = 110;
     }
 
     generateFrameAnimation(){

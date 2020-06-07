@@ -108,6 +108,7 @@ class Load extends Phaser.Scene {
         this.load.image("ball", "ball.png");
         this.load.image('hitbox', 'balls.png');
         this.load.image('gray', 'Zawarudo.png');
+        this.load.image('cover', 'ninjaCover.png');
 
         this.load.path = "./assets/tile_map/";
         this.load.tilemapTiledJSON("level_map_1", "tilemap01.json");
