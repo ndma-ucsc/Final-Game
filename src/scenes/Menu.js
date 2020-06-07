@@ -16,7 +16,7 @@ class Menu extends Phaser.Scene {
         this.cameras.main.fadeIn(1000);
         this.time.delayedCall(1000, () => {this.input.keyboard.enabled = true;});
         this.selected = 1;
-        this.cover = this.add.image(1800, 0,'cover').setAlpha(0);
+        this.cover = this.add.image(1800, -10,'cover').setAlpha(0);
         this.start = this.add.text(game.config.width/2, game.config.height/2 - 60, "START", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
         this.controls = this.add.text(game.config.width/2, game.config.height/2, "CONTROLS", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
         this.option = this.add.text(game.config.width/2, game.config.height/2 + 60, "OPTIONS", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
@@ -125,16 +125,23 @@ class Menu extends Phaser.Scene {
         if(this.slidesOrder == 0) {
             this.cover.setScale(1);
             this.cover.x = 770;
+            this.cover.y = 0;
             this.slidesOrder++;
         }
         else if(this.slidesOrder == 1) {
-            this.cover.setScale(2);
+            this.cover.x = -190;
             this.slidesOrder++;
         }
         else if(this.slidesOrder == 2) {
             this.cover.setScale(0.4);
             this.cover.x = 400;
-            this.cover.y = 110;
+            this.cover.y = 140;
+            this.slidesOrder++;
+        }
+        else if(this.slidesOrder == 3) {
+            this.cover.setScale(0.3);
+            this.cover.x = 800;
+            this.cover.y = 340;
             this.slidesOrder = 0;
         }
     }
