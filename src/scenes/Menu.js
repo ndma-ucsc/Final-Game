@@ -106,7 +106,7 @@ class Menu extends Phaser.Scene {
                     keyENTER.reset();
                 });
             }
-            else if(this.selected == 3) {
+            else if(this.selected == 4) {
                 this.cameras.main.fadeOut(500);
                 this.time.delayedCall(500,() => {
                     this.cameras.main.fadeIn(1);
