@@ -90,10 +90,9 @@ class Play extends Phaser.Scene{
 
         this.slowmoBar = new SlowmoBar(this, 0, 0);
 
-        this.pauseText = this.add.text(game.config.width - 10, 10, "||", {fontSize: "40px"}).setOrigin(1, 0);
-        this.add.text(game.config.width - 7, 15, "ESC", {fontSize: "30px"}).setOrigin(1, 0);
-
-
+        this.add.text(game.config.width - 30, 15, "ESC", {fontSize: "30px" , color: '#FF69B4'}).setOrigin(0.5);
+        this.pauseText = this.add.text(game.config.width - 30, 45, "||", {fontSize: "40px", color: '#00FFFF'}).setOrigin(0.5);
+        
         //create collider
         this.physics.add.collider(this.player, platformLayer);
         this.physics.add.collider(this.bullets, platformLayer);
