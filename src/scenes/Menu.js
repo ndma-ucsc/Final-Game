@@ -18,8 +18,9 @@ class Menu extends Phaser.Scene {
         this.selected = 1;
         this.cover = this.add.image(0, 0,'cover').setAlpha(0);
         this.start = this.add.text(game.config.width/2, game.config.height/2 - 60, "START", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
-        this.option = this.add.text(game.config.width/2, game.config.height/2, "OPTIONS", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
-        this.credits = this.add.text(game.config.width/2, game.config.height/2 + 60, "CREDITS", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
+        this.controls = this.add.text(game.config.width/2, game.config.height/2, "CONTROLS", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
+        this.option = this.add.text(game.config.width/2, game.config.height/2 + 60, "OPTIONS", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
+        this.credits = this.add.text(game.config.width/2, game.config.height/2 + 120, "CREDITS", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
         this.generateFrameAnimation();
 
         this.tweens.add({
@@ -41,11 +42,11 @@ class Menu extends Phaser.Scene {
                 this.selected--;
             }
             else {
-                this.selected = 3;
+                this.selected = 4;
             }
         }
         else if(this.input.keyboard.checkDown(cursors.down, 250)) {
-            if(this.selected < 3) {
+            if(this.selected < 4) {
                 this.selected++;
             }
             else {
@@ -54,16 +55,25 @@ class Menu extends Phaser.Scene {
         }
         if(this.selected == 1) {
             this.start.setTint(0x135300).setScale(1.3);
+            this.controls.setTint().setScale();
             this.option.setTint().setScale();
             this.credits.setTint().setScale();
         }
         else if(this.selected == 2) {
             this.start.setTint().setScale();
-            this.option.setTint(0x135300).setScale(1.3);
+            this.controls.setTint(0x135300).setScale(1.3);
+            this.option.setTint().setScale();
             this.credits.setTint().setScale();
         }
         else if(this.selected == 3) {
             this.start.setTint().setScale();
+            this.controls.setTint().setScale();
+            this.option.setTint(0x135300).setScale(1.3);
+            this.credits.setTint().setScale();
+        }
+        else if(this.selected == 4) {
+            this.start.setTint().setScale();
+            this.controls.setTint().setScale();
             this.option.setTint().setScale();
             this.credits.setTint(0x135300).setScale(1.3);
         }
@@ -77,6 +87,16 @@ class Menu extends Phaser.Scene {
                 });
             }
             else if(this.selected == 2) {
+                this.cameras.main.fadeOut(500);
+                this.time.delayedCall(500,() => {
+                    this.cameras.main.fadeIn(1);
+                    this.input.keyboard.enabled = true;
+                    this.scene.pause();
+                    this.scene.launch("controlScene");
+                    keyENTER.reset();
+                });
+            }
+            else if(this.selected == 3) {
                 this.cameras.main.fadeOut(500);
                 this.time.delayedCall(500,() => {
                     this.cameras.main.fadeIn(1);

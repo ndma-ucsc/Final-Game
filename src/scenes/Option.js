@@ -31,7 +31,7 @@ class Option extends Phaser.Scene {
         this.musicBox = this.add.text(game.config.width / 6, 4 * game.config.height / 6, 'SONG', {fontSize: "50px"}).setOrigin(0,0.5);
         this.musicBoxText = this.add.text(5 * game.config.width / 6, 4 * game.config.height / 6, bgMusic.key , optionTextConfig).setOrigin(1,0.5);
 
-        this.return = this.add.text(game.config.width / 2, 5 * game.config.height / 6, 'Back', {fontSize: "50px"}).setOrigin(0.5);
+        this.return = this.add.text(game.config.width / 2, 5 * game.config.height / 6, 'Return to Menu', {fontSize: "50px"}).setOrigin(0.5);
 
         cursors = this.input.keyboard.createCursorKeys();
         keyENTER = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);

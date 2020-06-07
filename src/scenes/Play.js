@@ -90,6 +90,10 @@ class Play extends Phaser.Scene{
 
         this.slowmoBar = new SlowmoBar(this, 0, 0);
 
+        this.pauseText = this.add.text(game.config.width - 10, 10, "||", {fontSize: "40px"}).setOrigin(1, 0);
+        this.add.text(game.config.width - 7, 15, "ESC", {fontSize: "30px"}).setOrigin(1, 0);
+
+
         //create collider
         this.physics.add.collider(this.player, platformLayer);
         this.physics.add.collider(this.bullets, platformLayer);
@@ -392,6 +396,7 @@ class Play extends Phaser.Scene{
                 console.log("Game Paused");
                 this.paused = true;
                 this.pauseOnSFX.play();
+                this.pauseText.text = "▷";
                 if(this.slowMotion)
                 {
                     this.slowSFX.pause();
@@ -410,6 +415,7 @@ class Play extends Phaser.Scene{
                 console.log("Game Unpaused");
                 this.paused = false;
                 this.pauseOffSFX.play();
+                this.pauseText.text = "||";
                 if(this.slowMotion)
                 {
                     this.slowSFX.resume();

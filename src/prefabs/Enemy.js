@@ -16,35 +16,34 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         super.update();
         if(!this.scene.paused){
             this.body.enable = true;
+            //Horizontal Movement
+            if(this.x <= 0 && this.body.velocity.x < 0){
+                this.body.velocity.x *= -1;
+            }
+            else if(this.x >= game.config.width && this.body.velocity.x > 0){
+                this.body.velocity.x *= -1;
+            }
+
+            //Vertical Movement
+            if(this.y <= 0 && this.body.velocity.y < 0){
+                this.body.velocity.y *= -1;
+            }
+            else if(this.y >= game.config.height && this.body.velocity.y > 0){
+                this.body.velocity.y *= -1;
+            }
+
+            let changeXDirection = Phaser.Math.Between(0, 10000);
+            let changeYDirection = Phaser.Math.Between(0, 10000);
+            
+            if(changeXDirection < 50){
+                this.body.velocity.x *= -1;
+            }
+            if(changeYDirection < 50){
+                this.body.velocity.y *= -1; 
+            }
         }
         else{
             this.body.enable = false;
-        }
-            
-        //Horizontal Movement
-        if(this.x <= 0 && this.body.velocity.x < 0){
-            this.body.velocity.x *= -1;
-        }
-        else if(this.x >= game.config.width && this.body.velocity.x > 0){
-            this.body.velocity.x *= -1;
-        }
-
-        //Vertical Movement
-        if(this.y <= 0 && this.body.velocity.y < 0){
-            this.body.velocity.y *= -1;
-        }
-        else if(this.y >= game.config.height && this.body.velocity.y > 0){
-            this.body.velocity.y *= -1;
-        }
-
-        let changeXDirection = Phaser.Math.Between(0, 10000);
-        let changeYDirection = Phaser.Math.Between(0, 10000);
-        
-        if(changeXDirection < 50){
-            this.body.velocity.x *= -1;
-        }
-        if(changeYDirection < 50){
-            this.body.velocity.y *= -1; 
         }
     }
 }
