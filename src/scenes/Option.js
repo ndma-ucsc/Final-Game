@@ -5,7 +5,7 @@ class Option extends Phaser.Scene {
 
     create() {
         this.scene.bringToTop("optionScene");
-
+        this.cameras.main.fadeIn(1000);
         let optionTextConfig = {
             fontFamily: 'Bradley Hand',
             fontSize: '55px',
@@ -165,6 +165,7 @@ class Option extends Phaser.Scene {
                 this.time.delayedCall(500,() => {
                     this.scene.stop("playScene");
                     this.scene.stop("controlScene");
+                    this.anims.resumeAll();
                     this.scene.start("menuScene");
                     this.scene.stop();
                 });

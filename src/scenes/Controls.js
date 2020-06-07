@@ -72,8 +72,10 @@ class Controls extends Phaser.Scene {
         this.countdown();
 
         this.controlArray = this.cache.text.get('controls').split('\n');
-
-        this.add.image(game.config.width / 2 , )
+        this.selectedText = 0
+        this.add.image(game.config.width / 2 , game.config.height / 4, 'dialogBox').setOrigin(0.5);
+        this.controlText = this.add.text(10, game.config.height / 4, this.controlArray[this.selectedText], {fontSize: "20px", wordWrap: true, wordWrapWidth: 450});
+        this.add.text(870, 310, "⏎", {fontSize: "60px", wordWrap: true, wordWrapWidth: 450});
     }
 
     update(){
@@ -94,10 +96,15 @@ class Controls extends Phaser.Scene {
     }
 
     controlTextUpdate(){
-
+        if (Phaser.Input.Keyboard.JustDown(keyENTER)){
+            this.selectedText++;
+            if (this.selectedText > this.controlArray.length) this.selectedText = 0;
+            this.controlText.text = this.controlArray[this.selectedText];
+        }
     }
 
     moveUpdate(){
+        keyENTER = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
         let justDownVal = Phaser.Input.Keyboard.JustDown(keySPACE);
         //On ground
         if (this.player.body.onFloor()){
