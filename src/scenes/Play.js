@@ -190,6 +190,19 @@ class Play extends Phaser.Scene{
                     this.footstepSFX.play();
                 }
             }
+            else if (cursors.down.isDown){
+                this.jump = false;
+                this.player.body.setVelocity(0, 0);
+                this.player.body.setAcceleration(0, 0);
+                if(this.facing == 'left') {
+                    this.player.anims.play('crouchL',true);
+                    this.player.setSize(30,25,false).setOffset(10,5);
+                }
+                else if(this.facing == 'right') {
+                    this.player.anims.play('crouchR',true);
+                    this.player.setSize(30,25,false).setOffset(5,5);
+                }
+            }
             else{
                 this.player.body.setVelocity(0, 0);
                 this.player.body.setAcceleration(0, 0);
@@ -204,7 +217,7 @@ class Play extends Phaser.Scene{
             }
             
             //While in the air
-            if (!this.isGrounded){
+            if (!this.isGrounded && this.jump) {
                 this.landSFX.play();
                 if(this.facing == 'left') {
                     this.player.play('jumpL_R',true);
@@ -238,15 +251,15 @@ class Play extends Phaser.Scene{
             }
             else{
                 this.player.body.setAccelerationX(0);
-                this.falling = true;
-                if(this.facing == 'left' && this.jump == false) {
-                    this.player.play('fallingL',true);
-                    this.player.setSize(30,50,false).setOffset(25,10);
-                }
-                else if(this.facing == 'right' && this.jump == false) {
-                    this.player.play('fallingR',true);
-                    this.player.setSize(30,50,false).setOffset(40,10);
-                }
+                // this.falling = true;
+                // if(this.facing == 'left' && this.jump == false) {
+                //     this.player.play('fallingL',true);
+                //     this.player.setSize(30,50,false).setOffset(25,10);
+                // }
+                // else if(this.facing == 'right' && this.jump == false) {
+                //     this.player.play('fallingR',true);
+                //     this.player.setSize(30,50,false).setOffset(40,10);
+                // }
             }
             if (cursors.down.isDown){
                 this.player.body.setAccelerationY(this.fastFall);
@@ -290,7 +303,7 @@ class Play extends Phaser.Scene{
         if (!this.player.body.onFloor()){
             if (this.player.body.blocked.left){
                 if (cursors.left.isDown && !cursors.right.isDown && this.player.body.velocity.y > 0){
-                    this.player.body.setVelocityX(-100)
+                    this.player.body.setVelocityX(-100);
                     this.player.body.setVelocityY(100);
                     this.wallCling = true;
                     this.player.anims.play('wallclingL',true);
@@ -480,15 +493,20 @@ class Play extends Phaser.Scene{
             if (combo === dashLeft) { 
                 if (!this.isGrounded && !this.paused && this.canDash) {
                     this.canDash = false;
-                    this.player.anims.play('runL',true);
+                    this.player.anims.play('dashL',true);
+                    this.player.setSize(30,10).setOffset(10,10);
+                    this.facing = 'left';
                     this.player.body.allowGravity = false;
                     this.player.body.setVelocityY(0);
-                    this.player.body.setVelocityX(-this.movementSpeed);
+                    this.player.body.setVelocityX(-this.movementSpeed - 20);
                     this.dashSFX.play();
                     this.time.addEvent({
-                        delay: 300,
+                        delay: 400,
                         callback: ()=> {
                             this.player.body.allowGravity = true;
+                            this.falling = true;
+                            this.player.play('fallingL',true);
+                            this.player.setSize(30,50,false).setOffset(25,10);
                         }
                     })
                     this.time.addEvent({
@@ -503,15 +521,20 @@ class Play extends Phaser.Scene{
             if (combo === dashRight && this.canDash) {
                 if (!this.isGrounded && !this.paused) {
                     this.canDash = false;
-                    this.player.anims.play('runR',true);
+                    this.player.anims.play('dashR',true);
+                    this.player.setSize(30,10).setOffset(39,10);
+                    this.facing = 'right';
                     this.player.body.allowGravity = false;
                     this.player.body.setVelocityY(0);
-                    this.player.body.setVelocityX(this.movementSpeed);
+                    this.player.body.setVelocityX(this.movementSpeed + 20);
                     this.dashSFX.play();
                     this.time.addEvent({
-                        delay: 300,
+                        delay: 400,
                         callback: ()=> {
                             this.player.body.allowGravity = true;
+                            this.falling = true;
+                            this.player.play('fallingR',true);
+                            this.player.setSize(30,50,false).setOffset(40,10);
                         }
                     });
                     this.time.addEvent({

@@ -222,6 +222,38 @@ class Menu extends Phaser.Scene {
             repeat: 0
         });
 
+        // Ninja dashing right
+        this.anims.create({
+            key: 'dashR',
+            frames: this.anims.generateFrameNumbers('dashRight', {start: 0, end: 0, first: 0}),
+            frameRate: 1,
+            repeat: 0
+        });
+
+        // Ninja dashing left
+        this.anims.create({
+            key: 'dashL',
+            frames: this.anims.generateFrameNumbers('dashLeft', {start: 0, end: 0, first: 0}),
+            frameRate: 1,
+            repeat: 0
+        });
+
+        // Ninja crouching right
+        this.anims.create({
+            key: 'crouchR',
+            frames: this.anims.generateFrameNumbers('crouchRight', {start: 0, end: 0, first: 0}),
+            frameRate: 1,
+            repeat: 0
+        });
+
+        // Ninja crouching left
+        this.anims.create({
+            key: 'crouchL',
+            frames: this.anims.generateFrameNumbers('crouchLeft', {start: 0, end: 0, first: 0}),
+            frameRate: 1,
+            repeat: 0
+        });
+
         // Oil Can spinning
         this.anims.create({
             key: 'spin',

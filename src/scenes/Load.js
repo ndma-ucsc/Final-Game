@@ -78,6 +78,10 @@ class Load extends Phaser.Scene {
         this.load.spritesheet('idleRight', 'idle_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 3});
         this.load.spritesheet('wallclingLeft', 'wallcling_left.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 0});
         this.load.spritesheet('wallclingRight', 'wallcling_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 0});
+        this.load.spritesheet('dashLeft', 'dashing_left.png', {frameWidth: 78, frameHeight: 29, startFrame: 0, endFrame: 0});
+        this.load.spritesheet('dashRight', 'dashing_right.png', {frameWidth: 78, frameHeight: 29, startFrame: 0, endFrame: 0});
+        this.load.spritesheet('crouchLeft', 'crouch_left.png', {frameWidth: 43, frameHeight: 34, startFrame: 0, endFrame: 0});
+        this.load.spritesheet('crouchRight', 'crouch_right.png', {frameWidth: 43, frameHeight: 34, startFrame: 0, endFrame: 0});
         this.load.image('player', 'player.png');
 
         this.load.path = "./assets/sfx/";

@@ -114,6 +114,19 @@ class Controls extends Phaser.Scene {
                     this.footstepSFX.play();
                 }
             }
+            else if (cursors.down.isDown){
+                this.jump = false;
+                this.player.body.setVelocity(0, 0);
+                this.player.body.setAcceleration(0, 0);
+                if(this.facing == 'left') {
+                    this.player.anims.play('crouchL',true);
+                    this.player.setSize(30,25,false).setOffset(10,5);
+                }
+                else if(this.facing == 'right') {
+                    this.player.anims.play('crouchR',true);
+                    this.player.setSize(30,25,false).setOffset(5,5);
+                }
+            }
             else{
                 this.player.body.setVelocity(0, 0);
                 this.player.body.setAcceleration(0, 0);
@@ -128,7 +141,7 @@ class Controls extends Phaser.Scene {
             }
             
             //While in the air
-            if (!this.isGrounded){
+            if (!this.isGrounded && this.jump) {
                 this.landSFX.play();
                 if(this.facing == 'left') {
                     this.player.play('jumpL_R',true);
@@ -155,24 +168,22 @@ class Controls extends Phaser.Scene {
             
             this.isGrounded = false;
             if (cursors.left.isDown){
-                this.player.play('fallingL',true);
                 this.player.body.setAccelerationX(-this.airSpeed);
             }
             else if (cursors.right.isDown){
-                this.player.play('fallingR',true);
                 this.player.body.setAccelerationX(this.airSpeed);
             }
             else{
                 this.player.body.setAccelerationX(0);
-                this.falling = true;
-                if(this.facing == 'left' && this.jump == false) {
-                    this.player.play('fallingL',true);
-                    this.player.setSize(30,50,false).setOffset(25,10);
-                }
-                else if(this.facing == 'right' && this.jump == false) {
-                    this.player.play('fallingR',true);
-                    this.player.setSize(30,50,false).setOffset(40,10);
-                }
+                // this.falling = true;
+                // if(this.facing == 'left' && this.jump == false) {
+                //     this.player.play('fallingL',true);
+                //     this.player.setSize(30,50,false).setOffset(25,10);
+                // }
+                // else if(this.facing == 'right' && this.jump == false) {
+                //     this.player.play('fallingR',true);
+                //     this.player.setSize(30,50,false).setOffset(40,10);
+                // }
             }
             if (cursors.down.isDown){
                 this.player.body.setAccelerationY(this.fastFall);
@@ -216,7 +227,7 @@ class Controls extends Phaser.Scene {
         if (!this.player.body.onFloor()){
             if (this.player.body.blocked.left){
                 if (cursors.left.isDown && !cursors.right.isDown && this.player.body.velocity.y > 0){
-                    this.player.body.setVelocityX(-100)
+                    this.player.body.setVelocityX(-100);
                     this.player.body.setVelocityY(100);
                     this.wallCling = true;
                     this.player.anims.play('wallclingL',true);
@@ -270,7 +281,7 @@ class Controls extends Phaser.Scene {
             this.wallCling = false;
         }
     }
-
+    
     slowMoUpdate(){
         //Slow Mo Time
         if (Phaser.Input.Keyboard.JustDown(keyF) || this.ranOutOfTime){
