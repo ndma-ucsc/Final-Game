@@ -162,6 +162,7 @@ class Option extends Phaser.Scene {
                 });
                 this.time.delayedCall(500,() => {
                     this.scene.stop("playScene");
+                    this.scene.stop("controlScene");
                     this.scene.start("menuScene");
                     this.scene.stop();
                 });

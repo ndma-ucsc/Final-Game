@@ -263,6 +263,7 @@ class Play extends Phaser.Scene{
                     this.player.play('fallingR',true);
                     this.player.setSize(30,50,false).setOffset(40,10);
                 }
+                this.player.body.setAccelerationY(0);
             }
         }
 
@@ -571,11 +572,11 @@ class Play extends Phaser.Scene{
         this.timedEvent = this.time.addEvent({
             delay: 1000, 
             callback: ()=> {
-                if (!this.slowMotion && this.initTime < 10){
+                if (!this.paused && !this.slowMotion && this.initTime < 10){
                     this.initTime++;
                     this.slowmoBar.increase(this.amount);
                 }
-                else if (this.slowMotion && this.initTime > 0){
+                else if (!this.paused && this.slowMotion && this.initTime > 0){
                     this.initTime--;
                     this.slowmoBar.decrease(this.amount);
                     if (this.initTime == 0){
