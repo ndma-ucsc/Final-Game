@@ -70,6 +70,10 @@ class Controls extends Phaser.Scene {
 
         this.dashing();
         this.countdown();
+
+        this.controlArray = this.cache.text.get('controls').split('\n');
+
+        this.add.image(game.config.width / 2 , )
     }
 
     update(){
@@ -85,7 +89,12 @@ class Controls extends Phaser.Scene {
                 this.player.setTint();
             }
         }
+        this.controlTextUpdate();
         this.musicUpdate();
+    }
+
+    controlTextUpdate(){
+
     }
 
     moveUpdate(){

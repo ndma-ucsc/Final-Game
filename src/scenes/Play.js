@@ -160,7 +160,7 @@ class Play extends Phaser.Scene{
             })
         });
     }
-
+ 
     moveUpdate(){
         let justDownVal = Phaser.Input.Keyboard.JustDown(keySPACE);
         //On ground
