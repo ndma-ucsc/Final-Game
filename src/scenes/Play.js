@@ -534,16 +534,6 @@ class Play extends Phaser.Scene{
         }
     }
 
-    checkWin(){
-        if (this.player.y <= 0){
-            this.level++;
-            if (this.level == 4){
-                this.scene.start("gameEndScene");
-            }
-            this.scene.start("playScene", {level: this.level, startingPos: this.player.x, remainingXVel: this.player.body.velocity.x});
-        }
-    }
-
     zaWarudo()
     {
         if (this.slowMotion) {
@@ -571,33 +561,16 @@ class Play extends Phaser.Scene{
         }
     }
 
-    countdown()
-    {
-        let timerTextConfig = {
-            fontFamily: 'Bradley Hand',
-            fontSize: '60px',
-            color: '#FFFFFF',
-            align: 'center',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-        };
-
-        this.timer = this.add.text(game.config.width - 100, 32, this.initTime, timerTextConfig).setDepth(2);
-
-        this.timedEvent = this.time.addEvent(
-        {
+    countdown(){
+        this.timedEvent = this.time.addEvent({
             delay: 1000, 
             callback: ()=> {
                 if (!this.slowMotion && this.initTime < 10){
                     this.initTime++;
-                    this.timer.setText(this.initTime);
                     this.slowmoBar.increase(this.amount);
                 }
                 else if (this.slowMotion && this.initTime > 0){
                     this.initTime--;
-                    this.timer.setText(this.initTime);
                     this.slowmoBar.decrease(this.amount);
                     if (this.initTime == 0){
                         this.electricSFX.play();
@@ -608,4 +581,17 @@ class Play extends Phaser.Scene{
             loop: true
         })
     }
+
+    checkWin(){
+        if (this.player.y <= 0){
+            this.level++;
+            if (this.level == 4){
+                this.scene.start("gameEndScene");
+            }
+            else{
+                this.scene.start("playScene", {level: this.level, startingPos: this.player.x, remainingXVel: this.player.body.velocity.x});
+            }
+        }
+    }
+
 }
