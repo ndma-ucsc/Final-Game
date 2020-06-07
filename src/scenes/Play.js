@@ -40,6 +40,7 @@ class Play extends Phaser.Scene{
         this.canDash = true;
         this.initTime = 10;
         this.ranOutOfTime = false;
+        this.amount = 100;
 
         //Sound FX Implemented
         this.jumpSFX = this.sound.add('jump', {volume: sfxPt / maxVolume});
@@ -86,6 +87,8 @@ class Play extends Phaser.Scene{
         this.bullets = this.add.group({
             runChildUpdate: true
         });
+
+        this.slowmoBar = new SlowmoBar(this, 0, 0);
 
         //create collider
         this.physics.add.collider(this.player, platformLayer);
@@ -590,10 +593,12 @@ class Play extends Phaser.Scene{
                 if (!this.slowMotion && this.initTime < 10){
                     this.initTime++;
                     this.timer.setText(this.initTime);
+                    this.slowmoBar.increase(this.amount);
                 }
                 else if (this.slowMotion && this.initTime > 0){
                     this.initTime--;
                     this.timer.setText(this.initTime);
+                    this.slowmoBar.decrease(this.amount);
                     if (this.initTime == 0){
                         this.electricSFX.play();
                         this.ranOutOfTime = true;
