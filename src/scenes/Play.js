@@ -227,11 +227,9 @@ class Play extends Phaser.Scene{
             
             this.isGrounded = false;
             if (cursors.left.isDown){
-                this.player.play('fallingL',true);
                 this.player.body.setAccelerationX(-this.airSpeed);
             }
             else if (cursors.right.isDown){
-                this.player.play('fallingR',true);
                 this.player.body.setAccelerationX(this.airSpeed);
             }
             else{

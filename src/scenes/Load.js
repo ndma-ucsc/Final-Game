@@ -66,11 +66,6 @@ class Load extends Phaser.Scene {
         this.load.audio('Ragnarok', 'Fengir- Ragnarok.mp3');
         this.load.audio('Followed', 'Shaolin Dub- Followed.mp3');
         this.load.audio('Turbo Giant', 'Wankers United- Turbo Giant.mp3');
-        // this.load.audio('Gumption Junction', 'Morphamish- Gumption Junction.mp3');
-        // this.load.audio('New Horizons', 'Decktonic- New Horizons.mp3');
-        // this.load.audio('Space Cop', 'Smoked Meat Fax Machine- Space Cop.mp3');
-        // this.load.audio('Mxghty', 'Lazer Falcon- MXGHTY.mp3');
-        // this.load.audio('Up There', 'Moon Veil- Up There.mp3');
 
         this.load.path = "./assets/player/";
         this.load.spritesheet('runRight', 'run_right.png', {frameWidth: 100, frameHeight: 77, startFrame: 0, endFrame: 7});
