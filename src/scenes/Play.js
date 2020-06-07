@@ -128,7 +128,7 @@ class Play extends Phaser.Scene{
         }
         this.enemies.children.iterate((child) => {
             this.time.addEvent({
-                delay: Phaser.Math.Between(100, 300) * Phaser.Math.Between(10,30) * Phaser.Math.Between(1,3),
+                delay: Phaser.Math.Between(100, 300) * Phaser.Math.Between(10, 30) * Phaser.Math.Between(1, 3),
                 callback: ()=> {
                     if (!this.paused && !this.gameOver){
                         let bullet = new Bullet(this, child.x, child.y, 'ball');
@@ -532,13 +532,13 @@ class Play extends Phaser.Scene{
     {
         if(this.slowMotion) {
             if(this.radius <= 1000) {
-                this.radius = this.radius + 4;
+                this.radius = this.radius + 7;
                 this.zawarudo.setScale(this.radius);
             }
         }
         else if(!this.slowMotion) {
             if(this.radius > 1) {
-                this.radius = this.radius - 80;
+                this.radius = this.radius - 7;
                 this.zawarudo.setScale(this.radius);
             }
             else if(this.radius < 0)
