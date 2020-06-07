@@ -287,8 +287,11 @@ class Play extends Phaser.Scene{
                 }
                 else{
                     if(this.wallCling) {
-                        this.player.anims.play('fallingR',true);
-                        this.player.setSize(30,50,false).setOffset(40,10);
+                        this.time.delayedCall(300, () => {
+                            this.player.anims.play('fallingR',true);
+                            this.player.setSize(30,50,false).setOffset(40,10);
+                        });
+                        
                     }
                     this.wallCling = false;
                     
@@ -313,8 +316,11 @@ class Play extends Phaser.Scene{
                 }
                 else{
                     if(this.wallCling) {
-                        this.player.anims.play('fallingL',true);
-                        this.player.setSize(30,50,false).setOffset(25,10);
+                        this.time.delayedCall(300, () => {
+                            this.player.anims.play('fallingL',true);
+                            this.player.setSize(30,50,false).setOffset(25,10);
+                        });
+                        
                     }
                     this.wallCling = false;
                 }
