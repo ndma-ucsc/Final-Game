@@ -62,9 +62,29 @@ class Credits extends Phaser.Scene {
                 this.groupText.add(textVar);
             }
         }
+        
+        this.groupText.children.iterate((child) => {
+            this.childrenDestroyer = this.time.addEvent({
+                delay: 100,
+                callback: () => {
+                    if(child.y < 0)
+                    {
+                        child.destroy();
+                    }
+                },
+                loop: true
+            })
+        });
     }
 
     update(){
-
+        if (Phaser.Input.Keyboard.JustDown(keyESC) || this.groupText.getLength() == 0){
+            this.childrenDestroyer.remove();
+            this.cameras.main.fadeOut(1000);
+            this.time.delayedCall(1000, () => {this.scene.start("menuScene");});
+        }
+        if (this.moveText){
+            this.groupText.incY(-2);
+        }
     }
 }

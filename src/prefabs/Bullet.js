@@ -23,8 +23,7 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
         if(!this.scene.paused && !this.scene.gameOver){
             this.body.enable = true;
         }
-        else
-        {
+        else{
             this.body.enable = false;
         }
 
