@@ -135,7 +135,7 @@ class Play extends Phaser.Scene{
                 delay: Phaser.Math.Between(100, 300) * Phaser.Math.Between(10, 30) * Phaser.Math.Between(1, 3),
                 callback: ()=> {
                     if (!this.paused && !this.gameOver){
-                        let bullet = new Bullet(this, child.x, child.y, 'ball');
+                        let bullet = new Bullet(this, child.x, child.y, 'ball', 3);
                         if (this.slowMotion)
                         {
                             bullet.body.velocity.x /= this.slowSpeed;

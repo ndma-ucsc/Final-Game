@@ -1,5 +1,5 @@
 class Bullet extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y, texture) {
+    constructor(scene, x, y, texture, ricochet) {
         super(scene, x, y, texture);
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -15,7 +15,7 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
             this.scene.player.y + Phaser.Math.Between(-this.verticalError, this.verticalError));
         scene.physics.velocityFromRotation(this.angle, 300, this.body.velocity);
 
-        this.ricochetCount = 0;
+        this.ricochetCount = ricochet;
     }
     update() {
         super.update();
@@ -29,9 +29,9 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
 
         if (!this.body.blocked.none) {
             this.scene.ricochetSFX.play();
-            this.ricochetCount++;
+            this.ricochetCount--;
         }
-        if(this.ricochetCount == 3) {
+        if(this.ricochetCount == 0) {
             this.destroy();
         }
     }
