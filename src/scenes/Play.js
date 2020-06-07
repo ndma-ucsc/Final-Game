@@ -132,9 +132,9 @@ class Play extends Phaser.Scene{
         }
         this.enemies.children.iterate((child) => {
             this.time.addEvent({
-                delay: Phaser.Math.Between(100, 300) * Phaser.Math.Between(10, 30) * Phaser.Math.Between(1, 3),
+                delay: Phaser.Math.Between(150, 300) * Phaser.Math.Between(10, 20) * Phaser.Math.Between(2, 4),
                 callback: ()=> {
-                    if (!this.paused && !this.gameOver){
+                    if (!this.paused && !this.gameOver){    
                         let verticalError = 100;
                         let horizontalError = 100;
                         let offsetX = this.player.x + Phaser.Math.Between(-horizontalError, horizontalError);
@@ -247,7 +247,6 @@ class Play extends Phaser.Scene{
                 this.player.body.setAccelerationY(this.fastFall);
             }
             else{
-                this.player.body.setAccelerationY(0);
                 this.falling = true;
                 if(this.facing == 'left' && this.jump == false) {
                     this.player.play('fallingL',true);
@@ -277,6 +276,7 @@ class Play extends Phaser.Scene{
 	    	this.jumps--;
         }
         if(justDownVal && this.player.body.onFloor()){
+            this.player.body.setAccelerationX(0);
             this.jumpSFX.play();
         }
 

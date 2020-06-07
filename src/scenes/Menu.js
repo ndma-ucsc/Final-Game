@@ -17,18 +17,10 @@ class Menu extends Phaser.Scene {
         this.time.delayedCall(1000, () => {this.input.keyboard.enabled = true;});
         this.selected = 1;
         this.cover = this.add.image(0, 0,'cover').setAlpha(0);
-        this.start = this.add.text(game.config.width/2, game.config.height/2, "START", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
-        this.option = this.add.text(game.config.width/2, game.config.height/2 + 60, "OPTIONS", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
+        this.start = this.add.text(game.config.width/2, game.config.height/2 - 60, "START", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
+        this.option = this.add.text(game.config.width/2, game.config.height/2, "OPTIONS", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
+        this.credits = this.add.text(game.config.width/2, game.config.height/2 + 60, "CREDITS", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
         this.generateFrameAnimation();
-
-        // this.tweens.add({
-        //     targets: this.cover,
-        //     x: 100,
-        //     ease: 'Sine.easeInOut',
-        //     yoyo: false,
-        //     repeat: 0,
-        //     duration: 3000
-        // });
 
         this.tweens.add({
             targets: this.cover,
@@ -49,11 +41,11 @@ class Menu extends Phaser.Scene {
                 this.selected--;
             }
             else {
-                this.selected = 2;
+                this.selected = 3;
             }
         }
         else if(this.input.keyboard.checkDown(cursors.down, 250)) {
-            if(this.selected < 2) {
+            if(this.selected < 3) {
                 this.selected++;
             }
             else {
@@ -63,10 +55,17 @@ class Menu extends Phaser.Scene {
         if(this.selected == 1) {
             this.start.setTint(0x135300).setScale(1.3);
             this.option.setTint().setScale();
+            this.credits.setTint().setScale();
         }
         else if(this.selected == 2) {
             this.start.setTint().setScale();
             this.option.setTint(0x135300).setScale(1.3);
+            this.credits.setTint().setScale();
+        }
+        else if(this.selected == 3) {
+            this.start.setTint().setScale();
+            this.option.setTint().setScale();
+            this.credits.setTint(0x135300).setScale(1.3);
         }
 
         if(Phaser.Input.Keyboard.JustDown(keyENTER)) {
@@ -84,6 +83,16 @@ class Menu extends Phaser.Scene {
                     this.input.keyboard.enabled = true;
                     this.scene.pause();
                     this.scene.launch("optionScene");
+                    keyENTER.reset();
+                });
+            }
+            else if(this.selected == 3) {
+                this.cameras.main.fadeOut(500);
+                this.time.delayedCall(500,() => {
+                    this.cameras.main.fadeIn(1);
+                    this.input.keyboard.enabled = true;
+                    this.scene.pause();
+                    this.scene.launch("creditsScene");
                     keyENTER.reset();
                 });
             }
