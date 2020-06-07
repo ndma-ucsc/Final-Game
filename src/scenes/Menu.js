@@ -7,8 +7,7 @@ class Menu extends Phaser.Scene {
         if(!bgMusic.isPlaying)
         {
             nextSong = Phaser.Math.RND.pick(songList);
-            bgMusic = this.sound.add(nextSong);
-            bgMusic.volume = volPt / maxVolume;
+            bgMusic = this.sound.add(nextSong, {volume: volPt / maxVolume * 0.25});
             bgMusic.play();
             console.log("Now Playing: " + bgMusic.key);
         }

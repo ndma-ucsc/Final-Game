@@ -28,7 +28,7 @@ let config = {
       checkCollision: {
         up: false
       },
-      debug: false
+      debug: true
   },
   pixelArt: true
   },
@@ -42,7 +42,7 @@ let keyF, keyLEFT, keyRIGHT, keyUP, keyDOWN, keyENTER, keySPACE, keyESC;
 let bgMusic;
 let songList;
 let nextSong;
-let volPt = 15;
+let volPt = 20;
 let sfxPt = 20;
 let collisionDebug = false;
 let maxVolume = 100;

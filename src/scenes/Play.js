@@ -17,6 +17,7 @@ class Play extends Phaser.Scene{
         //Adding player to scene
         this.player = this.physics.add.sprite(this.playerXPos, game.config.height, 'player');
         this.player.body.collideWorldBounds = true;
+        this.player.setImmovable();
 
         //Flags and other necessary variables
         this.slowMotion = false;
@@ -24,7 +25,7 @@ class Play extends Phaser.Scene{
         this.movementSpeed = 300;
         this.jumpVelocity = -500;
         this.jumpDuration = 200;
-        this.airSpeed = 300;
+        this.airSpeed = 500;
         this.fastFall = 2000;
         this.wallCling = false;
         this.wallJumpSpeedX = 400;
@@ -33,24 +34,26 @@ class Play extends Phaser.Scene{
         this.jump = false;
         this.falling = false;
         this.jumps;
-        this.JUMP_MAX = 1;
         this.paused = false;
         this.gameOver = false;
         this.radius = 1;
         this.canDash = true;
+        this.initTime = 10;
+        this.ranOutOfTime = false;
 
         //Sound FX Implemented
         this.jumpSFX = this.sound.add('jump', {volume: sfxPt / maxVolume});
         this.pauseOnSFX = this.sound.add('pauseOn', {volume: sfxPt / maxVolume});
         this.pauseOffSFX = this.sound.add('pauseOff', {volume: sfxPt / maxVolume});
-        this.landSFX = this.sound.add('land', {volume: sfxPt / maxVolume});
-        this.slowSFX = this.sound.add('slow', {volume: sfxPt / maxVolume * 0.5});
-        this.wallSFX = this.sound.add('wall', {volume: sfxPt / maxVolume * 0.5});
+        this.landSFX = this.sound.add('land', {volume: sfxPt / maxVolume * 1.5});
+        this.slowSFX = this.sound.add('slow', {volume: sfxPt / maxVolume * 0.2});
+        this.wallSFX = this.sound.add('wall', {volume: sfxPt / maxVolume * 0.2});
         this.deathSFX = this.sound.add('death', {volume: sfxPt / maxVolume});
         this.ricochetSFX = this.sound.add('ricochet', {volume: sfxPt / maxVolume * 0.5});
         this.laserSFX = this.sound.add('laser', {volume: sfxPt / maxVolume * 0.5});
         this.dashSFX = this.sound.add('dash', {volume: sfxPt / maxVolume * 1.5});
-        this.footstepSFX = this.sound.add('footstep', {volume: sfxPt / maxVolume});
+        this.footstepSFX = this.sound.add('footstep', {volume: sfxPt / maxVolume * 1.2});
+        this.electricSFX = this.sound.add('electric', {volume: sfxPt / maxVolume});
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
@@ -89,6 +92,7 @@ class Play extends Phaser.Scene{
         this.physics.add.collider(this.bullets, platformLayer);
         this.spawnEyeEnemies(this.level); 
         this.dashing();
+        this.countdown();
     }
 
     update(){
@@ -151,7 +155,7 @@ class Play extends Phaser.Scene{
         //On ground
         if (this.player.body.onFloor()){
             this.player.body.setMaxSpeed();
-            this.jumps = this.JUMP_MAX;
+            this.jumps = 1;
             if (cursors.left.isDown){
                 this.player.body.setVelocityX(-this.movementSpeed);
                 this.player.anims.play('runL',true);
@@ -213,9 +217,11 @@ class Play extends Phaser.Scene{
             
             this.isGrounded = false;
             if (cursors.left.isDown){
+                this.player.play('fallingL',true);
                 this.player.body.setAccelerationX(-this.airSpeed);
             }
             else if (cursors.right.isDown){
+                this.player.play('fallingR',true);
                 this.player.body.setAccelerationX(this.airSpeed);
             }
             else{
@@ -328,8 +334,8 @@ class Play extends Phaser.Scene{
 
     slowMoUpdate(){
         //Slow Mo Time
-        if (Phaser.Input.Keyboard.JustDown(keyF)){
-            if (this.slowMotion == false){
+        if (Phaser.Input.Keyboard.JustDown(keyF) || this.ranOutOfTime){
+            if (this.slowMotion == false && this.initTime != 0){
                 console.log("Slow Mo On");
                 this.slowSFX.play();
                 //Slow down certain sounds when in slow mo
@@ -350,6 +356,7 @@ class Play extends Phaser.Scene{
             else if (this.slowMotion == true){
                 console.log("Slow Mo Off");
                 this.slowSFX.stop();
+
                 //Set sounds back to normal
                 this.laserSFX.rate = 1;
                 this.ricochetSFX.rate = 1;
@@ -363,6 +370,7 @@ class Play extends Phaser.Scene{
                     child.body.velocity.x *= this.slowSpeed;
                     child.body.velocity.y *= this.slowSpeed;
                 });
+                this.ranOutOfTime = false;
                 this.slowMotion = false;
             }
         }
@@ -407,7 +415,6 @@ class Play extends Phaser.Scene{
                 this.scene.stop("optionScene");
                 cursors = this.input.keyboard.createCursorKeys();
                 keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
-                keyX = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
                 keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
                 keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
                 keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -511,8 +518,7 @@ class Play extends Phaser.Scene{
             {
                 nextSong = Phaser.Math.RND.pick(songList);
             }
-            bgMusic = this.sound.add(nextSong, {volume: volPt / maxVolume});
-            
+            bgMusic = this.sound.add(nextSong, {volume: volPt / maxVolume * 0.25});
             bgMusic.play();
             console.log("Now Playing: " + bgMusic.key);
         }
@@ -530,26 +536,64 @@ class Play extends Phaser.Scene{
 
     zaWarudo()
     {
-        if(this.slowMotion) {
-            if(this.radius <= 1000) {
-                this.radius = this.radius + 7;
+        if (this.slowMotion) {
+            if (this.radius < 1000){
+                this.radius = this.radius + 8;
+                if (this.radius > 1000){
+                    this.radius = 1000;
+                }
                 this.zawarudo.setScale(this.radius);
             }
         }
-        else if(!this.slowMotion) {
-            if(this.radius > 1) {
-                this.radius = this.radius - 7;
-                this.zawarudo.setScale(this.radius);
-            }
-            else if(this.radius < 0)
-            {
-                this.radius = 1;
+        else if(!this.slowMotion){
+            if (this.radius > 1){
+                this.radius = this.radius - 40;
+                if (this.radius < 0){
+                    this.radius = 1;
+                }
                 this.zawarudo.setScale(this.radius);
             }
         }
-        if(this.radius <= 1000){
+        
+        if (this.radius < 1000){
             this.zawarudo.x = this.player.x;
             this.zawarudo.y = this.player.y;
         }
+    }
+
+    countdown()
+    {
+        let timerTextConfig = {
+            fontFamily: 'Bradley Hand',
+            fontSize: '60px',
+            color: '#FFFFFF',
+            align: 'center',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+        };
+
+        this.timer = this.add.text(game.config.width - 100, 32, this.initTime, timerTextConfig).setDepth(2);
+
+        this.timedEvent = this.time.addEvent(
+        {
+            delay: 1000, 
+            callback: ()=> {
+                if (!this.slowMotion && this.initTime < 10){
+                    this.initTime++;
+                    this.timer.setText(this.initTime);
+                }
+                else if (this.slowMotion && this.initTime > 0){
+                    this.initTime--;
+                    this.timer.setText(this.initTime);
+                    if (this.initTime == 0){
+                        this.electricSFX.play();
+                        this.ranOutOfTime = true;
+                    }
+                }
+            },
+            loop: true
+        })
     }
 }
