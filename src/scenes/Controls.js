@@ -1,15 +1,10 @@
-"use strict";
-class Play extends Phaser.Scene{
-    constructor(){
-        super("playScene");
-    }
-    init (data){
-        this.level = data.level;
-        this.playerXPos = data.startingPos;
+class Controls extends Phaser.Scene {
+    constructor() {
+        super("controlScene");
     }
 
     create(){
-        console.log("Current Level: " + this.level);
+        console.log("CONTORLS SCENE");
         this.cameras.main.fadeIn(1000);
         this.input.keyboard.enabled = true;
         this.zawarudo = this.add.image(0, 0,'gray');
@@ -35,7 +30,6 @@ class Play extends Phaser.Scene{
         this.falling = false;
         this.jumps;
         this.paused = false;
-        this.gameOver = false;
         this.radius = 1;
         this.canDash = true;
         this.initTime = 10;
@@ -69,35 +63,11 @@ class Play extends Phaser.Scene{
         this.add.image(0, 0, 'background1').setOrigin(0, 0).setDepth(-10);
         this.add.image(0, 0, 'light').setOrigin(0, 0);
 
-        //add a tile map
-        const map = this.add.tilemap(`level_map_${this.level}`);
-
-        //add a tileset
-        const tileset = map.addTilesetImage(`level_tileset_${this.level}`, "tiles");
-
-        //create static layer
-        const platformLayer = map.createStaticLayer("Platforms", tileset, 0, 0);
-
-        //set map collision
-        platformLayer.setCollision([1,2,3,4,5,6,7,8,9]);
-
-        this.enemies = this.add.group({
-            runChildUpdate: true
-        });
-        this.bullets = this.add.group({
-            runChildUpdate: true
-        });
-
         this.slowmoBar = new SlowmoBar(this, 0, 0);
 
         this.pauseText = this.add.text(game.config.width - 10, 10, "||", {fontSize: "40px"}).setOrigin(1, 0);
         this.add.text(game.config.width - 7, 15, "ESC", {fontSize: "30px"}).setOrigin(1, 0);
 
-
-        //create collider
-        this.physics.add.collider(this.player, platformLayer);
-        this.physics.add.collider(this.bullets, platformLayer);
-        this.spawnEyeEnemies(this.level); 
         this.dashing();
         this.countdown();
     }
@@ -105,10 +75,7 @@ class Play extends Phaser.Scene{
     update(){
         this.zaWarudo();
         this.pauseUpdate();
-        if (!this.paused && !this.gameOver){
-            this.physics.world.collide(this.player, this.enemies, this.collisionUpdate, null, this);
-            this.physics.world.collide(this.player, this.bullets, this.collisionUpdate, null, this);
-            
+        if (!this.paused){
             this.moveUpdate();
             this.slowMoUpdate();
             if (this.player.x > 830 || this.player.x < 124){
@@ -118,50 +85,7 @@ class Play extends Phaser.Scene{
                 this.player.setTint();
             }
         }
-        if(!this.gameOver)
-        {
-            this.musicUpdate();
-        }
-        this.checkWin();
-    }
-        
-    spawnEyeEnemies(enemyCount){
-        if (!this.paused && !this.gameOver){
-            for(let i = 0; i < enemyCount; i++)
-            {
-                let randomHeight = Phaser.Math.Between(0, game.config.height - 800);
-                let randomWidth = Phaser.Math.Between(0, game.config.width);
-                let randomXSpeed = Phaser.Math.Between(25, 100);
-                let randomYSpeed = Phaser.Math.Between(25, 100);
-                let enemy = new Enemy(this, randomWidth, randomHeight, 'robot', randomXSpeed, randomYSpeed);
-                this.enemies.add(enemy);
-            }
-        }
-        this.enemies.children.iterate((child) => {
-            this.time.addEvent({
-                delay: Phaser.Math.Between(150, 300) * Phaser.Math.Between(10, 20) * Phaser.Math.Between(2, 4),
-                callback: ()=> {
-                    if (!this.paused && !this.gameOver){    
-                        let verticalError = 100;
-                        let horizontalError = 100;
-                        let offsetX = this.player.x + Phaser.Math.Between(-horizontalError, horizontalError);
-                        let offsetY = this.player.y + Phaser.Math.Between(-verticalError, verticalError);
-                        let trajectory = Phaser.Math.Angle.Between(child.x, child.y, offsetX, offsetY);
-                        console.log(offsetX - this.player.x);
-                        console.log(offsetY - this.player.y);
-                        let bullet = new Bullet(this, child.x, child.y, 'ball', 3, trajectory);
-                        if (this.slowMotion)
-                        {
-                            bullet.body.velocity.x /= this.slowSpeed;
-                            bullet.body.velocity.y /= this.slowSpeed;
-                        }
-                        this.laserSFX.play();
-                        this.bullets.add(bullet);
-                    }
-                },
-                loop: true
-            })
-        });
+        this.musicUpdate();
     }
 
     moveUpdate(){
@@ -231,9 +155,11 @@ class Play extends Phaser.Scene{
             
             this.isGrounded = false;
             if (cursors.left.isDown){
+                this.player.play('fallingL',true);
                 this.player.body.setAccelerationX(-this.airSpeed);
             }
             else if (cursors.right.isDown){
+                this.player.play('fallingR',true);
                 this.player.body.setAccelerationX(this.airSpeed);
             }
             else{
@@ -352,18 +278,6 @@ class Play extends Phaser.Scene{
                 console.log("Slow Mo On");
                 this.slowSFX.play();
                 //Slow down certain sounds when in slow mo
-                this.laserSFX.rate = 1/this.slowSpeed;
-                this.ricochetSFX.rate = 1/this.slowSpeed;
-
-                this.enemies.children.iterate((child) => {
-                    child.body.velocity.x /= this.slowSpeed;
-                    child.body.velocity.y /= this.slowSpeed;
-                });
-
-                this.bullets.children.iterate((child) => {
-                    child.body.velocity.x /= this.slowSpeed;
-                    child.body.velocity.y /= this.slowSpeed;
-                });
                 this.slowMotion = true;
             }
             else if (this.slowMotion == true){
@@ -371,18 +285,6 @@ class Play extends Phaser.Scene{
                 this.slowSFX.stop();
 
                 //Set sounds back to normal
-                this.laserSFX.rate = 1;
-                this.ricochetSFX.rate = 1;
-
-                this.enemies.children.iterate((child) => {
-                    child.body.velocity.x *= this.slowSpeed;
-                    child.body.velocity.y *= this.slowSpeed;
-                });
-
-                this.bullets.children.iterate((child) => {
-                    child.body.velocity.x *= this.slowSpeed;
-                    child.body.velocity.y *= this.slowSpeed;
-                });
                 this.ranOutOfTime = false;
                 this.slowMotion = false;
             }
@@ -437,28 +339,6 @@ class Play extends Phaser.Scene{
                 keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
             }
         }
-    }
-
-    collisionUpdate(){
-        this.player.body.enable = false;
-        this.input.keyboard.enabled = false;
-        this.gameOver = true; // turn off collision checking
-        this.player.alpha = 0;
-
-        // death sequence
-        this.tweens.add({        // fade out
-            targets: bgMusic,
-            volume: 0,
-            ease: 'Linear',
-            duration: 400,
-        }); 
-        bgMusic.stop();
-        this.deathSFX.play()
-        // let death = this.add.sprite(this.player.x, this.player.y, 'death').setOrigin(1);
-        // death.anims.play('death'); // explosion animation
-
-        this.cameras.main.fadeOut(2000);
-        this.time.delayedCall(2000, () => {this.scene.start("gameOverScene");});
     }
     
     dashing(){
@@ -570,11 +450,11 @@ class Play extends Phaser.Scene{
         this.timedEvent = this.time.addEvent({
             delay: 1000, 
             callback: ()=> {
-                if (!this.paused && !this.slowMotion && this.initTime < 10){
+                if (!this.slowMotion && this.initTime < 10){
                     this.initTime++;
                     this.slowmoBar.increase(this.amount);
                 }
-                else if (!this.paused && this.slowMotion && this.initTime > 0){
+                else if (this.slowMotion && this.initTime > 0){
                     this.initTime--;
                     this.slowmoBar.decrease(this.amount);
                     if (this.initTime == 0){
@@ -586,17 +466,4 @@ class Play extends Phaser.Scene{
             loop: true
         })
     }
-
-    checkWin(){
-        if (this.player.y <= 0){
-            this.level++;
-            if (this.level == 4){
-                this.scene.start("gameEndScene");
-            }
-            else{
-                this.scene.start("playScene", {level: this.level, startingPos: this.player.x, remainingXVel: this.player.body.velocity.x});
-            }
-        }
-    }
-
 }
