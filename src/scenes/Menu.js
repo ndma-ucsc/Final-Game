@@ -12,6 +12,7 @@ class Menu extends Phaser.Scene {
             console.log("Now Playing: " + bgMusic.key);
         }
 
+        this.selectionColor = 0x00c8e5;
         this.input.keyboard.enabled = false;
         this.cameras.main.fadeIn(1000);
         this.time.delayedCall(1000, () => {this.input.keyboard.enabled = true;});
@@ -54,28 +55,28 @@ class Menu extends Phaser.Scene {
             }
         }
         if(this.selected == 1) {
-            this.start.setTint(0x135300).setScale(1.3);
+            this.start.setTint(this.selectionColor).setScale(1.3);
             this.controls.setTint().setScale();
             this.option.setTint().setScale();
             this.credits.setTint().setScale();
         }
         else if(this.selected == 2) {
             this.start.setTint().setScale();
-            this.controls.setTint(0x135300).setScale(1.3);
+            this.controls.setTint(this.selectionColor).setScale(1.3);
             this.option.setTint().setScale();
             this.credits.setTint().setScale();
         }
         else if(this.selected == 3) {
             this.start.setTint().setScale();
             this.controls.setTint().setScale();
-            this.option.setTint(0x135300).setScale(1.3);
+            this.option.setTint(this.selectionColor).setScale(1.3);
             this.credits.setTint().setScale();
         }
         else if(this.selected == 4) {
             this.start.setTint().setScale();
             this.controls.setTint().setScale();
             this.option.setTint().setScale();
-            this.credits.setTint(0x135300).setScale(1.3);
+            this.credits.setTint(this.selectionColor).setScale(1.3);
         }
 
         if(Phaser.Input.Keyboard.JustDown(keyENTER)) {
