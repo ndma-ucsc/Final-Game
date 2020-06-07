@@ -135,7 +135,14 @@ class Play extends Phaser.Scene{
                 delay: Phaser.Math.Between(100, 300) * Phaser.Math.Between(10, 30) * Phaser.Math.Between(1, 3),
                 callback: ()=> {
                     if (!this.paused && !this.gameOver){
-                        let bullet = new Bullet(this, child.x, child.y, 'ball', 3);
+                        let verticalError = 100;
+                        let horizontalError = 100;
+                        let offsetX = this.player.x + Phaser.Math.Between(-horizontalError, horizontalError);
+                        let offsetY = this.player.y + Phaser.Math.Between(-verticalError, verticalError);
+                        let trajectory = Phaser.Math.Angle.Between(child.x, child.y, offsetX, offsetY);
+                        console.log(offsetX - this.player.x);
+                        console.log(offsetY - this.player.y);
+                        let bullet = new Bullet(this, child.x, child.y, 'ball', 3, trajectory);
                         if (this.slowMotion)
                         {
                             bullet.body.velocity.x /= this.slowSpeed;
