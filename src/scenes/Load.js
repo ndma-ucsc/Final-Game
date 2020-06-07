@@ -126,7 +126,6 @@ class Load extends Phaser.Scene {
         "Turbo Giant", "Ragnarok", 
         "Assault", "Lorry"];
         bgMusic = this.sound;
-        // this.scene.start("controlScene");
         this.scene.start("menuScene");
     }
 }

@@ -10,7 +10,7 @@ class Controls extends Phaser.Scene {
         this.zawarudo = this.add.image(0, 0,'gray');
         
         //Adding player to scene
-        this.player = this.physics.add.sprite(this.playerXPos, game.config.height, 'player');
+        this.player = this.physics.add.sprite(game.config.width/2, game.config.height, 'player');
         this.player.body.collideWorldBounds = true;
         this.player.setImmovable();
 
@@ -73,9 +73,9 @@ class Controls extends Phaser.Scene {
 
         this.controlArray = this.cache.text.get('controls').split('\n');
         this.selectedText = 0
-        this.add.image(game.config.width / 2 , game.config.height / 4, 'dialogBox').setOrigin(0.5);
-        this.controlText = this.add.text(10, game.config.height / 4, this.controlArray[this.selectedText], {fontSize: "20px", wordWrap: true, wordWrapWidth: 450});
-        this.add.text(870, 310, "⏎", {fontSize: "60px", wordWrap: true, wordWrapWidth: 450});
+        this.add.image(game.config.width / 2 , game.config.height / 4, 'dialogBox').setOrigin(0.5).setScale(0.9);
+        this.controlText = this.add.text(90, game.config.height / 4, this.controlArray[this.selectedText], {fontSize: "30px",  wordWrap: {width: 830, useAdvancedWrap: true}}).setOrigin(0,0.5);
+        this.add.text(830, 310, "⏎", {fontSize: "50px", wordWrap: true, wordWrapWidth: 450});
     }
 
     update(){
@@ -98,7 +98,9 @@ class Controls extends Phaser.Scene {
     controlTextUpdate(){
         if (Phaser.Input.Keyboard.JustDown(keyENTER)){
             this.selectedText++;
-            if (this.selectedText > this.controlArray.length) this.selectedText = 0;
+            if (this.selectedText >= this.controlArray.length){
+                this.selectedText = 0;
+            }
             this.controlText.text = this.controlArray[this.selectedText];
         }
     }
@@ -110,6 +112,7 @@ class Controls extends Phaser.Scene {
         if (this.player.body.onFloor()){
             this.player.body.setMaxSpeed();
             this.jumps = 1;
+            this.canDash = true;
             if (cursors.left.isDown){
                 this.player.body.setVelocityX(-this.movementSpeed);
                 this.player.anims.play('runL',true);

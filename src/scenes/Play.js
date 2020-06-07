@@ -167,6 +167,7 @@ class Play extends Phaser.Scene{
         if (this.player.body.onFloor()){
             this.player.body.setMaxSpeed();
             this.jumps = 1;
+            this.canDash = true;
             if (cursors.left.isDown){
                 this.player.body.setVelocityX(-this.movementSpeed);
                 this.player.anims.play('runL',true);
