@@ -38,11 +38,11 @@ let config = {
 let game = new Phaser.Game(config);
 
 // reserve some keyboard variables
-let keyF, keyX, keyP, keyLEFT, keyRIGHT, keyUP, keyDOWN, keyENTER, keySPACE, keyESC;
+let keyF, keyLEFT, keyRIGHT, keyUP, keyDOWN, keyENTER, keySPACE, keyESC;
 let bgMusic;
 let songList;
 let nextSong;
-let volPt = 20;
+let volPt = 15;
 let sfxPt = 20;
 let collisionDebug = false;
 let maxVolume = 100;

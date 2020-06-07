@@ -44,16 +44,17 @@ class Play extends Phaser.Scene{
         this.pauseOnSFX = this.sound.add('pauseOn', {volume: sfxPt / maxVolume});
         this.pauseOffSFX = this.sound.add('pauseOff', {volume: sfxPt / maxVolume});
         this.landSFX = this.sound.add('land', {volume: sfxPt / maxVolume});
-        this.slowSFX = this.sound.add('slow', {volume: sfxPt / maxVolume});
-        this.wallSFX = this.sound.add('wall', {volume: sfxPt / maxVolume});
+        this.slowSFX = this.sound.add('slow', {volume: sfxPt / maxVolume * 0.5});
+        this.wallSFX = this.sound.add('wall', {volume: sfxPt / maxVolume * 0.5});
         this.deathSFX = this.sound.add('death', {volume: sfxPt / maxVolume});
-        this.ricochetSFX = this.sound.add('ricochet', {volume: sfxPt / maxVolume / 2});
-        this.laserSFX = this.sound.add('laser', {volume: sfxPt / maxVolume / 2});
+        this.ricochetSFX = this.sound.add('ricochet', {volume: sfxPt / maxVolume * 0.5});
+        this.laserSFX = this.sound.add('laser', {volume: sfxPt / maxVolume * 0.5});
+        this.dashSFX = this.sound.add('dash', {volume: sfxPt / maxVolume * 1.5});
+        this.footstepSFX = this.sound.add('footstep', {volume: sfxPt / maxVolume});
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
-        keyX = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -91,23 +92,7 @@ class Play extends Phaser.Scene{
     }
 
     update(){
-        // this.powerUp.x = this.player.x;
-        // this.powerUp.y = this.player.y;
-        if(this.slowMotion) {
-            if(this.radius <= 1000) {
-                this.radius = this.radius + 80;
-                this.zawarudo.setScale(this.radius);
-            }
-        }
-        else if(!this.slowMotion) {
-            this.zawarudo.x = this.player.x;
-            this.zawarudo.y = this.player.y;
-            if(this.radius > 1) {
-                this.radius = this.radius - 80;
-                this.zawarudo.setScale(this.radius);
-            }
-        }
-        
+        this.zaWarudo();
         this.pauseUpdate();
         if (!this.paused && !this.gameOver){
             this.physics.world.collide(this.player, this.enemies, this.collisionUpdate, null, this);
@@ -115,7 +100,7 @@ class Play extends Phaser.Scene{
             
             this.moveUpdate();
             this.slowMoUpdate();
-            if (this.player.x > 830 || this.player.x < 123){
+            if (this.player.x > 830 || this.player.x < 124){
                 this.player.setTint(0x045D57);
             }
             else{
@@ -172,12 +157,20 @@ class Play extends Phaser.Scene{
                 this.player.anims.play('runL',true);
                 this.facing = 'left';
                 this.player.setSize(35,40,false).setOffset(30,20); //setSize(width,height,center or nah) setOffset(x,y) <- Move the hitbox (x,y)
+                if(!this.footstepSFX.isPlaying)
+                {
+                    this.footstepSFX.play();
+                }
             }
             else if (cursors.right.isDown){
                 this.player.body.setVelocityX(this.movementSpeed);
                 this.player.anims.play('runR',true);
                 this.facing = 'right';
                 this.player.setSize(35,40,false).setOffset(35,20);
+                if(!this.footstepSFX.isPlaying)
+                {
+                    this.footstepSFX.play();
+                }
             }
             else{
                 this.player.body.setVelocity(0, 0);
@@ -273,7 +266,6 @@ class Play extends Phaser.Scene{
         if(justDownVal && this.player.body.onFloor()){
             this.jumpSFX.play();
         }
-
 
         //Wall Cling
         if (!this.player.body.onFloor()){
@@ -470,6 +462,7 @@ class Play extends Phaser.Scene{
                     this.player.body.allowGravity = false;
                     this.player.body.setVelocityY(0);
                     this.player.body.setVelocityX(-this.movementSpeed);
+                    this.dashSFX.play();
                     this.time.addEvent({
                         delay: 300,
                         callback: ()=> {
@@ -492,6 +485,7 @@ class Play extends Phaser.Scene{
                     this.player.body.allowGravity = false;
                     this.player.body.setVelocityY(0);
                     this.player.body.setVelocityX(this.movementSpeed);
+                    this.dashSFX.play();
                     this.time.addEvent({
                         delay: 300,
                         callback: ()=> {
@@ -510,8 +504,7 @@ class Play extends Phaser.Scene{
         });
     }
 
-    musicUpdate()
-    {
+    musicUpdate(){
         if(!bgMusic.isPlaying)
         {
             while(nextSong == bgMusic.key)
@@ -526,13 +519,37 @@ class Play extends Phaser.Scene{
     }
 
     checkWin(){
-        
         if (this.player.y <= 0){
             this.level++;
             if (this.level == 4){
                 this.scene.start("gameEndScene");
             }
             this.scene.start("playScene", {level: this.level, startingPos: this.player.x, remainingXVel: this.player.body.velocity.x});
+        }
+    }
+
+    zaWarudo()
+    {
+        if(this.slowMotion) {
+            if(this.radius <= 1000) {
+                this.radius = this.radius + 4;
+                this.zawarudo.setScale(this.radius);
+            }
+        }
+        else if(!this.slowMotion) {
+            if(this.radius > 1) {
+                this.radius = this.radius - 80;
+                this.zawarudo.setScale(this.radius);
+            }
+            else if(this.radius < 0)
+            {
+                this.radius = 1;
+                this.zawarudo.setScale(this.radius);
+            }
+        }
+        if(this.radius <= 1000){
+            this.zawarudo.x = this.player.x;
+            this.zawarudo.y = this.player.y;
         }
     }
 }
