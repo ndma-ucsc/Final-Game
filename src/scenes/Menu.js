@@ -12,11 +12,12 @@ class Menu extends Phaser.Scene {
             console.log("Now Playing: " + bgMusic.key);
         }
 
+        this.selectionColor = 0x00c8e5;
         this.input.keyboard.enabled = false;
         this.cameras.main.fadeIn(1000);
         this.time.delayedCall(1000, () => {this.input.keyboard.enabled = true;});
         this.selected = 1;
-        this.cover = this.add.image(0, 0,'cover').setAlpha(0);
+        this.cover = this.add.image(1800, -10,'cover').setAlpha(0);
         this.start = this.add.text(game.config.width/2, game.config.height/2 - 60, "START", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
         this.controls = this.add.text(game.config.width/2, game.config.height/2, "CONTROLS", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
         this.option = this.add.text(game.config.width/2, game.config.height/2 + 60, "OPTIONS", {fontSize: "50px", color: "#FFFFFF"}).setOrigin(0.5);
@@ -25,12 +26,14 @@ class Menu extends Phaser.Scene {
 
         this.tweens.add({
             targets: this.cover,
-            alpha: { value: 1, duration: 5000, ease: 'Power1' },
+            alpha: { value: 1, duration: 3000, ease: 'Power1' },
             yoyo: true,
             loop: -1,
             onLoop : this.coverChange.bind(this)
 
         });
+
+        this.slidesOrder = 0;
         
     }
 
@@ -54,28 +57,28 @@ class Menu extends Phaser.Scene {
             }
         }
         if(this.selected == 1) {
-            this.start.setTint(0x135300).setScale(1.3);
+            this.start.setTint(this.selectionColor).setScale(1.3);
             this.controls.setTint().setScale();
             this.option.setTint().setScale();
             this.credits.setTint().setScale();
         }
         else if(this.selected == 2) {
             this.start.setTint().setScale();
-            this.controls.setTint(0x135300).setScale(1.3);
+            this.controls.setTint(this.selectionColor).setScale(1.3);
             this.option.setTint().setScale();
             this.credits.setTint().setScale();
         }
         else if(this.selected == 3) {
             this.start.setTint().setScale();
             this.controls.setTint().setScale();
-            this.option.setTint(0x135300).setScale(1.3);
+            this.option.setTint(this.selectionColor).setScale(1.3);
             this.credits.setTint().setScale();
         }
         else if(this.selected == 4) {
             this.start.setTint().setScale();
             this.controls.setTint().setScale();
             this.option.setTint().setScale();
-            this.credits.setTint(0x135300).setScale(1.3);
+            this.credits.setTint(this.selectionColor).setScale(1.3);
         }
 
         if(Phaser.Input.Keyboard.JustDown(keyENTER)) {
@@ -120,9 +123,28 @@ class Menu extends Phaser.Scene {
     }
 
     coverChange() {
-        this.cover.setScale(0.4);
-        this.cover.x = 400
-        this.cover.y = 110;
+        if(this.slidesOrder == 0) {
+            this.cover.setScale(1);
+            this.cover.x = 770;
+            this.cover.y = 0;
+            this.slidesOrder++;
+        }
+        else if(this.slidesOrder == 1) {
+            this.cover.x = -190;
+            this.slidesOrder++;
+        }
+        else if(this.slidesOrder == 2) {
+            this.cover.setScale(0.4);
+            this.cover.x = 400;
+            this.cover.y = 140;
+            this.slidesOrder++;
+        }
+        else if(this.slidesOrder == 3) {
+            this.cover.setScale(0.3);
+            this.cover.x = 800;
+            this.cover.y = 340;
+            this.slidesOrder = 0;
+        }
     }
 
     generateFrameAnimation(){

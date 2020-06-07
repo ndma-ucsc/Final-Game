@@ -147,8 +147,6 @@ class Play extends Phaser.Scene{
                         let offsetX = this.player.x + Phaser.Math.Between(-horizontalError, horizontalError);
                         let offsetY = this.player.y + Phaser.Math.Between(-verticalError, verticalError);
                         let trajectory = Phaser.Math.Angle.Between(child.x, child.y, offsetX, offsetY);
-                        console.log(offsetX - this.player.x);
-                        console.log(offsetY - this.player.y);
                         let bullet = new Bullet(this, child.x, child.y, 'ball', 3, trajectory);
                         if (this.slowMotion)
                         {

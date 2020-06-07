@@ -17,6 +17,8 @@ class Option extends Phaser.Scene {
             },
         };
 
+        this.selectionColor = 0xABFFA6;
+        
         this.optionText = this.add.text(game.config.width / 2, 60, 'Options', {fontSize: "50px"}).setOrigin(0.5);
 
         this.volume = this.add.text(game.config.width / 6, 1 * game.config.height / 6, 'VOLUME', {fontSize: "50px"}).setOrigin(0,0.5);
@@ -58,7 +60,7 @@ class Option extends Phaser.Scene {
         }
 
         if(this.selected == 1) {
-            this.volume.setTint(0xABFFA6).setScale(1.3);
+            this.volume.setTint(this.selectionColor).setScale(1.3);
             this.sfx.setTint().setScale();
             this.fullscreen.setTint().setScale();
             this.musicBox.setTint().setScale();
@@ -66,7 +68,7 @@ class Option extends Phaser.Scene {
         }
         else if(this.selected == 2) {
             this.volume.setTint().setScale();
-            this.sfx.setTint(0xABFFA6).setScale(1.3);
+            this.sfx.setTint(this.selectionColor).setScale(1.3);
             this.fullscreen.setTint().setScale();
             this.musicBox.setTint().setScale();
             this.return.setTint().setScale();
@@ -75,7 +77,7 @@ class Option extends Phaser.Scene {
         else if(this.selected == 3) {
             this.volume.setTint().setScale();
             this.sfx.setTint().setScale();
-            this.fullscreen.setTint(0xABFFA6).setScale(1.3);
+            this.fullscreen.setTint(this.selectionColor).setScale(1.3);
             this.musicBox.setTint().setScale();
             this.return.setTint().setScale();
         }
@@ -84,7 +86,7 @@ class Option extends Phaser.Scene {
             this.volume.setTint().setScale();
             this.sfx.setTint().setScale();
             this.fullscreen.setTint().setScale();
-            this.musicBox.setTint(0xABFFA6).setScale(1.3);
+            this.musicBox.setTint(this.selectionColor).setScale(1.3);
             this.return.setTint().setScale();
         }
 
@@ -93,7 +95,7 @@ class Option extends Phaser.Scene {
             this.sfx.setTint().setScale();
             this.fullscreen.setTint().setScale();
             this.musicBox.setTint().setScale();
-            this.return.setTint(0xABFFA6).setScale(1.3);
+            this.return.setTint(this.selectionColor).setScale(1.3);
         }
         
         if(this.selected == 1){
