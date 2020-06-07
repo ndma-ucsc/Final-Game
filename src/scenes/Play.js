@@ -610,7 +610,7 @@ class Play extends Phaser.Scene{
     checkWin(){
         if (this.player.y <= 0){
             this.level++;
-            if (this.level == 4){
+            if (this.level == 5){
                 this.scene.start("gameEndScene");
             }
             else{

@@ -117,6 +117,7 @@ class Load extends Phaser.Scene {
         this.load.tilemapTiledJSON("level_map_1", "tilemap01.json");
         this.load.tilemapTiledJSON("level_map_2", "tilemap02.json");
         this.load.tilemapTiledJSON("level_map_3", "tilemap03.json");
+        this.load.tilemapTiledJSON("level_map_4", "tilemap04.json");
     }
 
     create() {
