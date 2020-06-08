@@ -46,6 +46,7 @@ class Controls extends Phaser.Scene {
         this.dashSFX = this.sound.add('dash', {volume: sfxPt / maxVolume * 1.5});
         this.footstepSFX = this.sound.add('footstep', {volume: sfxPt / maxVolume * 1.2});
         this.electricSFX = this.sound.add('electric', {volume: sfxPt / maxVolume});
+        this.bleepSFX = this.sound.add('bleep', {volume: sfxPt / maxVolume * 0.6});
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
@@ -95,6 +96,7 @@ class Controls extends Phaser.Scene {
     controlTextUpdate(){
         if (Phaser.Input.Keyboard.JustDown(keyENTER)){
             this.selectedText++;
+            this.bleepSFX.play();
             if (this.selectedText >= this.controlArray.length){
                 this.selectedText = 0;
             }
