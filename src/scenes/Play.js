@@ -99,9 +99,125 @@ class Play extends Phaser.Scene{
         this.spawnEyeEnemies(this.level); 
         this.dashing();
         this.countdown();
+
+        if(this.level == 4) {
+            //boss
+            this.startFiring = 0;
+            this.boss = new Boss(this, game.config.width/2, 0, 'bossRobot').setScale(1.5, 1.5).setOrigin(0,0);
+            this.follower = { t: 0, vec: new Phaser.Math.Vector2() };
+            this.path = new Phaser.Curves.Path(500, 100); //move path
+            this.path.circleTo(100);
+            this.path.moveTo(500, 100); //move the path
+            this.path.circleTo(100, true, 180);
+
+            this.bossPath = this.tweens.add({
+                targets: this.follower,
+                t: 1,
+                ease: 'Linear',
+                duration: 10000,
+                repeat: -1
+            });
+
+            //energy balls
+            this.bombs = this.physics.add.group({
+                active: true,
+                visible: false,
+                key:'ball',
+                frameQuantity: 8,
+                collideWorldBounds: false,
+                immovable: true,
+                allowGravity: false,
+                classType: Boss
+            });
+            //hitbox
+            this.bombsHitbox = this.physics.add.group({
+                active: true,
+                visible: false,
+                key:'hitbox',
+                frameQuantity: 8,
+                collideWorldBounds: false,
+                immovable: true,
+                allowGravity: false,
+                classType: Boss
+            });
+            //energy balls
+            this.bombs2 = this.physics.add.group({
+                active: true,
+                visible: false,
+                key:'ball',
+                frameQuantity: 10,
+                collideWorldBounds: false,
+                immovable: true,
+                allowGravity: false,
+                classType: Boss
+            });
+            //hitbox
+            this.bombsHitbox2 = this.physics.add.group({
+                active: true,
+                visible: false,
+                key:'hitbox',
+                frameQuantity: 10,
+                collideWorldBounds: false,
+                immovable: true,
+                allowGravity: false,
+                classType: Boss
+            });
+            //energy balls
+            this.bombs3 = this.physics.add.group({
+                active: true,
+                visible: false,
+                key:'ball',
+                frameQuantity: 15,
+                collideWorldBounds: false,
+                immovable: true,
+                allowGravity: false,
+                classType: Boss
+            });
+            //hitbox
+            this.bombsHitbox3 = this.physics.add.group({
+                active: true,
+                visible: false,
+                key:'hitbox',
+                frameQuantity: 15,
+                collideWorldBounds: false,
+                immovable: true,
+                allowGravity: false,
+                classType: Boss
+            });
+            this.time.addEvent({ delay: 500, callback: () => {
+                this.startFiring++;
+            }, callbackScope: this, loop: true });
+            this.physics.add.overlap(this.player, this.bombsHitbox, () => {
+                //this.sound.play('sfx_explosion');
+                this.collisionUpdate();
+            });
+            this.physics.add.overlap(this.player, this.bombsHitbox2, () => {
+                //this.sound.play('sfx_explosion');
+                this.collisionUpdate();
+            });
+            this.physics.add.overlap(this.player, this.bombsHitbox3, () => {
+                //this.sound.play('sfx_explosion');
+                this.collisionUpdate();
+            });
+            this.createCircle();
+        }
+        
     }
 
     update(){
+        if(this.level == 4) {
+            if (!this.paused && !this.gameOver){
+                this.path.getPoint(this.follower.t, this.follower.vec);
+                this.boss.x = this.follower.vec.x;
+                this.boss.y = this.follower.vec.y;
+                if(this.startFiring >=2) {
+                    this.bombs.getChildren().forEach(function() {
+                        this.bombs.setVisible(true);
+                    }, this);
+                    this.boss.update(this.bombs,this.bombs2,this.bombs3,this.startAngle,this.endAngle,this.bombsHitbox,this.bombsHitbox2,this.bombsHitbox3,this.single,this.playerHitbox,this.bossHitbox);
+                }
+            }
+        }
         this.zaWarudo();
         this.pauseUpdate();
         if (!this.paused && !this.gameOver){
@@ -125,6 +241,9 @@ class Play extends Phaser.Scene{
     }
         
     spawnEyeEnemies(enemyCount){
+        if(enemyCount == 4) {
+            enemyCount = 0;
+        }
         if (!this.paused && !this.gameOver){
             for(let i = 0; i < enemyCount; i++)
             {
@@ -375,6 +494,8 @@ class Play extends Phaser.Scene{
                     child.body.velocity.x /= this.slowSpeed;
                     child.body.velocity.y /= this.slowSpeed;
                 });
+                this.bossPath.timeScale = 1/this.slowSpeed;
+                this.boss.slowmo();
                 this.slowMotion = true;
             }
             else if (this.slowMotion == true){
@@ -394,6 +515,8 @@ class Play extends Phaser.Scene{
                     child.body.velocity.x *= this.slowSpeed;
                     child.body.velocity.y *= this.slowSpeed;
                 });
+                this.bossPath.timeScale = 1;
+                this.boss.speedUp();
                 this.ranOutOfTime = false;
                 this.slowMotion = false;
             }
@@ -605,6 +728,21 @@ class Play extends Phaser.Scene{
                 }
             },
             loop: true
+        })
+    }
+    createCircle() {
+        this.startAngle = this.tweens.addCounter({
+            from: 0,
+            to: 6.28,
+            duration: 8000, //speed of rotation higher = slower
+            repeat: -1
+        })
+    
+        this.endAngle = this.tweens.addCounter({
+            from: 6.28,
+            to: 12.56,
+            duration: 8000, //speed of rotation higher = slowerd
+            repeat: -1
         })
     }
 

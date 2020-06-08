@@ -105,6 +105,7 @@ class Load extends Phaser.Scene {
         this.load.path = "./assets/sprites/";
         this.load.image("tiles", "tiles.png");
         this.load.image("robot", "robot.png");
+        this.load.image("bossRobot", "boss.png");
         this.load.image("ball", "ball.png");
         this.load.image('hitbox', 'balls.png');
         this.load.image('gray', 'Zawarudo.png');
