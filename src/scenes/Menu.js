@@ -41,7 +41,7 @@ class Menu extends Phaser.Scene {
             resetOnMatch: true,
             deleteOnMatch: true,
         });
-        this.collisionDebugText = this.add.text(3*game.config.width/4, 3*game.config.height/4, 'Collision are currently on!').setOrigin(0.5);
+        this.collisionDebugText = this.add.text(3*game.config.width/4, 3*game.config.height/4, 'Collision are currently off!').setOrigin(0.5);
         this.collisionDebugText.alpha = 0;
         this.input.keyboard.on('keycombomatch', (facadeDebug) => {
             this.collisionDebugText.alpha = 1;
