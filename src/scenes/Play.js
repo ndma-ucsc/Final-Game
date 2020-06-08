@@ -54,6 +54,10 @@ class Play extends Phaser.Scene{
         this.dashSFX = this.sound.add('dash', {volume: sfxPt / maxVolume * 1.5});
         this.footstepSFX = this.sound.add('footstep', {volume: sfxPt / maxVolume * 1.2});
         this.electricSFX = this.sound.add('electric', {volume: sfxPt / maxVolume});
+        this.boomSFX = this.sound.add('boom', {volume: sfxPt / maxVolume * 0.8});
+        this.flamethrowerSFX = this.sound.add('flamethrower', {volume: sfxPt / maxVolume * 1.2});
+        this.cannonSFX = this.sound.add('cannon', {volume: sfxPt / maxVolume * 1.2});
+        this.blastSFX = this.sound.add('blast', {volume: sfxPt / maxVolume * 1.2});
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
@@ -493,6 +497,10 @@ class Play extends Phaser.Scene{
                     child.body.velocity.x /= this.slowSpeed;
                     child.body.velocity.y /= this.slowSpeed;
                 });
+                if (this.level == 4){
+                    this.bossPath.timeScale = 1/this.slowSpeed;
+                    this.boss.slowmo();
+                }
                 this.slowMotion = true;
                 if(this.level == 4) {
                     this.bossPath.timeScale = 1/this.slowSpeed;
@@ -516,6 +524,10 @@ class Play extends Phaser.Scene{
                     child.body.velocity.x *= this.slowSpeed;
                     child.body.velocity.y *= this.slowSpeed;
                 });
+                if (this.level == 4){
+                    this.bossPath.timeScale = 1;
+                    this.boss.speedUp();
+                }
                 this.ranOutOfTime = false;
                 this.slowMotion = false;
                 if(this.level == 4) {
