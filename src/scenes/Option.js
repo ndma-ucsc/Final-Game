@@ -140,7 +140,7 @@ class Option extends Phaser.Scene {
                 bgMusic.stop();
                 bgMusic = this.sound.add(songList[this.songIndex], {volume: volPt / maxVolume});
                 bgMusic.play();
-                console.log("Now Playing: " + bgMusic.key);
+                // console.log("Now Playing: " + bgMusic.key);
             }
             else if(this.input.keyboard.checkDown(cursors.right, 100) && volPt < maxVolume){
                 this.songIndex = songList.indexOf(bgMusic.key) + 1;
@@ -150,7 +150,7 @@ class Option extends Phaser.Scene {
                 bgMusic.stop();
                 bgMusic = this.sound.add(songList[this.songIndex], {volume: volPt / maxVolume});
                 bgMusic.play();
-                console.log("Now Playing: " + bgMusic.key);
+                // console.log("Now Playing: " + bgMusic.key);
             }
         }
 

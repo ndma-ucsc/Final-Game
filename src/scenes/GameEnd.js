@@ -4,7 +4,7 @@ class GameEnd extends Phaser.Scene {
     }
 
     create() {
-        console.log('GAME END');
+        // console.log('GAME END');
         cursors = this.input.keyboard.createCursorKeys();
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
