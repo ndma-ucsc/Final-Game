@@ -34,6 +34,18 @@ class Menu extends Phaser.Scene {
         });
 
         this.slidesOrder = 0;
+
+        let facadeDebug = this.input.keyboard.createCombo(['f','a','c','a','d','e'], {
+            resetOnWrongKey: true,
+            maxKeyDelay: 0,
+            resetOnMatch: true,
+            deleteOnMatch: true,
+        });
+        this.collisionDebugText = this.add.text(3*game.config.width/4, 3*game.config.height/4, 'Collision are currently off!').setOrigin(0.5);
+        this.collisionDebugText.alpha = 0;
+        this.input.keyboard.on('keycombomatch', (facadeDebug) => {
+            collisionDebug = !collisionDebug;
+        });
         
     }
 
