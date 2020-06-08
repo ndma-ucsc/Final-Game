@@ -43,9 +43,6 @@ class Controls extends Phaser.Scene {
         this.landSFX = this.sound.add('land', {volume: sfxPt / maxVolume * 1.5});
         this.slowSFX = this.sound.add('slow', {volume: sfxPt / maxVolume * 0.2});
         this.wallSFX = this.sound.add('wall', {volume: sfxPt / maxVolume * 0.2});
-        this.deathSFX = this.sound.add('death', {volume: sfxPt / maxVolume});
-        this.ricochetSFX = this.sound.add('ricochet', {volume: sfxPt / maxVolume * 0.5});
-        this.laserSFX = this.sound.add('laser', {volume: sfxPt / maxVolume * 0.5});
         this.dashSFX = this.sound.add('dash', {volume: sfxPt / maxVolume * 1.5});
         this.footstepSFX = this.sound.add('footstep', {volume: sfxPt / maxVolume * 1.2});
         this.electricSFX = this.sound.add('electric', {volume: sfxPt / maxVolume});
