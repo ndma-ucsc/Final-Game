@@ -14,7 +14,7 @@ class Boss extends Phaser.GameObjects.Sprite {
         this.projectileY2;
         this.projectileX3;
         this.projectileY3;
-        this.projectileSpeed = 8;
+        this.projectileSpeed = 6;
         this.radius = 150;
         this.radius2 = 150;
         this.radius3 = 150;
@@ -211,12 +211,12 @@ class Boss extends Phaser.GameObjects.Sprite {
         
     }
     slowmo() {
-        this.projectileSpeed = 4;
+        this.projectileSpeed = 3;
         this.spraySpeed = 2;
         this.collapseSpeed = 3;
     }
     speedUp() {
-        this.projectileSpeed = 8;
+        this.projectileSpeed = 6;
         this.spraySpeed = 4;
         this.collapseSpeed = 6;
     }

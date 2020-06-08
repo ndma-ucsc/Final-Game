@@ -105,6 +105,7 @@ class Load extends Phaser.Scene {
         this.load.path = "./assets/sprites/";
         this.load.image("tiles", "tiles.png");
         this.load.image("robot", "robot.png");
+        this.load.image("bossRobot", "boss.png");
         this.load.image("ball", "ball.png");
         this.load.image('hitbox', 'balls.png');
         this.load.image('gray', 'Zawarudo.png');
@@ -117,6 +118,7 @@ class Load extends Phaser.Scene {
         this.load.tilemapTiledJSON("level_map_1", "tilemap01.json");
         this.load.tilemapTiledJSON("level_map_2", "tilemap02.json");
         this.load.tilemapTiledJSON("level_map_3", "tilemap03.json");
+        this.load.tilemapTiledJSON("level_map_4", "tilemap04.json");
     }
 
     create() {
