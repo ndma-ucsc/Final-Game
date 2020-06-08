@@ -33,6 +33,8 @@ class Menu extends Phaser.Scene {
 
         });
 
+        this.swordSFX = this.sound.add('sword', {volume: sfxPt / maxVolume * 0.7});
+
         this.slidesOrder = 0;
         collisionDebug = !collisionDebug;
         let facadeDebug = this.input.keyboard.createCombo(['f','a','c','a','d','e'], {
@@ -104,6 +106,7 @@ class Menu extends Phaser.Scene {
         }
 
         if(Phaser.Input.Keyboard.JustDown(keyENTER)) {
+            this.swordSFX.play();
             this.input.keyboard.enabled = false;
             if(this.selected == 1) {
                 this.cameras.main.fadeOut(1500);

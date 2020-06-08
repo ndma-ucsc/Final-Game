@@ -59,6 +59,7 @@ class Play extends Phaser.Scene{
         this.cannonSFX = this.sound.add('cannon', {volume: sfxPt / maxVolume * 0.5});
         this.blastSFX = this.sound.add('blast', {volume: sfxPt / maxVolume * 0.7});
         this.bleepSFX = this.sound.add('bleep', {volume: sfxPt / maxVolume * 0.6});
+        this.swordSFX = this.sound.add('sword', {volume: sfxPt / maxVolume * 0.7});
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
