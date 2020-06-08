@@ -1,47 +1,46 @@
 // Slowmo prefab
 class SlowmoBar extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y, texture, frame) {
-        super(scene, x, y, texture, frame);
+    constructor(scene, x, y) {
+        super(scene, x, y);
         this.bar = new Phaser.GameObjects.Graphics(scene);
         this.x = x;
         this.y = y;
-        this.value = 1000;
-        this.p = 440 / 1000;
-
+        this.endAngle = 360;
         this.draw();
-
+        this.off = true;
         scene.add.existing(this.bar);
+        this.bar.alpha = 0;
         
     }
 
-    decrease (amount) {
-        this.value -= amount;
-        if (this.value < 0) {
-            this.value = 0;
-        }
+    decrease () {
+        this.endAngle -= 36;
+        this.off = false;
         this.draw();
-        return (this.value === 0);
     }
-    increase (amount) {
-        this.value += amount;
-        if (this.value > 1000) {
-            this.value = 1000;
-        }
+    increase () {
+        this.endAngle += 36;
+        this.off = true;
         this.draw();
-        return (this.value === 1000);
     }
     draw () {
         this.bar.clear();
-
-        if (this.value < 80) {
-            this.bar.fillStyle(0xff0000);
+        if(this.endAngle == 360) {
+            this.bar.lineStyle(4, 0x00fff7, 1);
         }
         else {
-            this.bar.fillStyle(0x00ffee);
+            this.bar.lineStyle(4, 0x00a6ff, 1);
         }
-
-        var d = Math.floor(this.p * this.value);
-        this.bar.fillRect(this.x + 2, this.y + 2, d, 12);
+        if(this.off) {
+            this.bar.alpha -= 0.5;
+        }
+        else {
+            this.bar.alpha += 0.50;
+        }
+        console.log(this.endAngle);
+        this.bar.beginPath();
+        this.bar.arc(this.x + 40, this.y + 40, 20, Phaser.Math.DegToRad(0), Phaser.Math.DegToRad(this.endAngle), false);
+        this.bar.strokePath();
     }
 
 }

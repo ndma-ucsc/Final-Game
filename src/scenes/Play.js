@@ -40,7 +40,6 @@ class Play extends Phaser.Scene{
         this.canDash = true;
         this.initTime = 10;
         this.ranOutOfTime = false;
-        this.amount = 100;
 
         //Sound FX Implemented
         this.jumpSFX = this.sound.add('jump', {volume: sfxPt / maxVolume});
@@ -493,6 +492,10 @@ class Play extends Phaser.Scene{
                     this.boss.slowmo();
                 }
                 this.slowMotion = true;
+                if(this.level == 4) {
+                    this.bossPath.timeScale = 1/this.slowSpeed;
+                    this.boss.slowmo();
+                }
             }
             else if (this.slowMotion == true){
                 console.log("Slow Mo Off");
@@ -517,6 +520,10 @@ class Play extends Phaser.Scene{
                 }
                 this.ranOutOfTime = false;
                 this.slowMotion = false;
+                if(this.level == 4) {
+                    this.bossPath.timeScale = 1;
+                    this.boss.speedUp();
+                }
             }
         }
     }
@@ -714,11 +721,11 @@ class Play extends Phaser.Scene{
             callback: ()=> {
                 if (!this.paused && !this.slowMotion && this.initTime < 10){
                     this.initTime++;
-                    this.slowmoBar.increase(this.amount);
+                    this.slowmoBar.increase();
                 }
                 else if (!this.paused && this.slowMotion && this.initTime > 0){
                     this.initTime--;
-                    this.slowmoBar.decrease(this.amount);
+                    this.slowmoBar.decrease();
                     if (this.initTime == 0){
                         this.electricSFX.play();
                         this.ranOutOfTime = true;
@@ -726,7 +733,7 @@ class Play extends Phaser.Scene{
                 }
             },
             loop: true
-        })
+        });
     }
     createCircle() {
         this.startAngle = this.tweens.addCounter({
