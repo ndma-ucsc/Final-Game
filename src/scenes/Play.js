@@ -754,15 +754,19 @@ class Play extends Phaser.Scene{
             this.time.addEvent({ delay: 500, callback: () => {
                 this.startFiring++;
             }, callbackScope: this, loop: true });
-            this.physics.add.overlap(this.player, this.bombsHitbox, () => {
-                this.collisionUpdate();
-            });
-            this.physics.add.overlap(this.player, this.bombsHitbox2, () => {
-                this.collisionUpdate();
-            });
-            this.physics.add.overlap(this.player, this.bombsHitbox3, () => {
-                this.collisionUpdate();
-            });
+
+            if(!collisionDebug) {
+                this.physics.add.overlap(this.player, this.bombsHitbox, () => {
+                    this.collisionUpdate();
+                });
+                this.physics.add.overlap(this.player, this.bombsHitbox2, () => {
+                    this.collisionUpdate();
+                });
+                this.physics.add.overlap(this.player, this.bombsHitbox3, () => {
+                    this.collisionUpdate();
+                });
+            }
+            
             this.createCircle();
         }
     }
