@@ -65,8 +65,8 @@ class Controls extends Phaser.Scene {
 
         this.slowmoBar = new SlowmoBar(this, 0, 0);
 
-        this.pauseText = this.add.text(game.config.width - 10, 10, "||", {fontSize: "40px"}).setOrigin(1, 0);
-        this.add.text(game.config.width - 7, 15, "ESC", {fontSize: "30px"}).setOrigin(1, 0);
+        this.add.text(game.config.width - 30, 25, "ESC", {fontSize: "30px" , color: '#FF69B4'}).setOrigin(0.5);
+        this.pauseText = this.add.text(game.config.width - 30, 55, "||", {fontSize: "40px", color: '#00FFFF'}).setOrigin(0.5);
 
         this.dashing();
         this.countdown();
