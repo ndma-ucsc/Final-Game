@@ -9,7 +9,7 @@ class Play extends Phaser.Scene{
     }
 
     create(){
-        console.log("Current Level: " + this.level);
+        // console.log("Current Level: " + this.level);
         this.cameras.main.fadeIn(1000);
         this.input.keyboard.enabled = true;
         this.zawarudo = this.add.image(0, 0,'gray');
@@ -373,7 +373,7 @@ class Play extends Phaser.Scene{
         //Slow Mo Time
         if (Phaser.Input.Keyboard.JustDown(keyF) || this.ranOutOfTime){
             if (this.slowMotion == false && this.initTime != 0){
-                console.log("Slow Mo On");
+                // console.log("Slow Mo On");
                 this.slowSFX.play();
                 //Slow down certain sounds when in slow mo
                 this.laserSFX.rate = 1/this.slowSpeed;
@@ -399,7 +399,7 @@ class Play extends Phaser.Scene{
                 }
             }
             else if (this.slowMotion == true){
-                console.log("Slow Mo Off");
+                // console.log("Slow Mo Off");
                 this.slowSFX.stop();
 
                 //Set sounds back to normal
@@ -432,7 +432,7 @@ class Play extends Phaser.Scene{
     pauseUpdate(){
         if (Phaser.Input.Keyboard.JustDown(keyESC)){
             if (!this.gameOver && this.paused == false){
-                console.log("Game Paused");
+                // console.log("Game Paused");
                 this.paused = true;
                 this.pauseOnSFX.play();
                 this.pauseText.text = "▷";
@@ -451,7 +451,7 @@ class Play extends Phaser.Scene{
                 this.scene.launch("optionScene");
             }
             else if (!this.gameOver && this.paused == true){
-                console.log("Game Unpaused");
+                // console.log("Game Unpaused");
                 this.paused = false;
                 this.pauseOffSFX.play();
                 this.pauseText.text = "||";
@@ -585,7 +585,7 @@ class Play extends Phaser.Scene{
             }
             bgMusic = this.sound.add(nextSong, {volume: volPt / maxVolume * 0.25});
             bgMusic.play();
-            console.log("Now Playing: " + bgMusic.key);
+            // console.log("Now Playing: " + bgMusic.key);
         }
     }
 

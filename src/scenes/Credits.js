@@ -5,7 +5,7 @@ class Credits extends Phaser.Scene {
 
     create()
     {
-        console.log("In Credit Scene");
+        // console.log("In Credit Scene");
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
         let creditsTextConfig = {

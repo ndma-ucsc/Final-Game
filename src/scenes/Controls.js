@@ -4,7 +4,7 @@ class Controls extends Phaser.Scene {
     }
 
     create(){
-        console.log("CONTORLS SCENE");
+        // console.log("CONTORLS SCENE");
         this.cameras.main.fadeIn(1000);
         this.input.keyboard.enabled = true;
         this.zawarudo = this.add.image(0, 0,'gray');
