@@ -40,7 +40,6 @@ class Play extends Phaser.Scene{
         this.canDash = true;
         this.initTime = 10;
         this.ranOutOfTime = false;
-        this.amount = 100;
 
         //Sound FX Implemented
         this.jumpSFX = this.sound.add('jump', {volume: sfxPt / maxVolume});
@@ -720,11 +719,11 @@ class Play extends Phaser.Scene{
             callback: ()=> {
                 if (!this.paused && !this.slowMotion && this.initTime < 10){
                     this.initTime++;
-                    this.slowmoBar.increase(this.amount);
+                    this.slowmoBar.increase();
                 }
                 else if (!this.paused && this.slowMotion && this.initTime > 0){
                     this.initTime--;
-                    this.slowmoBar.decrease(this.amount);
+                    this.slowmoBar.decrease();
                     if (this.initTime == 0){
                         this.electricSFX.play();
                         this.ranOutOfTime = true;
@@ -732,7 +731,7 @@ class Play extends Phaser.Scene{
                 }
             },
             loop: true
-        })
+        });
     }
     createCircle() {
         this.startAngle = this.tweens.addCounter({
