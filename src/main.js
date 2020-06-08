@@ -28,7 +28,7 @@ let config = {
       checkCollision: {
         up: false
       },
-      debug: off
+      debug: false
   },
   pixelArt: true
   },

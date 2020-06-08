@@ -94,8 +94,8 @@ class Play extends Phaser.Scene{
 
         this.slowmoBar = new SlowmoBar(this, 0, 0);
 
-        this.add.text(game.config.width - 30, 15, "ESC", {fontSize: "30px" , color: '#FF69B4'}).setOrigin(0.5);
-        this.pauseText = this.add.text(game.config.width - 30, 45, "||", {fontSize: "40px", color: '#00FFFF'}).setOrigin(0.5);
+        this.add.text(game.config.width - 30, 25, "ESC", {fontSize: "30px" , color: '#FF69B4'}).setOrigin(0.5);
+        this.pauseText = this.add.text(game.config.width - 30, 55, "||", {fontSize: "40px", color: '#00FFFF'}).setOrigin(0.5);
         
         //create collider
         this.physics.add.collider(this.player, platformLayer);
@@ -205,7 +205,6 @@ class Play extends Phaser.Scene{
             });
             this.createCircle();
         }
-        
     }
 
     update(){
@@ -372,15 +371,6 @@ class Play extends Phaser.Scene{
             }
             else{
                 this.player.body.setAccelerationX(0);
-                // this.falling = true;
-                // if(this.facing == 'left' && this.jump == false) {
-                //     this.player.play('fallingL',true);
-                //     this.player.setSize(30,50,false).setOffset(25,10);
-                // }
-                // else if(this.facing == 'right' && this.jump == false) {
-                //     this.player.play('fallingR',true);
-                //     this.player.setSize(30,50,false).setOffset(40,10);
-                // }
             }
             if (cursors.down.isDown){
                 this.player.body.setAccelerationY(this.fastFall);
