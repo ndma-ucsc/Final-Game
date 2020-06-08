@@ -658,6 +658,8 @@ class Play extends Phaser.Scene{
         if (this.player.y <= 0){
             this.level++;
             if (this.level == 5){
+                this.gameOver = true;
+                bgMusic.stop();
                 this.scene.start("gameEndScene");
             }
             else{
