@@ -390,15 +390,20 @@ class Controls extends Phaser.Scene {
             if (combo === dashLeft) { 
                 if (!this.isGrounded && !this.paused && this.canDash) {
                     this.canDash = false;
-                    this.player.anims.play('runL',true);
+                    this.player.anims.play('dashL',true);
+                    this.player.setSize(30,10).setOffset(10,10);
+                    this.facing = 'left';
                     this.player.body.allowGravity = false;
                     this.player.body.setVelocityY(0);
-                    this.player.body.setVelocityX(-this.movementSpeed);
+                    this.player.body.setVelocityX(-this.movementSpeed - 20);
                     this.dashSFX.play();
                     this.time.addEvent({
-                        delay: 300,
+                        delay: 400,
                         callback: ()=> {
                             this.player.body.allowGravity = true;
+                            this.falling = true;
+                            this.player.play('fallingL',true);
+                            this.player.setSize(30,50,false).setOffset(25,10);
                         }
                     })
                     this.time.addEvent({
@@ -413,15 +418,20 @@ class Controls extends Phaser.Scene {
             if (combo === dashRight && this.canDash) {
                 if (!this.isGrounded && !this.paused) {
                     this.canDash = false;
-                    this.player.anims.play('runR',true);
+                    this.player.anims.play('dashR',true);
+                    this.player.setSize(30,10).setOffset(39,10);
+                    this.facing = 'right';
                     this.player.body.allowGravity = false;
                     this.player.body.setVelocityY(0);
-                    this.player.body.setVelocityX(this.movementSpeed);
+                    this.player.body.setVelocityX(this.movementSpeed + 20);
                     this.dashSFX.play();
                     this.time.addEvent({
-                        delay: 300,
+                        delay: 400,
                         callback: ()=> {
                             this.player.body.allowGravity = true;
+                            this.falling = true;
+                            this.player.play('fallingR',true);
+                            this.player.setSize(30,50,false).setOffset(40,10);
                         }
                     });
                     this.time.addEvent({
