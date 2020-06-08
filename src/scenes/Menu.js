@@ -33,32 +33,21 @@ class Menu extends Phaser.Scene {
 
         });
 
-        this.swordSFX = this.sound.add('sword', {volume: sfxPt / maxVolume * 0.7});
-
         this.slidesOrder = 0;
-        collisionDebug = !collisionDebug;
+
         let facadeDebug = this.input.keyboard.createCombo(['f','a','c','a','d','e'], {
             resetOnWrongKey: true,
             maxKeyDelay: 0,
             resetOnMatch: true,
             deleteOnMatch: true,
         });
-        this.collisionDebugText = this.add.text(3*game.config.width/4, 3*game.config.height/4, 'Collision are currently off!').setOrigin(0.5);
-        this.collisionDebugOffText = this.add.text(3*game.config.width/4, 3*game.config.height/4, 'Collision are currently on!').setOrigin(0.5);
+        this.collisionDebugText = this.add.text(3*game.config.width/4, 3*game.config.height/4, 'Collision are currently on!').setOrigin(0.5);
         this.collisionDebugText.alpha = 0;
-        this.collisionDebugOffText.alpha = 0;
         this.input.keyboard.on('keycombomatch', (facadeDebug) => {
-            if(!collisionDebug) {
-                this.collisionDebugOffText.alpha = 1;
-                this.collisionDebugText.alpha = 0;
-            }
-            else if(collisionDebug) {
-                this.collisionDebugText.alpha = 1;
-                this.collisionDebugOffText.alpha = 0;
-            }
+            this.collisionDebugText.alpha = 1;
             collisionDebug = !collisionDebug;
         });
-        
+        console.log(collisionDebug);
     }
 
     update(){
@@ -106,7 +95,6 @@ class Menu extends Phaser.Scene {
         }
 
         if(Phaser.Input.Keyboard.JustDown(keyENTER)) {
-            this.swordSFX.play();
             this.input.keyboard.enabled = false;
             if(this.selected == 1) {
                 this.cameras.main.fadeOut(1500);
