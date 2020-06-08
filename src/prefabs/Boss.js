@@ -8,6 +8,9 @@ class Boss extends Phaser.GameObjects.Sprite {
         this.bossFire = false; //track boss's firing status
         this.bossSpray = false;
         this.bossCollapse = false;
+        this.fireSFX = scene.sound.add('cannon'); // add boss sfx
+        this.spraySFX = scene.sound.add('blast'); // add boss sfx
+        this.collapseSFX = scene.sound.add('flamethrower'); // add boss sfx
         this.projectileX;
         this.projectileY;
         this.projectileX2;
@@ -57,17 +60,17 @@ class Boss extends Phaser.GameObjects.Sprite {
             if(randValue == 1) {
                 this.rep = this.rep + randValue;
                 this.bossFire = true;
-                //this.sfxBoss.play();  // play sfx
+                this.fireSFX.play();  // play sfx
             }
             else if(randValue == 2) {
                 this.rep = this.rep + randValue;
                 this.bossSpray = true;
-                //this.sfxBoss3.play();  // play sfx
+                this.spraySFX.play();  // play sfx
             }
             else if(randValue == 3) {
                 this.bossCollapse = true;
                 this.rep = 0;
-                //this.sfxBoss2.play();  // play sfx
+                this.collapseSFX.play();  // play sfx
             }
 
         }

@@ -9,7 +9,6 @@ class SlowmoBar extends Phaser.GameObjects.Sprite {
         this.draw();
         this.off = true;
         scene.add.existing(this.bar);
-        this.bar.alpha = 0;
         
     }
 
@@ -30,12 +29,6 @@ class SlowmoBar extends Phaser.GameObjects.Sprite {
         }
         else {
             this.bar.lineStyle(4, 0x00a6ff, 1);
-        }
-        if(this.off) {
-            this.bar.alpha -= 0.5;
-        }
-        else {
-            this.bar.alpha += 0.50;
         }
         console.log(this.endAngle);
         this.bar.beginPath();
