@@ -4,7 +4,7 @@ class GameOver extends Phaser.Scene {
     }
 
     create() {
-        console.log('GAME OVER');
+        // console.log('GAME OVER');
         cursors = this.input.keyboard.createCursorKeys();
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
