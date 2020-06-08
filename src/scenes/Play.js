@@ -124,7 +124,7 @@ class Play extends Phaser.Scene{
         this.zaWarudo();
         this.pauseUpdate();
         if (!this.paused && !this.gameOver){
-            if (collisionDebug){
+            if (!collisionDebug){
                 this.physics.world.collide(this.player, this.enemies, this.collisionUpdate, null, this);
                 this.physics.world.collide(this.player, this.bullets, this.collisionUpdate, null, this);
             }
