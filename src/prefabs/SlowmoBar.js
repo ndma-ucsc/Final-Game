@@ -30,7 +30,6 @@ class SlowmoBar extends Phaser.GameObjects.Sprite {
         else {
             this.bar.lineStyle(4, 0x00a6ff, 1);
         }
-        console.log(this.endAngle);
         this.bar.beginPath();
         this.bar.arc(this.x + 40, this.y + 40, 20, Phaser.Math.DegToRad(0), Phaser.Math.DegToRad(this.endAngle), false);
         this.bar.strokePath();

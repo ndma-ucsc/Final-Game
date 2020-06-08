@@ -34,7 +34,7 @@ class Menu extends Phaser.Scene {
         });
 
         this.slidesOrder = 0;
-
+        collisionDebug = !collisionDebug;
         let facadeDebug = this.input.keyboard.createCombo(['f','a','c','a','d','e'], {
             resetOnWrongKey: true,
             maxKeyDelay: 0,
@@ -42,8 +42,18 @@ class Menu extends Phaser.Scene {
             deleteOnMatch: true,
         });
         this.collisionDebugText = this.add.text(3*game.config.width/4, 3*game.config.height/4, 'Collision are currently off!').setOrigin(0.5);
+        this.collisionDebugOffText = this.add.text(3*game.config.width/4, 3*game.config.height/4, 'Collision are currently on!').setOrigin(0.5);
         this.collisionDebugText.alpha = 0;
+        this.collisionDebugOffText.alpha = 0;
         this.input.keyboard.on('keycombomatch', (facadeDebug) => {
+            if(!collisionDebug) {
+                this.collisionDebugOffText.alpha = 1;
+                this.collisionDebugText.alpha = 0;
+            }
+            else if(collisionDebug) {
+                this.collisionDebugText.alpha = 1;
+                this.collisionDebugOffText.alpha = 0;
+            }
             collisionDebug = !collisionDebug;
         });
         
