@@ -47,7 +47,7 @@ class Credits extends Phaser.Scene {
         creditsTextConfig.color = '#FF00FF';
         creditsTextConfig.fontSize = '50px';
         let groupArr = ["PROGRAMMING", "Sam Nguyen", "Victor Chung", "Nathan Ma", "", 
-                        "LEVEL DESIGN", "Nathan Ma", "", 
+                        "LEVEL DESIGN", "Nathan Ma", "Victor Chung", "",
                         "SOUND", "Sam Nguyen", "", 
                         "ART", "Victor Chung", "",
                         "ASSETS FROM", "Freesound.org", "Freemusicarchive.org", "",

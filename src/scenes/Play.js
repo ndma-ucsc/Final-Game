@@ -40,7 +40,6 @@ class Play extends Phaser.Scene{
         this.canDash = true;
         this.initTime = 10;
         this.ranOutOfTime = false;
-        this.amount = 100;
 
         //Sound FX Implemented
         this.jumpSFX = this.sound.add('jump', {volume: sfxPt / maxVolume});
@@ -55,6 +54,10 @@ class Play extends Phaser.Scene{
         this.dashSFX = this.sound.add('dash', {volume: sfxPt / maxVolume * 1.5});
         this.footstepSFX = this.sound.add('footstep', {volume: sfxPt / maxVolume * 1.2});
         this.electricSFX = this.sound.add('electric', {volume: sfxPt / maxVolume});
+        this.boomSFX = this.sound.add('boom', {volume: sfxPt / maxVolume * 0.8});
+        this.flamethrowerSFX = this.sound.add('flamethrower', {volume: sfxPt / maxVolume * 1.2});
+        this.cannonSFX = this.sound.add('cannon', {volume: sfxPt / maxVolume * 1.2});
+        this.blastSFX = this.sound.add('blast', {volume: sfxPt / maxVolume * 1.2});
 
         //Keyboard Inputs
         cursors = this.input.keyboard.createCursorKeys();
@@ -90,8 +93,8 @@ class Play extends Phaser.Scene{
 
         this.slowmoBar = new SlowmoBar(this, 0, 0);
 
-        this.add.text(game.config.width - 30, 15, "ESC", {fontSize: "30px" , color: '#FF69B4'}).setOrigin(0.5);
-        this.pauseText = this.add.text(game.config.width - 30, 45, "||", {fontSize: "40px", color: '#00FFFF'}).setOrigin(0.5);
+        this.add.text(game.config.width - 30, 25, "ESC", {fontSize: "30px" , color: '#FF69B4'}).setOrigin(0.5);
+        this.pauseText = this.add.text(game.config.width - 30, 55, "||", {fontSize: "40px", color: '#00FFFF'}).setOrigin(0.5);
         
         //create collider
         this.physics.add.collider(this.player, platformLayer);
@@ -99,109 +102,7 @@ class Play extends Phaser.Scene{
         this.spawnEyeEnemies(this.level); 
         this.dashing();
         this.countdown();
-
-        if(this.level == 4) {
-            //boss
-            this.startFiring = 0;
-            this.boss = new Boss(this, game.config.width/2, 0, 'bossRobot').setScale(1.5, 1.5).setOrigin(0,0);
-            this.follower = { t: 0, vec: new Phaser.Math.Vector2() };
-            this.path = new Phaser.Curves.Path(500, 100); //move path
-            this.path.circleTo(100);
-            this.path.moveTo(500, 100); //move the path
-            this.path.circleTo(100, true, 180);
-
-            this.bossPath = this.tweens.add({
-                targets: this.follower,
-                t: 1,
-                ease: 'Linear',
-                duration: 10000,
-                repeat: -1
-            });
-
-            //energy balls
-            this.bombs = this.physics.add.group({
-                active: true,
-                visible: false,
-                key:'ball',
-                frameQuantity: 8,
-                collideWorldBounds: false,
-                immovable: true,
-                allowGravity: false,
-                classType: Boss
-            });
-            //hitbox
-            this.bombsHitbox = this.physics.add.group({
-                active: true,
-                visible: false,
-                key:'hitbox',
-                frameQuantity: 8,
-                collideWorldBounds: false,
-                immovable: true,
-                allowGravity: false,
-                classType: Boss
-            });
-            //energy balls
-            this.bombs2 = this.physics.add.group({
-                active: true,
-                visible: false,
-                key:'ball',
-                frameQuantity: 10,
-                collideWorldBounds: false,
-                immovable: true,
-                allowGravity: false,
-                classType: Boss
-            });
-            //hitbox
-            this.bombsHitbox2 = this.physics.add.group({
-                active: true,
-                visible: false,
-                key:'hitbox',
-                frameQuantity: 10,
-                collideWorldBounds: false,
-                immovable: true,
-                allowGravity: false,
-                classType: Boss
-            });
-            //energy balls
-            this.bombs3 = this.physics.add.group({
-                active: true,
-                visible: false,
-                key:'ball',
-                frameQuantity: 15,
-                collideWorldBounds: false,
-                immovable: true,
-                allowGravity: false,
-                classType: Boss
-            });
-            //hitbox
-            this.bombsHitbox3 = this.physics.add.group({
-                active: true,
-                visible: false,
-                key:'hitbox',
-                frameQuantity: 15,
-                collideWorldBounds: false,
-                immovable: true,
-                allowGravity: false,
-                classType: Boss
-            });
-            this.time.addEvent({ delay: 500, callback: () => {
-                this.startFiring++;
-            }, callbackScope: this, loop: true });
-            this.physics.add.overlap(this.player, this.bombsHitbox, () => {
-                //this.sound.play('sfx_explosion');
-                this.collisionUpdate();
-            });
-            this.physics.add.overlap(this.player, this.bombsHitbox2, () => {
-                //this.sound.play('sfx_explosion');
-                this.collisionUpdate();
-            });
-            this.physics.add.overlap(this.player, this.bombsHitbox3, () => {
-                //this.sound.play('sfx_explosion');
-                this.collisionUpdate();
-            });
-            this.createCircle();
-        }
-        
+        this.bossBattle();
     }
 
     update(){
@@ -370,15 +271,6 @@ class Play extends Phaser.Scene{
             }
             else{
                 this.player.body.setAccelerationX(0);
-                // this.falling = true;
-                // if(this.facing == 'left' && this.jump == false) {
-                //     this.player.play('fallingL',true);
-                //     this.player.setSize(30,50,false).setOffset(25,10);
-                // }
-                // else if(this.facing == 'right' && this.jump == false) {
-                //     this.player.play('fallingR',true);
-                //     this.player.setSize(30,50,false).setOffset(40,10);
-                // }
             }
             if (cursors.down.isDown){
                 this.player.body.setAccelerationY(this.fastFall);
@@ -501,6 +393,10 @@ class Play extends Phaser.Scene{
                     this.boss.slowmo();
                 }
                 this.slowMotion = true;
+                if(this.level == 4) {
+                    this.bossPath.timeScale = 1/this.slowSpeed;
+                    this.boss.slowmo();
+                }
             }
             else if (this.slowMotion == true){
                 console.log("Slow Mo Off");
@@ -525,6 +421,10 @@ class Play extends Phaser.Scene{
                 }
                 this.ranOutOfTime = false;
                 this.slowMotion = false;
+                if(this.level == 4) {
+                    this.bossPath.timeScale = 1;
+                    this.boss.speedUp();
+                }
             }
         }
     }
@@ -722,11 +622,11 @@ class Play extends Phaser.Scene{
             callback: ()=> {
                 if (!this.paused && !this.slowMotion && this.initTime < 10){
                     this.initTime++;
-                    this.slowmoBar.increase(this.amount);
+                    this.slowmoBar.increase();
                 }
                 else if (!this.paused && this.slowMotion && this.initTime > 0){
                     this.initTime--;
-                    this.slowmoBar.decrease(this.amount);
+                    this.slowmoBar.decrease();
                     if (this.initTime == 0){
                         this.electricSFX.play();
                         this.ranOutOfTime = true;
@@ -734,7 +634,7 @@ class Play extends Phaser.Scene{
                 }
             },
             loop: true
-        })
+        });
     }
     createCircle() {
         this.startAngle = this.tweens.addCounter({
@@ -764,4 +664,107 @@ class Play extends Phaser.Scene{
         }
     }
 
+    bossBattle(){
+        if(this.level == 4) {
+            //boss
+            this.startFiring = 0;
+            this.boss = new Boss(this, game.config.width/2, 0, 'bossRobot').setScale(1.5, 1.5).setOrigin(0,0);
+            this.follower = { t: 0, vec: new Phaser.Math.Vector2() };
+            this.path = new Phaser.Curves.Path(500, 100); //move path
+            this.path.circleTo(100);
+            this.path.moveTo(500, 100); //move the path
+            this.path.circleTo(100, true, 180);
+
+            this.bossPath = this.tweens.add({
+                targets: this.follower,
+                t: 1,
+                ease: 'Linear',
+                duration: 10000,
+                repeat: -1
+            });
+
+            //energy balls
+            this.bombs = this.physics.add.group({
+                active: true,
+                visible: false,
+                key:'ball',
+                frameQuantity: 8,
+                collideWorldBounds: false,
+                immovable: true,
+                allowGravity: false,
+                classType: Boss
+            });
+            //hitbox
+            this.bombsHitbox = this.physics.add.group({
+                active: true,
+                visible: false,
+                key:'hitbox',
+                frameQuantity: 8,
+                collideWorldBounds: false,
+                immovable: true,
+                allowGravity: false,
+                classType: Boss
+            });
+            //energy balls
+            this.bombs2 = this.physics.add.group({
+                active: true,
+                visible: false,
+                key:'ball',
+                frameQuantity: 10,
+                collideWorldBounds: false,
+                immovable: true,
+                allowGravity: false,
+                classType: Boss
+            });
+            //hitbox
+            this.bombsHitbox2 = this.physics.add.group({
+                active: true,
+                visible: false,
+                key:'hitbox',
+                frameQuantity: 10,
+                collideWorldBounds: false,
+                immovable: true,
+                allowGravity: false,
+                classType: Boss
+            });
+            //energy balls
+            this.bombs3 = this.physics.add.group({
+                active: true,
+                visible: false,
+                key:'ball',
+                frameQuantity: 15,
+                collideWorldBounds: false,
+                immovable: true,
+                allowGravity: false,
+                classType: Boss
+            });
+            //hitbox
+            this.bombsHitbox3 = this.physics.add.group({
+                active: true,
+                visible: false,
+                key:'hitbox',
+                frameQuantity: 15,
+                collideWorldBounds: false,
+                immovable: true,
+                allowGravity: false,
+                classType: Boss
+            });
+            this.time.addEvent({ delay: 500, callback: () => {
+                this.startFiring++;
+            }, callbackScope: this, loop: true });
+            this.physics.add.overlap(this.player, this.bombsHitbox, () => {
+                //this.sound.play('sfx_explosion');
+                this.collisionUpdate();
+            });
+            this.physics.add.overlap(this.player, this.bombsHitbox2, () => {
+                //this.sound.play('sfx_explosion');
+                this.collisionUpdate();
+            });
+            this.physics.add.overlap(this.player, this.bombsHitbox3, () => {
+                //this.sound.play('sfx_explosion');
+                this.collisionUpdate();
+            });
+            this.createCircle();
+        }
+    }
 }

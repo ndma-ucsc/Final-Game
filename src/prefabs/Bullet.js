@@ -32,6 +32,7 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
             this.ricochetCount--;
         }
         if(this.ricochetCount == 0) {
+            this.scene.boomSFX.play();
             this.destroy();
         }
     }

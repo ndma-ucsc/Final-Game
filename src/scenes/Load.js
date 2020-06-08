@@ -96,7 +96,11 @@ class Load extends Phaser.Scene {
         this.load.audio("death", "Hurt.wav");
         this.load.audio("dash", "Dash.wav");
         this.load.audio("footstep", "Footstep.wav");
-        this.load.audio("electric", "Electric.wav")
+        this.load.audio("electric", "Electric.wav");
+        this.load.audio("boom", "Boom.wav");
+        this.load.audio("flamethrower", "Flamethrower.wav");
+        this.load.audio("cannon", "Pulse Cannon.wav");
+        this.load.audio("blast", "8-Bit Blast.wav");
 
         this.load.path = "./assets/backgrounds/";
         this.load.image('background1', 'tilemap.png');
