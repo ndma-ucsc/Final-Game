@@ -1,4 +1,4 @@
 Use ← and → to move. Press the spacebar to jump. Press ↓ to crouch.
 Double tap ← or → to perform a mid-air dash. Press ↓ to fast fall.
 Hold ← or → to cling to the wall. Press the spacebar to perform a wall jump.
-The blue bar tracks your how long you can manipulate time. Press F to manipulate time.
+The blue circle tracks your how long you can manipulate time. Press F to manipulate time.
