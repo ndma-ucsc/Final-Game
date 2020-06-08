@@ -47,7 +47,7 @@ class Menu extends Phaser.Scene {
             this.collisionDebugText.alpha = 1;
             collisionDebug = !collisionDebug;
         });
-        console.log(collisionDebug);
+        //console.log(collisionDebug);
     }
 
     update(){
