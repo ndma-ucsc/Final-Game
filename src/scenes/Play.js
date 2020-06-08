@@ -494,9 +494,11 @@ class Play extends Phaser.Scene{
                     child.body.velocity.x /= this.slowSpeed;
                     child.body.velocity.y /= this.slowSpeed;
                 });
-                this.bossPath.timeScale = 1/this.slowSpeed;
-                this.boss.slowmo();
                 this.slowMotion = true;
+                if(this.level == 4) {
+                    this.bossPath.timeScale = 1/this.slowSpeed;
+                    this.boss.slowmo();
+                }
             }
             else if (this.slowMotion == true){
                 console.log("Slow Mo Off");
@@ -515,10 +517,12 @@ class Play extends Phaser.Scene{
                     child.body.velocity.x *= this.slowSpeed;
                     child.body.velocity.y *= this.slowSpeed;
                 });
-                this.bossPath.timeScale = 1;
-                this.boss.speedUp();
                 this.ranOutOfTime = false;
                 this.slowMotion = false;
+                if(this.level == 4) {
+                    this.bossPath.timeScale = 1;
+                    this.boss.speedUp();
+                }
             }
         }
     }
