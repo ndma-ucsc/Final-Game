@@ -9,7 +9,7 @@ class Menu extends Phaser.Scene {
             nextSong = Phaser.Math.RND.pick(songList);
             bgMusic = this.sound.add(nextSong, {volume: volPt / maxVolume * 0.25});
             bgMusic.play();
-            console.log("Now Playing: " + bgMusic.key);
+            // console.log("Now Playing: " + bgMusic.key);
         }
 
         this.selectionColor = 0x00c8e5;

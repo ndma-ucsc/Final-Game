@@ -13,7 +13,7 @@ const tileSize = 30;
 
 let config = {
   type: Phaser.AUTO,
-  title: " ",
+  title: "Junk Rat",
   scale: {
       mode: Phaser.Scale.FIT,
       autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -28,7 +28,7 @@ let config = {
       checkCollision: {
         up: false
       },
-      debug: true
+      debug: off
   },
   pixelArt: true
   },
