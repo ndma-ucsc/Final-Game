@@ -101,7 +101,13 @@ class Play extends Phaser.Scene{
         //create collider
         this.physics.add.collider(this.player, platformLayer);
         this.physics.add.collider(this.bullets, platformLayer);
-        this.spawnEyeEnemies(this.level); 
+        if(this.level > 4) {
+            this.spawnEyeEnemies(3);
+        }
+        else {
+            this.spawnEyeEnemies(this.level); 
+        }
+        
         this.dashing();
         this.countdown();
         this.bossBattle();
@@ -657,7 +663,7 @@ class Play extends Phaser.Scene{
     checkWin(){
         if (this.player.y <= 0){
             this.level++;
-            if (this.level == 5){
+            if (this.level == 9){
                 this.gameOver = true;
                 bgMusic.stop();
                 this.scene.start("gameEndScene");
@@ -758,6 +764,9 @@ class Play extends Phaser.Scene{
             }, callbackScope: this, loop: true });
 
             if(!collisionDebug) {
+                this.physics.add.overlap(this.player, this.boss, () => {
+                    this.collisionUpdate();
+                });
                 this.physics.add.overlap(this.player, this.bombsHitbox, () => {
                     this.collisionUpdate();
                 });
